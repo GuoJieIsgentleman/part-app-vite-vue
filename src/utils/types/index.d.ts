@@ -1,0 +1,1 @@
+declare module 'js-table2excel'
