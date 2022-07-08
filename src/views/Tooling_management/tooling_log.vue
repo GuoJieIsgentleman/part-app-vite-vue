@@ -121,7 +121,6 @@ import { ElMessageBox, ElMessage } from "element-plus";
 import { formatDate111 } from "/@/utils/formatTime";
 import { exportTable } from "/@/utils/exportExcel";
 import { Session } from "/@/utils/storage";
-import Message from "element-plus/lib/el-message/src/message";
 
 const disabled = ref(false);
 const background = ref(false);
@@ -247,7 +246,7 @@ const reciveparts = (page?: any, pagesize?: any) => {
       }
     })
     .catch((err) => {
-      ElMessage({ type: "error", message: err.data });
+      ElMessageBox({ type: "error", message: "显示异常" });
     });
 };
 

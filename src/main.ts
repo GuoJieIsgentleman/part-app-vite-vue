@@ -3,19 +3,19 @@ import App from './App.vue';
 
 import router from './router'
 import { store, key } from './store';
-import { directive } from '/@/utils/directive';
+import { directive } from './utils/directive';
 
 
 
 
 
-import { i18n } from '/@/i18n/index';
-import { globalComponentSize } from '/@/utils/componentSize';
+import { i18n } from './i18n/index';
+import { globalComponentSize } from './utils/componentSize';
 import 'default-passive-events'
 
 import ElementPlus from 'element-plus';
 import 'element-plus/lib/theme-chalk/index.css';
-import '/@/theme/index.scss';
+import './theme/index.scss';
 import mitt from 'mitt';
 import screenShort from 'vue-web-screen-shot';
 import VueGridLayout from 'vue-grid-layout';

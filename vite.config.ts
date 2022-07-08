@@ -1,5 +1,7 @@
 import vue from '@vitejs/plugin-vue';
-import { resolve } from 'path';
+
+
+import path, { resolve } from 'path';
 import type { UserConfig } from 'vite';
 import { loadEnv } from './src/utils/viteBuild';
 
@@ -16,6 +18,11 @@ import vitePluginImp from 'vite-plugin-imp'
 
 
 const pathResolve = (dir: string): any => {
+  console.log("------路径----")
+  console.log(__dirname)
+  console.log(path.resolve(__dirname, './src'))
+
+  console.log(resolve(__dirname, '.', dir))
   return resolve(__dirname, '.', dir);
 };
 
@@ -25,7 +32,7 @@ const pathResolve = (dir: string): any => {
 const { VITE_PORT, VITE_OPEN, VITE_PUBLIC_PATH } = loadEnv();
 
 const alias: Record<string, string> = {
-  '/@': pathResolve('/src/'),
+  '/@': path.resolve(__dirname, './src'),
   'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
 };
 
@@ -51,7 +58,9 @@ const viteConfig: UserConfig = {
 
   ],
   root: process.cwd(),
-  resolve: { alias },
+  resolve: {
+    alias
+  },
 
   optimizeDeps: {
     include: ['element-plus/lib/locale/lang/zh-cn', 'element-plus/lib/locale/lang/en', 'element-plus/lib/locale/lang/zh-tw'],

@@ -37,17 +37,17 @@ import {
   toRefs,
 } from "vue";
 import { useRoute } from "vue-router";
-import { useStore } from "/@/store/index";
-import { useTitle } from "/@/utils/setWebTitle";
-import { Local } from "/@/utils/storage";
-import setIntroduction from "/@/utils/setIconfont";
-import LockScreen from "/@/layout/lockScreen/index.vue";
-import Setings from "/@/layout/navBars/breadcrumb/setings.vue";
-import CloseFull from "/@/layout/navBars/breadcrumb/closeFull.vue";
+import { useStore } from "./store/index.ts";
+import { useTitle } from "./utils/setWebTitle";
+import { Local } from "./utils/storage.ts";
+import setIntroduction from "./utils/setIconfont";
+import LockScreen from "./layout/lockScreen/index.vue";
+import Setings from "./layout/navBars/breadcrumb/setings.vue";
+import CloseFull from "./layout/navBars/breadcrumb/closeFull.vue";
 
 import { ElMessage, ElMessageBox, ElConfigProvider } from "element-plus";
 import zhcn from "element-plus/lib/locale/lang/zh-cn";
-import service from "/@/utils/request";
+import service from "./utils/request";
 export default defineComponent({
   name: "app",
   components: { LockScreen, Setings, CloseFull },

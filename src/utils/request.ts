@@ -3,7 +3,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 
 import viteConfig from 'vite.config';
 
-import { Session } from '/@/utils/storage';
+import { Session } from './storage';
 
 // 配置新建一个 axios 实例
 

@@ -1,4 +1,7 @@
 
+import Machine_procline
+from flask import jsonify, request
+import requests
 from ast import Str
 from re import S
 import tooling_manager
@@ -25,7 +28,7 @@ import untils
 
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from fastapi import FastAPI, File, UploadFile, Request
+from fastapi import Body, FastAPI, File, UploadFile, Request
 
 
 app = FastAPI()
@@ -3516,6 +3519,19 @@ def get_log(currentpagecount:  Optional[int] = 0, pagesize: Optional[int] = 0, r
     return rs
 
 
+# 更新 2022-07-05 增加机修产线
+
+
+@app.get('/getMachine_proclinedetail')
+def getMachine_proclinedetail(procline: Optional[str] = '',):
+    return Machine_procline.getMachine_proclinedetail(procline)
+
+
+@app.get('/getMachine_proclineSummary')
+def getMachine_proclineSummary():
+    return Machine_procline.getMachine_proclineSummary()
+
+
 @app.get('/getVersion')
 def getVersion():
     # auth: str
@@ -3529,6 +3545,27 @@ def getVersion():
 @app.get('/partPages')
 def gopartPages(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "id": id})
+
+
+# 请求体为数据模型
+class aa(BaseModel):
+    e: str
+
+
+@app.get("/add_park_log")
+def add_park_log(item: aa):
+    print(item.e)
+
+    db = getConn()
+    cursor = db.cursor()
+
+    cursor.execute(
+        f'''INSERT INTO `play`.`park_log` ( `content`, `create_time`) 
+        VALUES ('{item.e}', '{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}')
+        ''')
+    db.commit()
+    print("插入停车数据成功")
+    return '插入停车数据成功'
 
 
 if __name__ == '__main__':

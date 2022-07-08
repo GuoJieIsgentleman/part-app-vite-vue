@@ -1,7 +1,9 @@
 // 定义内容
 export default {
   router: {
-
+    Machine_contrast: '机修产线对比',
+    Machine_procline_Summary: '机修产线汇总',
+    Machine_procline_detial: '机修产线明细',
     tooling_log: '工装明细记录',
     machine_parts_log: '成套备件记录',
     machine_log: '机修备件记录',

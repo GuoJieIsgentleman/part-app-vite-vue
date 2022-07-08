@@ -82,7 +82,6 @@ import { ElMessageBox, ElMessage } from "element-plus";
 import { formatDate111 } from "/@/utils/formatTime";
 import { exportTable } from "/@/utils/exportExcel";
 import { Session } from "/@/utils/storage";
-import Message from "element-plus/lib/el-message/src/message";
 
 const IsPC = () => {
   var sUserAgent = navigator.userAgent.toLowerCase();

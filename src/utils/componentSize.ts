@@ -1,4 +1,4 @@
-import { Local } from '/@/utils/storage';
+import { Local } from './storage';
 
 /**
  * 全局组件大小

@@ -21,6 +21,7 @@
         "image-conversion": "^2.1.1",
         "js-table2excel": "^1.0.3",
         "mitt": "^3.0.0",
+        "node-sass": "^7.0.1",
         "nprogress": "^0.2.0",
         "print-js": "^1.6.0",
         "qrcodejs2-fixes": "^0.0.2",
@@ -61,7 +62,7 @@
         "sass-loader": "^12.1.0",
         "script-loader": "^0.7.2",
         "typescript": "^4.3.5",
-        "vite": "^2.4.4",
+        "vite": "^2.9.13",
         "vite-plugin-imp": "^2.0.9",
         "vite-plugin-style-import": "^1.2.1",
         "vue-eslint-parser": "^7.10.0"

@@ -66,7 +66,7 @@ import IconSelector from "/@/components/iconSelector/index.vue";
 import { useI18n } from "vue-i18n";
 import service from "/@/utils/request";
 import { ElMessage } from "element-plus";
-import Message from "element-plus/lib/el-message/src/message";
+// import Message from "element-plus/lib/el-message/src/message";
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
 export default {
   name: "systemEditMenu2",
