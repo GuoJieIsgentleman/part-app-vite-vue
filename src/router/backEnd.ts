@@ -47,6 +47,9 @@ export async function initBackEndControlRoutes() {
 
   dynamicRoutes[0].children = await backEndComponent(res.data.data);
 
+  console.log('dynamicRoutes[0].children  处理好的');
+  console.log(dynamicRoutes[0].children);
+
 
   // 添加动态路由
   await setAddRoute();

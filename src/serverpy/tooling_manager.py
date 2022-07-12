@@ -1189,12 +1189,12 @@ def tooling_update_log(
     db = conn.getConn()
     cursor = db.cursor()
     if flag == 'add':
-        cursor.execute(f''' INSERT INTO `part`.`log` (`username`, `area`, `spec`, `iten_name`, `count`, `create_date`, `flag`,`remark`) 
+        cursor.execute(f''' INSERT INTO `part`.`log` (`username`, `area`, `spec`, `item_name`, `count`, `create_date`, `flag`,`remark`) 
         VALUES ('{username}', '{area}', '{spec}', '{item_name}', '{count}', '{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}', 'add','工装管理');
     ''')
         print("增加记录完成 " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
     if flag == 'update':
-        cursor.execute(f''' INSERT INTO `part`.`log` ( `username`, `area`, `spec`, `iten_name`, `count`, `update_date`, `flag`,`remark`) 
+        cursor.execute(f''' INSERT INTO `part`.`log` ( `username`, `area`, `spec`, `item_name`, `count`, `update_date`, `flag`,`remark`) 
         VALUES ('{username}', '{area}', '{spec}', '{item_name}', '{count}', '{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}', 'update','工装管理');
     ''')
         print("更新记录完成 " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))

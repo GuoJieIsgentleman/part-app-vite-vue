@@ -19,6 +19,7 @@ import './theme/index.scss';
 import mitt from 'mitt';
 import screenShort from 'vue-web-screen-shot';
 import VueGridLayout from 'vue-grid-layout';
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 
 const app = createApp(App);
@@ -33,4 +34,7 @@ app
 
 app.config.globalProperties.mittBus = mitt();
 
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
 directive(app);

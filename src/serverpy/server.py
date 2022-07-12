@@ -2608,12 +2608,12 @@ def part_update_log(
     db = getConn()
     cursor = db.cursor()
     if flag == 'add':
-        cursor.execute(f''' INSERT INTO `part`.`log` (`username`, `area`, `spec`, `iten_name`, `count`, `create_date`, `flag`,`remark`) 
+        cursor.execute(f''' INSERT INTO `part`.`log` (`username`, `area`, `spec`, `item_name`, `count`, `create_date`, `flag`,`remark`) 
         VALUES ('{username}', '{area}', '{spec}', '{item_name}', '{count}', '{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}', 'add','电器备件管理');
     ''')
         print("增加记录完成 " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
     if flag == 'update':
-        cursor.execute(f''' INSERT INTO `part`.`log` ( `username`, `area`, `spec`, `iten_name`, `count`, `update_date`, `flag`,`remark`) 
+        cursor.execute(f''' INSERT INTO `part`.`log` ( `username`, `area`, `spec`, `item_name`, `count`, `update_date`, `flag`,`remark`) 
         VALUES ('{username}', '{area}', '{spec}', '{item_name}', '{count}', '{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}', 'update','电器备件管理');
     ''')
         print("更新记录完成 " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
@@ -3530,6 +3530,35 @@ def getMachine_proclinedetail(procline: Optional[str] = '',):
 @app.get('/getMachine_proclineSummary')
 def getMachine_proclineSummary():
     return Machine_procline.getMachine_proclineSummary()
+
+
+@app.get('/getmachine_contrast')
+def getmachine_contrast():
+    return Machine_procline.getmachine_contrast()
+
+
+@app.post('/machine_procline_detail_uploadfile')
+async def machine_procline_detail_uploadfile(flag: Optional[str] = None, imgid: Optional[str] = None, time1:  Optional[str] = None, file: UploadFile = File(...)):
+
+    return await Machine_procline.create_upload_file(flag, imgid, time1, file)
+
+# 添加产线使用件
+
+
+@app.get('/addmachine_procline_detail')
+def addmachine_procline_detail(procline: Optional[str] = None, part_name: Optional[str] = None, part_spec: Optional[str] = None, area: Optional[str] = None, type: Optional[str] = None):
+    return Machine_procline.addmachine_procline_detail(procline, part_name, part_spec, area, type)
+
+
+@app.get('/deletemachine_procline_detail')
+def deletemachine_procline_detail(id: Optional[str] = None):
+    print("进入删除方法")
+    return Machine_procline.deletemachine_procline_detail(id)
+
+
+@app.get('/updatemachine_procline_detail')
+def updatemachine_procline_detail(id: Optional[str] = None, procline: Optional[str] = None, part_name: Optional[str] = None, part_spec: Optional[str] = None, area: Optional[str] = None, type: Optional[str] = None):
+    return Machine_procline.updatemachine_procline_detail(id, procline, part_name, part_spec, area, type)
 
 
 @app.get('/getVersion')

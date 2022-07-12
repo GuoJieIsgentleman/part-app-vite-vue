@@ -4,6 +4,51 @@ import table2excel from "js-table2excel";
 import { formatDate111 } from "/@/utils/formatTime";
 import service from "/@/utils/request";
 import { ElMessage, ElMessageBox } from "element-plus";
+import AddMenu from "./components/machine_procline/addMenu.vue";
+import UpdateMenu from "./components/machine_procline/updateMenu.vue";
+
+const AddMenuref = ref();
+const UpdateMenuref = ref();
+const onOpenAddMenu = () => {
+  AddMenuref.value.openDialog();
+};
+
+const onOpenEditMenu = (row: object, index: any) => {
+  console.log(row);
+  UpdateMenuref.value.openDialog(row, index);
+};
+
+const onTabelRowDel = (row: any, index: any) => {
+  ElMessageBox.confirm("此操作将永久删除备件信息, 是否继续?", "提示", {
+    confirmButtonText: "删除",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(() => {
+      console.log(row);
+      service
+        .get("/deletemachine_procline_detail", {
+          params: {
+            id: row.id,
+          },
+        })
+        .then((res) => {
+          ElMessage({
+            message: res.data,
+            type: "success",
+          });
+
+          initpart();
+        })
+        .catch((err) => {
+          ElMessage({
+            message: err.data,
+            type: "warning",
+          });
+        });
+    })
+    .catch(() => {});
+};
 
 const state = reactive({
   column: [
@@ -13,11 +58,11 @@ const state = reactive({
     { title: "类别", key: "type", type: "text" },
     { title: "备件名称", key: "machine_name", type: "text" },
     { title: "规格型号", key: "machine_spesc", type: "text" },
-    { title: "法兰盘外径", key: "FLP", type: "text" },
-    { title: "轴对内径", key: "ZD", type: "text" },
-    { title: "键槽", key: "JC", type: "text" },
-    { title: "孔数", key: "KS", type: "text" },
-    { title: "孔中心距", key: "KZXJ", type: "text" },
+    { title: "法兰盘外径", key: "FLP", type: "image", width: 200, height: 200 },
+    { title: "轴对内径", key: "ZD", type: "image", width: 200, height: 200 },
+    { title: "键槽", key: "JC", type: "image", width: 200, height: 200 },
+    { title: "孔数", key: "KS", type: "image", width: 200, height: 200 },
+    { title: "孔中心距", key: "KZXJ", type: "image", width: 200, height: 200 },
   ],
   partslist: [] as any,
   use_proline_options: [
@@ -65,7 +110,6 @@ const state = reactive({
   pos: 0,
 });
 
-const onOpenAddMenu = () => {};
 const exportExcel1 = () => {
   table2excel(
     state.column,
@@ -255,18 +299,111 @@ const getSpanArr = () => {
           >
           </el-table-column>
           <el-table-column prop="FLP" align="center" label="法兰盘外径" width="100">
+            <template #default="scope">
+              <div v-if="scope.row.FLP != null">
+                <el-image
+                  style="width: 100px; height: 100px"
+                  :preview-src-list="[scope.row.FLP]"
+                  :src="scope.row.FLP"
+                >
+                </el-image>
+              </div>
+              <div v-else>
+                无图
+                <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
+              </div>
+            </template>
           </el-table-column>
 
           <el-table-column prop="ZD" align="center" label="轴对内径" width="100">
+            <template #default="scope">
+              <div v-if="scope.row.ZD != null">
+                <el-image
+                  style="width: 100px; height: 100px"
+                  :preview-src-list="[scope.row.ZD]"
+                  :src="scope.row.ZD"
+                >
+                </el-image>
+              </div>
+              <div v-else>
+                无图
+                <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
+              </div>
+            </template>
           </el-table-column>
 
           <el-table-column prop="JC" align="center" label="键槽" width="100">
+            <template #default="scope">
+              <div v-if="scope.row.JC != null">
+                <el-image
+                  style="width: 100px; height: 100px"
+                  :preview-src-list="[scope.row.JC]"
+                  :src="scope.row.JC"
+                >
+                </el-image>
+              </div>
+              <div v-else>
+                无图
+                <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
+              </div>
+            </template>
           </el-table-column>
 
           <el-table-column prop="KS" align="center" label="孔数" width="100">
+            <template #default="scope">
+              <div v-if="scope.row.KS != null">
+                <el-image
+                  style="width: 100px; height: 100px"
+                  :preview-src-list="[scope.row.KS]"
+                  :src="scope.row.KS"
+                >
+                </el-image>
+              </div>
+              <div v-else>
+                无图
+                <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
+              </div>
+            </template>
           </el-table-column>
 
           <el-table-column prop="KZXJ" width="100" align="center" label="孔中心距">
+            <template #default="scope">
+              <div v-if="scope.row.KZXJ != null">
+                <el-image
+                  style="width: 100px; height: 100px"
+                  :preview-src-list="[scope.row.KZXJ]"
+                  :src="scope.row.KZXJ"
+                >
+                </el-image>
+              </div>
+              <div v-else>
+                无图
+                <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" min-width="120">
+            <template #default="scope">
+              <Auths :value="['btn.edit']">
+                <el-button
+                  type="primary"
+                  size="small"
+                  @click="onOpenEditMenu(scope.row, scope.$index)"
+                  icon="el-icon-edit"
+                  circle
+                ></el-button>
+              </Auths>
+
+              <Auths :value="['btn.del']">
+                <el-button
+                  type="warning"
+                  size="small"
+                  @click="onTabelRowDel(scope.row, scope.$index)"
+                  icon="el-icon-delete"
+                  circle
+                ></el-button>
+              </Auths>
+            </template>
           </el-table-column>
         </el-table-column>
       </el-table>
@@ -280,6 +417,8 @@ const getSpanArr = () => {
       </el-pagination> -->
     </el-card>
   </div>
+  <AddMenu ref="AddMenuref" />
+  <UpdateMenu ref="UpdateMenuref" />
 </template>
 
 <style lang="scss" scoped></style>
