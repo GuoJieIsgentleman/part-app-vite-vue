@@ -80,6 +80,8 @@ const viteConfig: UserConfig = {
     },
   },
   build: {
+  
+
     outDir: 'dist',
     assetsDir: "./static/js",
     minify: 'esbuild',
@@ -91,6 +93,14 @@ const viteConfig: UserConfig = {
 
       },
     },
+   
+   
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    }
   },
   define: {
     __VUE_I18N_LEGACY_API__: JSON.stringify(false),

@@ -3,7 +3,8 @@
     <el-dialog title="电器备件添加" v-model="state.isShowDialog" width="769px">
       <el-form :model="state.ruleForm" size="small" label-width="80px">
         <el-row :gutter="10">
-          <el-col :span="6">
+          <el-form-item label="备件图片">
+          <el-col :span="12">
             <el-upload
               class="avatar-uploader"
               ref="upload1"
@@ -29,6 +30,8 @@
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-col>
+          </el-form-item>
+     
         </el-row>
 
         <el-row :gutter="35">
@@ -51,8 +54,15 @@
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-            <el-form-item label="搁置区域">
-              <el-select
+           
+           
+           <el-form-item label="搁置区域">
+               <el-input
+                v-model="state.ruleForm.part_area_value"
+                placeholder="搁置区域"
+                clearable
+              ></el-input>
+              <!-- <el-select
                 v-model="state.ruleForm.part_area_value"
                 filterable
                 placeholder="备件区域"
@@ -65,7 +75,9 @@
                   :value="item['value']"
                 >
                 </el-option>
-              </el-select>
+              </el-select> -->
+
+          
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -173,8 +185,14 @@ const onCancel = () => {
 
 const upload1 = ref();
 const onSubmit = () => {
-  console.log(state.ruleForm); // 数据，请注意需要转换的类型
-  closeDialog(); // 关闭弹窗
+  if(state.ruleForm.type===""||state.ruleForm.part_name==="" || state.ruleForm.part_spec==="" || state.ruleForm.part_area_value==="" )
+  {
+    ElMessage({type:'warning',message:'请完善备件信息'})
+    return
+  }else if(state.ruleForm.balance==="" ||state.ruleForm.balance===""){
+    ElMessage({type:'warning',message:'请填写件数'})
+    return
+  }
 
   service
     .get("/addparts", {
@@ -188,7 +206,7 @@ const onSubmit = () => {
         type: state.ruleForm.type,
       },
     })
-    .then((res) => {
+    .then((res:any) => {
       ElMessage({
         type: "success",
         message: res.data.msg,
@@ -200,7 +218,7 @@ const onSubmit = () => {
       initForm();
       closeDialog();
     })
-    .catch((err) => {
+    .catch((err:any) => {
       ElMessage({
         type: "error",
         message: err.data,
@@ -244,7 +262,7 @@ const beforeAvatarUpload = (file: any) => {
 
   // return isJPG && isLt2M;
   //压缩
-  return new Promise((resolve) => {
+  return new Promise((resolve:any) => {
     // compress(file, 100).then((res) => {
     //   console.log(res);
     //   resolve(res);
@@ -254,7 +272,7 @@ const beforeAvatarUpload = (file: any) => {
       size: 200,
       width: 500,
       height: 500,
-    }).then((res) => {
+    }).then((res:any) => {
       console.log(res);
       resolve(res);
     });

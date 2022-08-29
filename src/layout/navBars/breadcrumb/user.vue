@@ -1,55 +1,36 @@
 <template>
   <div class="layout-navbars-breadcrumb-user" :style="{ flex: layoutUserFlexNum }">
-    <el-dropdown
-      :show-timeout="70"
-      :hide-timeout="50"
-      trigger="click"
-      @command="onComponentSizeChange"
-    >
+    <el-dropdown :show-timeout="70" :hide-timeout="50" trigger="click" @command="onComponentSizeChange">
       <div class="layout-navbars-breadcrumb-user-icon">
         <i class="iconfont icon-ziti" :title="$t('message.user.title0')"></i>
       </div>
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item command="" :disabled="disabledSize === ''">{{
-            $t("message.user.dropdownDefault")
+              $t("message.user.dropdownDefault")
           }}</el-dropdown-item>
           <el-dropdown-item command="medium" :disabled="disabledSize === 'medium'">{{
-            $t("message.user.dropdownMedium")
+              $t("message.user.dropdownMedium")
           }}</el-dropdown-item>
           <el-dropdown-item command="small" :disabled="disabledSize === 'small'">{{
-            $t("message.user.dropdownSmall")
+              $t("message.user.dropdownSmall")
           }}</el-dropdown-item>
           <el-dropdown-item command="mini" :disabled="disabledSize === 'mini'">{{
-            $t("message.user.dropdownMini")
+              $t("message.user.dropdownMini")
           }}</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-    <el-dropdown
-      :show-timeout="70"
-      :hide-timeout="50"
-      trigger="click"
-      @command="onLanguageChange"
-    >
+    <el-dropdown :show-timeout="70" :hide-timeout="50" trigger="click" @command="onLanguageChange">
       <div class="layout-navbars-breadcrumb-user-icon">
-        <i
-          class="iconfont"
-          :class="disabledI18n === 'en' ? 'icon-fuhao-yingwen' : 'icon-fuhao-zhongwen'"
-          :title="$t('message.user.title1')"
-        ></i>
+        <i class="iconfont" :class="disabledI18n === 'en' ? 'icon-fuhao-yingwen' : 'icon-fuhao-zhongwen'"
+          :title="$t('message.user.title1')"></i>
       </div>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item command="zh-cn" :disabled="disabledI18n === 'zh-cn'"
-            >简体中文</el-dropdown-item
-          >
-          <el-dropdown-item command="en" :disabled="disabledI18n === 'en'"
-            >English</el-dropdown-item
-          >
-          <el-dropdown-item command="zh-tw" :disabled="disabledI18n === 'zh-tw'"
-            >繁體中文</el-dropdown-item
-          >
+          <el-dropdown-item command="zh-cn" :disabled="disabledI18n === 'zh-cn'">简体中文</el-dropdown-item>
+          <el-dropdown-item command="en" :disabled="disabledI18n === 'en'">English</el-dropdown-item>
+          <el-dropdown-item command="zh-tw" :disabled="disabledI18n === 'zh-tw'">繁體中文</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -60,18 +41,10 @@
       <i class="icon-skin iconfont" :title="$t('message.user.title3')"></i>
     </div>
     <div class="layout-navbars-breadcrumb-user-icon">
-      <el-popover
-        placement="bottom"
-        trigger="click"
-        v-model:visible="isShowUserNewsPopover"
-        :width="300"
-        popper-class="el-popover-pupop-user-news"
-      >
+      <el-popover placement="bottom" trigger="click" v-model:visible="isShowUserNewsPopover" :width="300"
+        popper-class="el-popover-pupop-user-news">
         <template #reference>
-          <el-badge
-            :is-dot="true"
-            @click="isShowUserNewsPopover = !isShowUserNewsPopover"
-          >
+          <el-badge :is-dot="true" @click="isShowUserNewsPopover = !isShowUserNewsPopover">
             <i class="el-icon-bell" :title="$t('message.user.title4')"></i>
           </el-badge>
         </template>
@@ -81,34 +54,28 @@
       </el-popover>
     </div>
     <div class="layout-navbars-breadcrumb-user-icon mr10" @click="onScreenfullClick">
-      <i
-        class="iconfont"
-        :title="isScreenfull ? $t('message.user.title6') : $t('message.user.title5')"
-        :class="!isScreenfull ? 'icon-fullscreen' : 'icon-tuichuquanping'"
-      ></i>
+      <i class="iconfont" :title="isScreenfull ? $t('message.user.title6') : $t('message.user.title5')"
+        :class="!isScreenfull ? 'icon-fullscreen' : 'icon-tuichuquanping'"></i>
     </div>
     <el-dropdown :show-timeout="70" :hide-timeout="50" @command="onHandleCommandClick">
       <span class="layout-navbars-breadcrumb-user-link">
-        <img
-          :src="getUserInfos.photo"
-          class="layout-navbars-breadcrumb-user-link-photo mr5"
-        />
+        <img :src="getUserInfos.photo" class="layout-navbars-breadcrumb-user-link-photo mr5" />
         {{ getUserInfos.userName === "" ? "test" : getUserInfos.userName }}
         <i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item command="/home">{{
-            $t("message.user.dropdown1")
+              $t("message.user.dropdown1")
           }}</el-dropdown-item>
           <!-- <el-dropdown-item command="wareHouse">{{ $t('message.user.dropdown6') }}</el-dropdown-item> -->
           <el-dropdown-item command="/personal">{{
-            $t("message.user.dropdown2")
+              $t("message.user.dropdown2")
           }}</el-dropdown-item>
           <!-- <el-dropdown-item command="/404">{{ $t('message.user.dropdown3') }}</el-dropdown-item>
 					<el-dropdown-item command="/401">{{ $t('message.user.dropdown4') }}</el-dropdown-item> -->
           <el-dropdown-item divided command="logOut">{{
-            $t("message.user.dropdown5")
+              $t("message.user.dropdown5")
           }}</el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -118,8 +85,8 @@
 </template>
 
 <script lang="ts">
-import { ref, getCurrentInstance, computed, reactive, toRefs, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { ref, getCurrentInstance, computed, reactive, toRefs, onMounted, watch } from "vue";
+import { useRouter, onBeforeRouteUpdate, Router } from "vue-router";
 import { ElMessageBox, ElMessage } from "element-plus";
 import screenfull from "screenfull";
 import { useI18n } from "vue-i18n";
@@ -129,6 +96,7 @@ import { useTitle } from "/@/utils/setWebTitle";
 import { Session, Local } from "/@/utils/storage";
 import UserNews from "/@/layout/navBars/breadcrumb/userNews.vue";
 import Search from "/@/layout/navBars/breadcrumb/search.vue";
+
 export default {
   name: "layoutBreadcrumbUser",
   components: { UserNews, Search },
@@ -201,7 +169,7 @@ export default {
                 done();
                 setTimeout(() => {
                   instance.confirmButtonLoading = false;
-                }, 300);
+                }, 500);
               }, 700);
             } else {
               done();
@@ -211,18 +179,53 @@ export default {
           .then(() => {
             Session.clear(); // 清除缓存/token等
             resetRoute(); // 删除/重置路由
+
+
+            //   window.location.href="http://192.168.56.1:10000/#/login";
+
             router.push("/login");
             setTimeout(() => {
               ElMessage.success(t("message.user.logOutSuccess"));
             }, 300);
           })
-          .catch(() => {});
-      } else if (path === "wareHouse") {
-        window.open("https://gitee.com/lyt-top/vue-next-admin");
+          .catch(() => { });
+      } else if (path === "/home") {
+       // window.open("https://gitee.com/lyt-top/vue-next-admin");
+         router.push(path);
       } else {
         router.push(path);
       }
     };
+
+    const route: Router = useRouter()
+
+    onBeforeRouteUpdate((to: any) => {
+      console.log('to=>', to);
+      if (to.name === "Home") {
+        router.go(0);
+      }
+
+    })
+    watch(() => router.currentRoute.value.path,
+
+      (newValue, oldValue) => {
+
+        console.log("watch=5", newValue);
+        if(newValue=='/login'){
+          router.go(0);
+        }
+      },
+
+      { immediate: true }
+    )
+
+    //     watch({
+    //     Route(to, from) {
+    //       if (to.name === "Home" && from.name) {
+    //         this.$router.go(0);
+    //       }
+    //     },
+    //   })
     // 菜单搜索点击
     const onSearchClick = () => {
       searchRef.value.openSearch();
@@ -304,17 +307,20 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+
   &-link {
     height: 100%;
     display: flex;
     align-items: center;
     white-space: nowrap;
+
     &-photo {
       width: 25px;
       height: 25px;
       border-radius: 100%;
     }
   }
+
   &-icon {
     padding: 0 10px;
     cursor: pointer;
@@ -323,23 +329,28 @@ export default {
     line-height: 50px;
     display: flex;
     align-items: center;
+
     &:hover {
       background: rgba(0, 0, 0, 0.04);
+
       i {
         display: inline-block;
         animation: logoAnimation 0.3s ease-in-out;
       }
     }
   }
+
   ::v-deep(.el-dropdown) {
     color: var(--bg-topBarColor);
   }
+
   ::v-deep(.el-badge) {
     height: 40px;
     line-height: 40px;
     display: flex;
     align-items: center;
   }
+
   ::v-deep(.el-badge__content.is-fixed) {
     top: 12px;
   }

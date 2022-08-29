@@ -4,6 +4,7 @@
       <el-form :model="state.ruleForm" size="small" label-width="80px">
         <el-row :gutter="10">
           <el-col :span="6">
+           <el-form-item label="备件图片">
             <el-upload
               class="avatar-uploader"
               ref="upload1"
@@ -30,7 +31,9 @@
 
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
+            </el-form-item>
           </el-col>
+
         </el-row>
         <el-row :gutter="35">
           <!-- <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">

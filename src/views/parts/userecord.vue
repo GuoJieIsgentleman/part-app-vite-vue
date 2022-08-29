@@ -333,6 +333,9 @@ const getusearea = async () => {
   });
 };
 
+
+
+
 //初始化领用记录
 const inituserecord = async (flag?: any) => {
   console.log(flag);

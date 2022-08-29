@@ -6,6 +6,7 @@ import { setAddRoute, setFilterMenuAndCacheTagsViewRoutes } from '/@/router/inde
 import { dynamicRoutes } from '/@/router/route';
 import { getMenuAdmin, getMenuOther } from '/@/api/menu/index';
 import { type } from 'os';
+import { AnyAaaaRecord } from 'dns';
 
 const layouModules: any = import.meta.glob('../layout/routerView/*.{vue,tsx}');
 const viewsModules: any = import.meta.glob('../views/**/*.{vue,tsx}');
@@ -33,8 +34,7 @@ export async function initBackEndControlRoutes() {
   // 触发初始化用户信息
   store.dispatch('userInfos/setUserInfos');
   // 获取路由菜单数据
-  const res = await getBackEndControlRoutes();
-
+  const res:any = await getBackEndControlRoutes();
 
 
 
@@ -47,8 +47,8 @@ export async function initBackEndControlRoutes() {
 
   dynamicRoutes[0].children = await backEndComponent(res.data.data);
 
-  console.log('dynamicRoutes[0].children  处理好的');
-  console.log(dynamicRoutes[0].children);
+  console.log('dynamicRoutes',dynamicRoutes);
+  
 
 
   // 添加动态路由
@@ -67,8 +67,7 @@ export function getBackEndControlRoutes() {
 
   // 模拟 admin 与 test
   const auth = store.state.userInfos.userInfos.authPageList[0];
-  console.log('获取后端路由传递的参数 权限');
-  console.log(auth);
+
 
   // 管理员 admin
   if (auth === 'admin') return getMenuAdmin({ auth: auth });

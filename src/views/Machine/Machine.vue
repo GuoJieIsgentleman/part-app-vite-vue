@@ -164,23 +164,23 @@
 
         <el-table-column label="操作" align="center" min-width="120">
           <template #default="scope">
-            <Auths :value="['btn.edit']">
+            <Auths :value="['btn.edit']" class="displayStyle">
               <el-button
                 type="primary"
                 v-if="scope.row['isShow']"
                 @click="onOpenEditMenu(scope.row, scope.$index)"
-                icon="el-icon-edit"
-                circle
-              ></el-button>
+                
+              
+              >编辑</el-button>
             </Auths>
 
-            <Auths :value="['btn.del']">
+            <Auths :value="['btn.del']" class="displayStyle">
               <el-button
                 type="warning"
                 @click="onTabelRowDel(scope.row, scope.$index)"
-                icon="el-icon-delete"
-                circle
-              ></el-button>
+               
+              
+              >删除</el-button>
             </Auths>
           </template>
         </el-table-column>
@@ -352,13 +352,13 @@ const reciveparts = (page?: any, pagesize?: any) => {
         pagesize: pagesize,
       },
     })
-    .then((res) => {
+    .then((res:any) => {
       console.log(res);
       if (res != null) {
         state.pagecount = res.data.pages;
         state.total = res.data.total;
         state.loading = false;
-        state.partslist = res.data.data1.map((item: any[]) => {
+        state.partslist = res.data.data1.map((item: any) => {
           return {
             id: item[0],
             part_name: item[1],
@@ -377,7 +377,7 @@ const reciveparts = (page?: any, pagesize?: any) => {
       console.log("state.partslist");
       console.log(state.partslist);
     })
-    .catch((err) => {
+    .catch((err:any) => {
       ElMessage({ type: "error", message: err.data });
     });
 };
@@ -400,6 +400,8 @@ const checkIsShow = (area: any) => {
       }
     });
   }
+
+  
   console.log(`${area}+++++++++${flag}`);
   return flag;
 };
@@ -429,23 +431,44 @@ const gettype = async (value?: any) => {
 };
 
 //----------------------------------
-const getpartname = async (value?: any) => {
+const getpartname =  (value?: any) => {
   //通过area 找type
 
-  let { data: partname } = await service.get("/getmachine_name", {
+   service.get("/getmachine_name", {
     params: {
       type: value,
+      flag:"all"
       // spec: state.ruleForm.model2,
     },
-  });
+  }).then((res:any)=>{
 
-  state.ruleForm.part_name = partname.map((item: any) => {
-    return {
-      value: item[1],
-      label: item[1],
-      count: item[4],
-    };
-  });
+      console.log(res.data.specs)
+     console.log(res.data.names)
+   
+     state.ruleForm.part_name=  res.data.names.map((item:any)=>{
+          return {
+            value:item[0],
+            label:item[0]
+          }
+        })
+
+
+        state.ruleForm.usespesc=res.data.specs.map((item:any)=>{
+          return {
+            value:item[0],
+            label:item[0]
+          }
+        })
+
+
+  }).catch((err:any)=>{
+
+  })
+
+
+
+
+ 
 };
 //---------------------------------------
 
@@ -631,5 +654,9 @@ const getSummaries = (param: any) => {
   right: 40px;
   bottom: 40px;
   top: 500px;
+}
+.displayStyle{
+  display: inline-block;
+
 }
 </style>

@@ -1,3 +1,4 @@
+import json
 import pinyin
 import sys
 from hmac import new
@@ -333,21 +334,56 @@ async def create_upload_file(imgid: str, time1:  Optional[str] = None, file: Upl
 
 # 机修巡检功能
 
-def getinspection(cardid:  Optional[str] = None):
+def getinspection(cardid:  Optional[str] = None,username:Optional[str] = None):
     # auth: str
     db = conn.getConn()
     print('获取巡检区域')
-    print(type(cardid))
+    print('cardid',cardid)
+    print('username',username)
+    cursor = db.cursor()
+    ss=""
+    if cardid=="-1":
+        cursor.execute(
+        f''' select inspect_area from `user` where  username = '{username}' ''')
+       
+        data1 =cursor.fetchall()
+        print("获取到全部的区域")
+        print(len(data1))
+        print(data1)
+        if data1[0][0]==''  or data1[0][0]==None:
+            
+            print("请联系管理员授权")
+            return -1
+        temp=str(data1[0][0])
+        temp1=temp[1:len(temp)-1]
+        
+        sql=f''' select * from machine_inspection where cardname in({temp1})  '''
+        cursor.execute(sql)
+
+        
+        result =cursor.fetchall()
+        print('result')
+        print(result)
+        return result
+    
+    
+    
     new_cardid = cardid[1:len(cardid)-1]
     print(new_cardid)
-    cursor = db.cursor()
+   
     cursor.execute(
         '''select * from machine_inspection where cardid='{0}'
         '''.format(new_cardid))
     data = cursor.fetchone()
+    
     print('巡检区域为')
     print(data)
-
+    if data == None:
+        print('没有获取到该卡号信息')
+        machine_update_log(username,spec=new_cardid,flag='inspect')
+        return '未找到该区域'
+    
+        
     # 查询保养、外修和备件管理 的确认
     if data[2] == None:
         return '未查询到对应区域'
@@ -365,7 +401,7 @@ def getinspection(cardid:  Optional[str] = None):
 
 
             select * from (
-            select * from machine_maintenance where use_area='{}'
+            select * from machine_maintenance where use_area like '%{}%'
             ) aa
             where useconfirm ="" or maintenanceman =''
                       '''.format(data[2]))
@@ -391,7 +427,7 @@ def getinspection(cardid:  Optional[str] = None):
               FROM
                 machine_repair
               WHERE
-                use_area = '{}'
+                use_area like '%{}%'
             ) aa
           WHERE
             aa.useconfirm = ''
@@ -416,7 +452,7 @@ def getinspection(cardid:  Optional[str] = None):
               FROM
                 machine_detail
               WHERE
-                area = '{}'
+                area like  '%{}%'
                       '''.format(data[2]))
 
         part_data = cursor.fetchall()
@@ -486,13 +522,32 @@ def gettype(area: Optional[str] = None):
 
 # 获取name
 
-def getpartname(type: Optional[str] = None, area: Optional[str] = None):
+def getpartname(type: Optional[str] = None, 
+                area: Optional[str] = None, 
+                flag: Optional[str] = None):
     # 获取获取类型
     db = conn.getConn()
     cursor = db.cursor()
 
-    print(type)
-
+    print(flag)
+    if flag=="all":
+        print("获取全部的信息")
+        cursor.execute(
+            "select part_spec from machine_detail where type like '{0}' group by part_spec "
+            .format(type))
+        specs = cursor.fetchall()
+       
+        cursor.execute(
+            "select part_name from machine_detail where type like '{0}' group by part_name "
+            .format(type))
+        names = cursor.fetchall()
+        res={
+            'specs':specs,
+            'names':names
+        }
+        return res
+        
+    
     if area == None:
         cursor.execute(
             "select * from machine_detail where type='{0}' group by part_name "
@@ -500,6 +555,8 @@ def getpartname(type: Optional[str] = None, area: Optional[str] = None):
         data = cursor.fetchall()
         print('备件管理查询'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
         print(data)
+        
+        
         return data
     else:
         cursor.execute(
@@ -661,7 +718,8 @@ def updatemachine_part(
     print(area)
     print('type')
     print(type)
-
+    print('username')
+    print(username)
     if id != None:
         print('--更改备件信息--')
         try:
@@ -1809,6 +1867,11 @@ def machine_update_log(
     if flag == 'update':
         cursor.execute(f''' INSERT INTO `part`.`log` ( `username`, `area`, `spec`, `item_name`, `count`, `update_date`, `flag`,`remark`) 
         VALUES ('{username}', '{area}', '{spec}', '{item_name}', '{count}', '{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}', 'update','机修备件管理');
+    ''')
+        print("更新记录完成 " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+    if flag == 'inspect':
+        cursor.execute(f''' INSERT INTO `part`.`log` ( `username`, `spec`, `update_date`, `flag`,`remark`) 
+        VALUES ('{username}','{spec}', '{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}', 'inspect','机修巡检未找到卡号信息')
     ''')
         print("更新记录完成 " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
     db.commit()

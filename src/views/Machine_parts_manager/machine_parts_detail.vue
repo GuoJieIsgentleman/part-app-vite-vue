@@ -116,7 +116,7 @@
       >
         <el-table-column prop="id" label="序号" fixed width="50" align="center">
         </el-table-column>
-        <el-table-column
+        <!-- <el-table-column
           show-overflow-tooltip
           prop="machine_part_id"
           label="成套设备id"
@@ -124,7 +124,7 @@
           width="80"
           align="center"
         >
-        </el-table-column>
+        </el-table-column> -->
 
         <el-table-column
           prop="machine_part_name"

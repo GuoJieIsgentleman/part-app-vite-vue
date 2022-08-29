@@ -50,7 +50,7 @@
         </el-table-column>
         <el-table-column prop="flag" label="操作" width="100" align="center">
         </el-table-column>
-        <el-table-column prop="remark" label="类型" width="100" align="center">
+        <el-table-column prop="remark" label="备注" width="100" align="center">
         </el-table-column>
       </el-table>
       <!-- 分页栏 -->

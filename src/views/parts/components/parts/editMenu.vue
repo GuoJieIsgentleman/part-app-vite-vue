@@ -34,7 +34,7 @@
                   />
                   <img v-else :src="state.ruleForm.imageUrl" class="avatar" />
 
-                  <i class="el-icon-plus avatar-uploader-icon"></i>
+                  <!-- <i class="el-icon-plus avatar-uploader-icon"></i> -->
                 </el-upload>
               </div>
               <div v-else>
@@ -69,7 +69,7 @@
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="类型">
               <el-input
-                disabled
+               
                 v-model="state.ruleForm.type"
                 placeholder=""
                 clearable
@@ -79,7 +79,7 @@
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="备件名称">
               <el-input
-                disabled
+                
                 v-model="state.ruleForm.part_name"
                 placeholder=""
                 clearable
@@ -89,7 +89,7 @@
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="备件型号">
               <el-input
-                disabled
+               
                 v-model="state.ruleForm.part_spec"
                 placeholder=""
                 clearable
@@ -107,7 +107,12 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="搁置区域">
-              <el-select
+                <el-input
+                v-model="state.ruleForm.area"
+                placeholder=""
+                clearable
+              ></el-input>
+              <!-- <el-select
                 v-model="state.ruleForm.area"
                 filterable
                 placeholder="备件区域"
@@ -120,7 +125,7 @@
                   :value="item['value']"
                 >
                 </el-option>
-              </el-select>
+              </el-select> -->
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -315,6 +320,15 @@ const emit = defineEmits(["senddata"]);
 // };
 const onSubmit = () => {
   // 做保存 更新表的操作
+
+  if(state.ruleForm.type===""||state.ruleForm.part_name==="" || state.ruleForm.part_spec==="" || state.ruleForm.area==="" )
+  {
+    ElMessage({type:'warning',message:'请完善备件信息'})
+    return
+  }else if(state.ruleForm.balance==="" ||state.ruleForm.balance===""){
+    ElMessage({type:'warning',message:'请填写件数'})
+    return
+  }
 
   state.issave = !state.issave;
   //请求

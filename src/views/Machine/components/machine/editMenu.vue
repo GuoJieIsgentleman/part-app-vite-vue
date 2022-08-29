@@ -106,24 +106,16 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-            <!-- <el-form-item label="搁置区域">
-              <el-select
+              <el-form-item label="搁置区域">
+              <el-input
                 v-model="state.ruleForm.area"
-                filterable
-                placeholder="备件区域"
+                placeholder=""
                 clearable
-              >
-                <el-option
-                  v-for="item in state.ruleForm.userarea"
-                  :key="item['value']"
-                  :label="item['label']"
-                  :value="item['value']"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item> -->
+              ></el-input>
+            </el-form-item>
+           
 
-            <el-input v-model="state.ruleForm.area" placeholder=""></el-input>
+            <!-- <el-input v-model="state.ruleForm.area" placeholder=""></el-input> -->
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="结存">
@@ -175,6 +167,8 @@ import service from "/@/utils/request";
 import { ElMessage } from "element-plus";
 import { formatDate111 } from "/@/utils/formatTime";
 import { store } from "/@/store";
+import { Session } from "/@/utils/storage";
+
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
 
 //编辑框根据权限显示是否让编辑 班长
@@ -184,6 +178,7 @@ const isdisabled = ref(true);
 const { t } = useI18n();
 
 const state = reactive({
+  usernmae: Session.get("userInfo").userName,
   issave: false,
   isShowDialog: false,
   /**
@@ -247,7 +242,7 @@ const beforeAvatarUpload = (file: any) => {
 
   // return isJPG && isLt2M;
   //压缩
-  return new Promise((resolve) => {
+  return new Promise((resolve:any) => {
     // compress(file, 100).then((res) => {
     //   console.log(res);
     //   resolve(res);
@@ -257,7 +252,7 @@ const beforeAvatarUpload = (file: any) => {
       size: 200,
       width: 500,
       height: 500,
-    }).then((res) => {
+    }).then((res:any) => {
       console.log(res);
       resolve(res);
     });
@@ -329,7 +324,15 @@ const emit = defineEmits(["senddata"]);
 // };
 const onSubmit = () => {
   // 做保存 更新表的操作
-
+  
+  if(state.ruleForm.type===""||state.ruleForm.part_name==="" || state.ruleForm.part_spec==="" || state.ruleForm.area==="" )
+  {
+    ElMessage({type:'warning',message:'请完善备件信息'})
+    return
+  }else if(state.ruleForm.balance==="" ||state.ruleForm.balance===""){
+    ElMessage({type:'warning',message:'请填写件数'})
+    return
+  }
   state.issave = !state.issave;
   //请求
 
@@ -344,6 +347,7 @@ const onSubmit = () => {
         new_balance: state.ruleForm.balance,
         new_original: state.ruleForm.original,
         connection: state.ruleForm.connection,
+        username: Session.get("userInfo").userName,
       },
     })
     .then((res) => {

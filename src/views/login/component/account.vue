@@ -30,7 +30,7 @@
       </el-input>
     </el-form-item>
     <el-form-item>
-      <el-row :gutter="15">
+      <!-- <el-row :gutter="15">
         <el-col :span="16">
           <el-input
             type="text"
@@ -47,7 +47,7 @@
             <span class="login-content-code-img">1234</span>
           </div>
         </el-col>
-      </el-row>
+      </el-row> -->
     </el-form-item>
     <el-form-item>
       <el-button
@@ -74,6 +74,7 @@ import { useStore } from "/@/store/index";
 import { Session } from "/@/utils/storage";
 import { formatAxis } from "/@/utils/formatTime";
 import service from "/@/utils/request";
+import { NextLoading } from '/@/utils/loading';
 export default defineComponent({
   name: "login",
   setup() {
@@ -101,6 +102,14 @@ export default defineComponent({
     // 登录
 
     const onSignIn = () => {
+
+
+      if(state.ruleForm.userName=="" ||state.ruleForm.password==""){
+        ElMessage({type:'warning',message:'请输入用户名或者密码'})
+        return
+      }
+
+
       state.loading.signIn = true;
       //验证密码账号
       service
@@ -108,7 +117,7 @@ export default defineComponent({
           userName: state.ruleForm.userName,
           password: state.ruleForm.password,
         })
-        .then((res) => {
+        .then(  (res:any) => {
           if (res.data.flag == "success") {
             // admin 页面权限标识，对应路由 meta.auth，用于控制路由的显示/隐藏
             let adminAuthPageList: Array<string> = ["admin"];
@@ -119,32 +128,15 @@ export default defineComponent({
               "btn.edit",
               "btn.link",
             ];
+            
+            console.log('res account',res);
+            
 
             // test 页面权限标识，对应路由 meta.auth，用于控制路由的显示/隐藏
             let defaultAuthPageList: Array<string> = [res.data.auth];
             // test 按钮权限标识
             let defaultAuthBtnList: Array<string> = JSON.parse(res.data.btn_auth);
-
-            // let otherManagerAuthPageList: Array<string> = [res.data.auth];
-            // // test 按钮权限标识
-            // let otherManagerAuthBtnList: Array<string> = JSON.parse(res.data.btn_auth);
-            // // 不同用户模拟不同的用户权限
-            // if (res.data.auth === "admin") {
-            //   defaultAuthPageList = adminAuthPageList;
-            //   defaultAuthBtnList = adminAuthBtnList;
-            // } else if (
-            //   res.data.auth === "electrician_manager" ||
-            //   res.data.auth === "machine_manager"
-            // ) {
-            //   defaultAuthPageList = otherManagerAuthPageList;
-            //   defaultAuthBtnList = otherManagerAuthBtnList;
-            // } else {
-            //   defaultAuthPageList = otherAuthPageList;
-            //   defaultAuthBtnList = otherAuthBtnList;
-            // }
-            console.log("res.data.areainfo");
-            console.log(JSON.parse(res.data.areainfo));
-            console.log(JSON.parse(res.data.btn_auth));
+           
             // 用户信息模拟数据
             const userInfos = {
               userName: state.ruleForm.userName,
@@ -172,8 +164,9 @@ export default defineComponent({
             //   await initFrontEndControlRoutes();
             //   signInSuccess();
             // } else {
-            //   // 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
-            //   // 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
+
+           // 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
+             // 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
             //   await initBackEndControlRoutes();
             //   // 执行完 initBackEndControlRoutes，再执行 signInSuccess
             //   signInSuccess();
@@ -193,7 +186,7 @@ export default defineComponent({
             state.loading.signIn = !state.loading.signIn;
           }
         })
-        .catch((err) => {
+        .catch((err:any) => {
           console.log("err");
           console.log(err);
 
@@ -214,8 +207,10 @@ export default defineComponent({
       // 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
       // 如果是复制粘贴的路径，非首页/登录页，那么登录成功后重定向到对应的路径中
       await initBackEndControlRoutes();
-
+      
       if (route.query?.redirect) {
+        console.log('route.query?.redirect',route.query?.redirect);
+        
         router.push({
           path: route.query?.redirect as string,
           query:
@@ -224,17 +219,25 @@ export default defineComponent({
               : "",
         });
       } else {
+        console.log('router.push("/")',router.push("/"));
+        
+
         router.push("/");
       }
       // 登录成功提示
-      setTimeout(() => {
-        // 关闭 loading
-        state.loading.signIn = true;
-        const signInText = t("message.signInText");
-        ElMessage.success(`${currentTimeInfo}，${signInText}`);
-        // 修复防止退出登录再进入界面时，需要刷新样式才生效的问题，初始化布局样式等(登录的时候触发，目前方案)
-        proxy.mittBus.emit("onSignInClick");
-      }, 300);
+      // setTimeout(() => {
+      //   // 关闭 loading
+      //   state.loading.signIn = true;
+      //   const signInText = t("message.signInText");
+      //   ElMessage.success(`${currentTimeInfo}，${signInText}`);
+      //   // 修复防止退出登录再进入界面时，需要刷新样式才生效的问题，初始化布局样式等(登录的时候触发，目前方案)
+      //   proxy.mittBus.emit("onSignInClick");
+      // }, 300);
+      state.loading.signIn = true;
+			const signInText = t('message.signInText');
+			ElMessage.success(`${currentTimeInfo}，${signInText}`);
+			// 添加 loading，防止第一次进入界面时出现短暂空白
+			NextLoading.start();
     };
     return {
       currentTime,

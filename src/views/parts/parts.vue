@@ -21,96 +21,42 @@
       <el-row :gutter="24">
         <el-col :span="12" :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-tag type="danger" style="background-color: red; color: white">
-            库存数为1时显示红色</el-tag
-          >
+            库存数为1时显示红色</el-tag>
         </el-col>
         <el-col :span="12" :xs="12" :sm="12" :md="12" :lg="12" :xl="12"> </el-col>
       </el-row>
-      <el-select
-        v-model="state.part_area_value"
-        filterable
-        placeholder="备件区域"
-        clearable
-      >
-        <el-option
-          v-for="item in state.ruleForm.userarea"
-          :key="item['value']"
-          :label="item['label']"
-          :value="item['value']"
-        >
+      <el-select v-model="state.part_area_value" filterable placeholder="备件区域" clearable>
+        <el-option v-for="item in state.ruleForm.userarea" :key="item['value']" :label="item['label']"
+          :value="item['value']">
         </el-option>
       </el-select>
 
-      <el-select
-        @change="getpartname(state.part_type_value)"
-        v-model="state.part_type_value"
-        filterable
-        placeholder="备件类型"
-        clearable
-      >
-        <el-option
-          v-for="item in state.ruleForm.usetype"
-          :key="item['value']"
-          :label="item['label']"
-          :value="item['value']"
-        >
+      <el-select @change="getpartname(state.part_type_value)" v-model="state.part_type_value" filterable
+        placeholder="备件类型" clearable>
+        <el-option v-for="item in state.ruleForm.usetype" :key="item['value']" :label="item['label']"
+          :value="item['value']">
         </el-option>
       </el-select>
 
-      <el-select
-        v-model="state.part_name_value"
-        @change="getspesc(state.part_name_value)"
-        filterable
-        placeholder="备件名称"
-        clearable
-      >
-        <el-option
-          v-for="item in state.ruleForm.part_name"
-          :key="item['value']"
-          :label="item['label']"
-          :value="item['value']"
-        >
+      <el-select v-model="state.part_name_value" @change="getspesc(state.part_name_value)" filterable placeholder="备件名称"
+        clearable>
+        <el-option v-for="item in state.ruleForm.part_name" :key="item['value']" :label="item['label']"
+          :value="item['value']">
         </el-option>
       </el-select>
-      <el-select
-        v-model="state.part_spec_value"
-        filterable
-        placeholder="规格型号"
-        clearable
-      >
-        <el-option
-          v-for="item in state.ruleForm.usespesc"
-          :key="item['value']"
-          :label="item['label']"
-          :value="item['value']"
-        >
+      <el-select v-model="state.part_spec_value" filterable placeholder="规格型号" clearable>
+        <el-option v-for="item in state.ruleForm.usespesc" :key="item['value']" :label="item['label']"
+          :value="item['value']">
         </el-option>
       </el-select>
 
       <el-button @click="selectparts()" type="success">查询</el-button>
 
       <!-- :row-class-name="tableRowClassName" -->
-      <el-table
-        id="outTable"
-        v-loading="state.loading"
-        :data="state.partslist"
-        :ref="filterTable"
-        border
-        show
-        align="center"
-        height="600"
-        style="width: 100%"
-        header-align="center"
-        max-height="900"
-        fit
-        :row-style="{ height: '10px' }"
-        :cell-style="{ padding: '5px 0' }"
-        size="mini"
-        :cell-class-name="addClass"
-        show-summary
-        :summary-method="getSummaries"
-        row-key="id"
-      >
+      <el-table id="outTable" v-loading="state.loading" :data="state.partslist" :ref="filterTable" border show
+        align="center" height="600" style="width: 100%" header-align="center" max-height="900" fit
+        :row-style="{ height: '10px' }" :cell-style="{ padding: '5px 0' }" size="mini" :cell-class-name="addClass"
+        show-summary :summary-method="getSummaries" row-key="id">
         <el-table-column prop="id" label="序号" fixed width="50" align="center">
         </el-table-column>
         <el-table-column prop="part_name" label="备件名称" width="180" align="center">
@@ -119,21 +65,13 @@
         <el-table-column prop="part_spec" label="规格型号" width="180" align="center">
         </el-table-column>
 
-        <el-table-column
-          prop="connection"
-          label="机械连接方式"
-          width="180"
-          align="center"
-        >
+        <el-table-column prop="connection" label="机械连接方式" width="180" align="center">
         </el-table-column>
         <el-table-column prop="partimgsrc" label="图片展示" width="200" align="center">
           <template #default="scope">
             <div v-if="scope.row.partimgsrc != ''">
-              <el-image
-                style="width: 100px; height: 100px"
-                :preview-src-list="[scope.row.partimgsrc]"
-                :src="scope.row.partimgsrc"
-              >
+              <el-image style="width: 100px; height: 100px" :preview-src-list="[scope.row.partimgsrc]"
+                :src="scope.row.partimgsrc">
               </el-image>
             </div>
             <div v-else>
@@ -145,59 +83,39 @@
 
         <el-table-column prop="area" min-width="150" align="center" label="搁置产线区域">
         </el-table-column>
-        <el-table-column
-          prop="balance"
-          label="结存剩余（台)"
-          min-width="100"
-          align="center"
-        >
+        <el-table-column prop="balance" label="结存剩余（台)" min-width="100" align="center">
         </el-table-column>
-        <el-table-column
-          prop="original"
-          label="原有数量（台)"
-          min-width="100"
-          align="center"
-        >
+        <el-table-column prop="original" label="原有数量（台)" min-width="100" align="center">
         </el-table-column>
         <el-table-column prop="type" label="备件类型" width="100" align="center">
         </el-table-column>
 
         <el-table-column label="操作" align="center" min-width="120">
           <template #default="scope">
-            <Auths :value="['btn.edit']">
-              <el-button
-                type="primary"
-                v-if="scope.row['isShow']"
-                @click="onOpenEditMenu(scope.row, scope.$index)"
-                icon="el-icon-edit"
-                circle
-              ></el-button>
+
+            <Auths :value="['btn.edit']" class="displayStyle">
+              <el-button size="small" type="primary" v-if="scope.row['isShow']" @click="onOpenEditMenu(scope.row, scope.$index)"
+                >编辑</el-button>
             </Auths>
-            <Auths :value="['btn.del']">
-              <el-button
-                type="warning"
-                @click="onTabelRowDel(scope.row, scope.$index)"
-                icon="el-icon-delete"
-                circle
-              ></el-button>
+         
+            <Auths :value="['btn.del']"  class="displayStyle">
+              <el-button size="small" type="warning" @click="onTabelRowDel(scope.row, scope.$index)"  >
+              删除
+              </el-button>
             </Auths>
           </template>
         </el-table-column>
       </el-table>
       <!-- 分页栏 -->
       <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :page-size="state.pagearray"
-        @prev-click="prev()"
-        @next-click="next()"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="state.total"
-        prev-text="上一页"
-        next-text="下一页"
-        :page-count="state.pagecount"
-      />
+       background @size-change="handleSizeChange"
+       @current-change="handleCurrentChange"
+        :page-size="state.pagesize"
+        :page-sizes="state.pagearray"
+        @prev-click="prev()" @next-click="next()"
+        layout="total, sizes, prev, pager, next, jumper" 
+        :total="state.total" prev-text="上一页" next-text="下一页"
+        :page-count="state.pagecount" />
     </el-card>
     <AddMenu ref="addMenuRef" />
     <EditMenu ref="editMenuRef" @senddata="setdata" />
@@ -279,10 +197,10 @@ const currentPage4 = (val: any) => {
   // console.log(val.area);
 };
 
-const filterHandler = (value: any, row: any, column: any) => {};
+const filterHandler = (value: any, row: any, column: any) => { };
 
-const clearFilter = () => {};
-const resetDateFilter = () => {};
+const clearFilter = () => { };
+const resetDateFilter = () => { };
 const handleClick = (val: any) => {
   // console.log(val.area);
 };
@@ -344,7 +262,7 @@ const state = reactive({
   srcList: [""],
   rowdata: [],
 });
-const filterTable = (el: any) => {};
+const filterTable = (el: any) => { };
 
 const getusearea = async () => {
   let { data: res } = await service.get(`/getusearea`);
@@ -365,12 +283,18 @@ const reciveparts = (page?: any, pagesize?: any) => {
         pagesize: pagesize,
       },
     })
-    .then((res) => {
-      if (res != null) {
+    .then((res: any) => {
+
+     
+
+      if (res.data != null) {
         state.pagecount = res.data.pages;
         state.total = res.data.total;
         state.loading = false;
-        state.partslist = res.data.data1.map((item: any[]) => {
+        state.partslist = res.data.data1.map((item: any) => {
+       
+
+
           return {
             id: item[0],
             part_name: item[1],
@@ -389,7 +313,7 @@ const reciveparts = (page?: any, pagesize?: any) => {
       console.log("state.partslist");
       console.log(state.partslist);
     })
-    .catch((err) => {
+    .catch((err: any) => {
       ElMessage({ type: "error", message: err.data });
     });
 };
@@ -398,8 +322,10 @@ const checkIsShow = (area: any) => {
   let flag = false;
 
   if (
-    Session.get("userInfo").authPageList[0] == "Monitor" ||
-    Session.get("userInfo").authPageList[0] == "machine_monitor"
+    Session.get("userInfo").authPageList[0] === "Monitor" || 
+    Session.get("userInfo").authPageList[0] === "machine_monitor"
+   
+
   ) {
     state.areainfo.map((item: any) => {
       if (area.slice(0, 5) == item.slice(0, 5)) {
@@ -408,6 +334,10 @@ const checkIsShow = (area: any) => {
     });
   } else {
     flag = false;
+  }
+
+  if(  Session.get("userInfo").authPageList[0] === "admin"){
+    return true
   }
 
   console.log(`${area}+++++++++${flag}`);
@@ -500,7 +430,7 @@ const onTabelRowDel = (row: any, index: any) => {
             id: row.id,
           },
         })
-        .then((res) => {
+        .then((res: any) => {
           ElMessage({
             message: res.data,
             type: "success",
@@ -508,14 +438,14 @@ const onTabelRowDel = (row: any, index: any) => {
 
           initpart();
         })
-        .catch((err) => {
+        .catch((err: any) => {
           ElMessage({
             message: err.data,
             type: "warning",
           });
         });
     })
-    .catch(() => {});
+    .catch(() => { });
 };
 
 const selectparts = async () => {
@@ -529,7 +459,7 @@ const selectparts = async () => {
       type: state.part_type_value,
     },
   });
-  state.partslist = res.map((item: any[]) => {
+  state.partslist = res.map((item: any) => {
     return {
       id: item[0],
       part_name: item[1],
@@ -563,7 +493,7 @@ const exportExcel1 = () => {
 
 const getSummaries = (param: any) => {
   const { columns, data } = param;
-  const sums: any[] = [];
+  const sums: any = [];
   columns.forEach((column: any, index: any) => {
     if (index === 0) {
       sums[index] = "合计";
@@ -606,6 +536,7 @@ const getSummaries = (param: any) => {
   width: 20px; // 横向滚动条
   height: 20px; // 纵向滚动条 必写
 }
+
 // 滚动条的滑块
 .el-table__body-wrapper::-webkit-scrollbar-thumb {
   background-color: #ddd;
@@ -626,19 +557,26 @@ const getSummaries = (param: any) => {
   background-color: rgb(88, 199, 78);
   color: white;
 }
+
 .el-table .success-row {
   --el-table-tr-background-color: var(--el-color-success-lighter);
 }
-.el-table tbody tr:hover > td {
+
+.el-table tbody tr:hover>td {
   background-color: #96b7dc !important;
   color: black;
 }
 
-#app > section > div.el-backtop {
+#app>section>div.el-backtop {
   cursor: pointer;
   z-index: 5;
   right: 40px;
   bottom: 40px;
   top: 500px;
+}
+
+.displayStyle{
+  display: inline-block;
+
 }
 </style>

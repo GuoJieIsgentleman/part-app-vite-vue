@@ -1,134 +1,88 @@
 <template>
   <div class="system-menu-container">
-    <el-dialog
-      title="机修使用件添加"
-      @close="initForm"
-      v-model="state.isShowDialog"
-      width="769px"
-    >
+    <el-dialog title="机修使用件添加" @close="initForm" v-model="state.isShowDialog" width="769px">
       <el-form :model="state.ruleForm" label-width="80px">
         <el-row :gutter="50">
-          <el-col :span="5">
-            <el-upload
-              class="avatar-uploader"
-              ref="upload1"
-              :on-change="imgpreivewFLP"
-              :auto-upload="false"
-              :action="
+          <el-space wrap :size="20">
+            <el-col :span="5">
+
+              <el-upload class="avatar-uploader" ref="upload1" :on-change="imgpreivewFLP" :auto-upload="false" :action="
                 'http://61.185.74.251:5556/machine_procline_detail_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString() +
                 '&&flag=FLP'
-              "
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
-              <img v-if="state.ruleForm.FLP" :src="state.ruleForm.FLP" class="imgstyle" />
+              " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+              
+                <img v-if="state.ruleForm.FLP" :src="state.ruleForm.FLP" class="imgstyle" />
 
-              <el-icon v-else class="avatar-uploader-icon"><Plus />法兰盘外径</el-icon>
-            </el-upload>
-          </el-col>
+                <el-icon v-else class="avatar-uploader-icon">图1</el-icon>
+              </el-upload>
 
-          <el-col :span="5">
-            <el-upload
-              class="avatar-uploader"
-              ref="upload2"
-              :on-change="imgpreivewZD"
-              :auto-upload="false"
-              :action="
+            </el-col>
+
+            <el-col :span="5">
+              <el-upload class="avatar-uploader" ref="upload2" :on-change="imgpreivewZD" :auto-upload="false" :action="
                 'http://61.185.74.251:5556/machine_procline_detail_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString() +
                 '&&flag=ZD'
-              "
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
-              <img v-if="state.ruleForm.ZD" :src="state.ruleForm.ZD" class="imgstyle" />
+              " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+               
+                <img v-if="state.ruleForm.ZD" :src="state.ruleForm.ZD" class="imgstyle" />
 
-              <el-icon v-else class="avatar-uploader-icon"><Plus />轴对内径</el-icon>
-            </el-upload></el-col
-          >
-          <el-col :span="5">
-            <el-upload
-              class="avatar-uploader"
-              ref="upload3"
-              :on-change="imgpreivewJC"
-              :auto-upload="false"
-              :action="
+                <el-icon v-else class="avatar-uploader-icon">图2</el-icon>
+              </el-upload>
+            </el-col>
+            <el-col :span="5">
+              <el-upload class="avatar-uploader" ref="upload3" :on-change="imgpreivewJC" :auto-upload="false" :action="
                 'http://61.185.74.251:5556/machine_procline_detail_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString() +
                 '&&flag=JC'
-              "
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
-              <img v-if="state.ruleForm.JC" :src="state.ruleForm.JC" class="imgstyle" />
+              " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+              
+                <img v-if="state.ruleForm.JC" :src="state.ruleForm.JC" class="imgstyle" />
 
-              <el-icon v-else class="avatar-uploader-icon"><Plus />键槽</el-icon>
-            </el-upload></el-col
-          >
-          <el-col :span="5">
-            <el-upload
-              class="avata"
-              ref="upload4"
-              :on-change="imgpreivewKS"
-              :auto-upload="false"
-              :action="
+                <el-icon v-else class="avatar-uploader-icon">图3</el-icon>
+              </el-upload>
+            </el-col>
+           
+            <el-col :span="5">
+               <el-upload class="avata" ref="upload4" :on-change="imgpreivewKS" :auto-upload="false" :action="
                 'http://61.185.74.251:5556/machine_procline_detail_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString() +
                 '&&flag=KS'
-              "
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
-              <img v-if="state.ruleForm.KS" :src="state.ruleForm.KS" class="imgstyle" />
+              " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+               
+                <img v-if="state.ruleForm.KS" :src="state.ruleForm.KS" class="imgstyle" />
 
-              <el-icon v-else class="avatar-uploader-icon"><Plus />孔数</el-icon>
-            </el-upload>
-          </el-col>
-          <el-col :span="5">
-            <el-upload
-              class="avatar-uploader"
-              ref="upload5"
-              :on-change="imgpreivewKZXJ"
-              :auto-upload="false"
-              :action="
+                <el-icon v-else class="avatar-uploader-icon">图4</el-icon>
+              </el-upload>
+
+            </el-col>
+                 <el-col :span="5">
+              <el-upload class="avatar-uploader" ref="upload5" :on-change="imgpreivewKZXJ" :auto-upload="false" :action="
                 'http://61.185.74.251:5556/machine_procline_detail_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString() +
                 '&&flag=KZXJ'
-              "
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
-              <img
-                v-if="state.ruleForm.KZXJ"
-                :src="state.ruleForm.KZXJ"
-                class="imgstyle"
-              />
+              " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+       
+                <img v-if="state.ruleForm.KZXJ" :src="state.ruleForm.KZXJ" class="imgstyle" />
 
-              <el-icon v-else class="avatar-uploader-icon"><Plus />孔中心距</el-icon>
-            </el-upload>
-          </el-col>
+                <el-icon v-else class="avatar-uploader-icon">图5</el-icon>
+              </el-upload>
+
+            </el-col>
+          </el-space>
         </el-row>
+        <br/>
         <el-row :gutter="35">
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="类型">
@@ -142,36 +96,19 @@
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="备件名称">
-              <el-input
-                v-model="state.ruleForm.part_name"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.part_name" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="备件规格">
-              <el-input
-                v-model="state.ruleForm.part_spec"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.part_spec" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="使用区域">
-              <el-select
-                v-model="state.ruleForm.part_area_value"
-                filterable
-                placeholder="备件区域"
-                clearable
-              >
-                <el-option
-                  v-for="item in state.ruleForm.userarea"
-                  :key="item['value']"
-                  :label="item['label']"
-                  :value="item['value']"
-                >
+              <el-select v-model="state.ruleForm.part_area_value" filterable placeholder="备件区域" clearable>
+                <el-option v-for="item in state.ruleForm.userarea" :key="item['value']" :label="item['label']"
+                  :value="item['value']">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -182,15 +119,11 @@
               <el-input v-model="state.ruleForm.remark" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
-        </el-row> </el-form
-      ><template #footer
-        ><span class="dialog-footer">
+        </el-row>
+      </el-form><template #footer><span class="dialog-footer">
           <el-button @click="onCancel" size="small">取 消</el-button>
-          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small"
-            >保存</el-button
-          >
-        </span></template
-      >
+          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small">保存</el-button>
+        </span></template>
     </el-dialog>
   </div>
 </template>
@@ -200,6 +133,7 @@ import { reactive, toRefs, onUnmounted, onMounted, ref } from "vue";
 import service from "/@/utils/request";
 import { compress, compressAccurately } from "image-conversion";
 import { ElMessage } from "element-plus";
+import { Session } from "/@/utils/storage";
 
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
 // "element-plus": "^1.0.2-beta.70",
@@ -333,6 +267,7 @@ const onSubmit = () => {
         procline: state.ruleForm.part_area_value,
         type: state.ruleForm.type,
         area: state.ruleForm.area,
+        username: Session.get("userInfo").userName,
       },
     })
     .then((res) => {

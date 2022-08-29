@@ -1,4 +1,6 @@
 
+from msilib.schema import tables
+from tokenize import tabsize
 import Machine_procline
 from flask import jsonify, request
 import requests
@@ -14,7 +16,7 @@ import hmac
 import json
 import os
 import time
-from typing import Optional
+from typing import Optional, Type
 from pydantic.errors import StrError
 
 from fastapi.staticfiles import StaticFiles
@@ -39,9 +41,9 @@ origins = [
 
 
 templates = Jinja2Templates(
-    directory=r"F:\partapp\part-app-vite-momo\part-app-vite\part-app-vite\src\serverpy\templates")
+    directory=r"G:\part-app-vite\part-app-vite\src\serverpy\templates")
 
-app.mount("/static", StaticFiles(directory=r"F:\partapp\part-app-vite-momo\part-app-vite\part-app-vite\src\serverpy\static"), name="static")
+app.mount("/static", StaticFiles(directory=r"G:\part-app-vite\part-app-vite\src\serverpy\static"), name="static")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -82,14 +84,14 @@ def read_item(username: str, password: str):
     data = cursor.fetchall()
     print(len(data))
     if (len(data) == 0):
-        print(usertoken)
+        #print(usertoken)
         return data
     # 密码验证成功 生成token 插入数据库
     else:
         usertokenpwd = generate_token('username')
         usertoken[username] = usertokenpwd
-        print(usertoken)
-        print(data)
+        #print(usertoken)
+        #print(data)
 
         userdata = {'username': username, 'token': usertoken[username]}
         return json.dumps(userdata)
@@ -814,7 +816,7 @@ def adduserecord(userecordform: Optional[userecordform] = None):
     print(userecordform.flag)
 
     cursor.execute(
-        '''select *  from  part_detail where area='{0}'and part_spec='{1}' and type='{2}' and part_name='{3}'
+        '''select *  from  part_detail where area like '%{0}%'and part_spec='{1}' and type='{2}' and part_name='{3}'
     '''.format(userecordform.area, userecordform.spec, userecordform.type,
                userecordform.part_name))
     data = cursor.fetchall()
@@ -826,7 +828,7 @@ def adduserecord(userecordform: Optional[userecordform] = None):
 
     count = data[0][4]
     cursor.execute('''update part_detail set balance={0}-{5}
-        where part_name='{1}' and part_spec='{2}' and area='{3}' and type='{4}'
+        where part_name='{1}' and part_spec='{2}' and area like '%{3}%' and type='{4}'
     '''.format(count, userecordform.part_name, userecordform.spec,
                userecordform.area, userecordform.type,
                userecordform.use_count))
@@ -1977,17 +1979,16 @@ def getusearea():
     print('获取区域'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
     db = getConn()
     cursor = db.cursor()
-    cursor.execute('''SELECT
-                    DISTINCT
-                      CASE
-                    WHEN char_LENGTH(area) > 8 THEN
-                      left (area, 8)
-                    else area
-                    END AS aaa
-                    FROM
-                      part_detail
-                    GROUP BY
-                      area
+    cursor.execute('''
+                   select case when left (area, 2)='方镀' then left (area, 6)  
+when left (area, 2)='南污' then left (area, 5)  
+when left (area, 2)='值班' then left (area, 5)  
+when left (area, 2)='圆镀' then left (area, 6)  
+else  '其他'
+end areas
+from part_detail
+group by areas
+
 ''')
 
     data = cursor.fetchall()
@@ -2010,7 +2011,7 @@ def gettype(area: Optional[str] = None):
         print(data)
         return data
     else:
-        sql = "select type from part_detail where area='{0}'group by type".format(
+        sql = "select type from part_detail where area like'{0}%'group by type".format(
             area)
         cursor.execute(sql
                        )
@@ -2038,7 +2039,7 @@ def getpartname(type: Optional[str] = None, area: Optional[str] = None):
         return data
     else:
         cursor.execute(
-            "select * from part_detail where type='{0}' and area='{1}'"
+            "select * from part_detail where type = '{0}' and area like '%{1}%'"
             .format(type, area))
         data = cursor.fetchall()
         print('添加领用查询'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
@@ -2064,7 +2065,7 @@ def getbalance(type: Optional[str] = None,
     print(part_name)
 
     cursor.execute(
-        "select * from part_detail where area='{0}' and type='{1}' and part_spec='{2}' and part_name='{3}' "
+        "select * from part_detail where area like '%{0}%' and type='{1}' and part_spec='{2}' and part_name='{3}' "
         .format(area, type, spec, part_name))
     data = cursor.fetchall()
 
@@ -2091,7 +2092,7 @@ def getspesc(type: Optional[str] = None,  use_part_name: Optional[str] = None, a
         return data
     else:
         cursor.execute(
-            "select * from part_detail where 1=1 and type='{0}' and part_name='{1}' and area='{2}'  ".format(
+            "select * from part_detail where 1=1 and type='{0}' and part_name='{1}' and area like '%{2}%'  ".format(
                 type, use_part_name, area))
         data = cursor.fetchall()
         print(data)
@@ -2114,6 +2115,8 @@ def getmenus(currentpagecount:  Optional[int] = 0, pagesize: Optional[int] = 0):
     cursor.execute("select count(id) from part_detail")
     data = cursor.fetchall()
 
+    
+    pages=0
     # 查询分多少页
     if currentpagecount != 0:
         total = data[0][0]
@@ -2197,45 +2200,290 @@ def selectpart(
         # print('进到有条件')
         return data
 
+@app.get('/getroles')
+def getroles(currentpagecount:  Optional[int] = 0, pagesize: Optional[int] = 0):
+    print(currentpagecount)
+    # 传过来取多少页的数据
+    print(pagesize)
+    
+    db = getConn()
+    print('获取角色列表'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+    cursor = db.cursor()
+    sql=f''' select * from user_role '''
+    cursor.execute(sql)
+    
+    res=cursor.fetchall()
+    
+    cursor.execute("select count(id) from user_role ")
+    data = cursor.fetchall()
+    pages=0
+    # 查询分多少页
+    if currentpagecount != 0:
+        total = data[0][0]
+        tem = total % currentpagecount
+        tem1 = total // currentpagecount
+
+        # 算出总页数
+        pages = tem if tem == 0 else tem1+1
+    
+    start = currentpagecount*(pagesize-1)
+    end = currentpagecount
+    print('start')
+    print(start)
+    print('end')
+    print(end)
+    print('pages')
+    print(pages)
+    print(data[0][0])
+    print('获取用户列表'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+    cursor.execute(
+        "select * from user_role order by id  limit {0},{1}".format(start, end))
+    data1 = cursor.fetchall()
+
+    #
+    res = {
+        'total': data[0][0],
+        'data1': data1,
+        'pages': pages
+    }
+    print(res)
+    return res
+
+
+@app.get('/getUserRoles')
+def getUserRoles(auth_code:  Optional[str] =None):
+    
+    
+    sql=""
+    if auth_code == None:
+        sql=" select * from menu_list"
+    else:
+        sql=f''' 
+      select mm.id,mm.menu_name,aa.auth_code,aa.menu_name,mm.name,mm.parentname from menu_list mm left join 
+    (
+    select ml.id,ul.auth_code,ml.menu_name from user_role_list ul left join menu_list ml
+    on ul.`name`=ml.`name` and ul.component = ml.compent
+    where ul.auth_code='{auth_code}'
+    and ml.menu_name is not null) aa
+    on aa.menu_name=mm.menu_name and mm.id=aa.id
+		where aa.auth_code  is not null
+    order by mm.id
+    '''    
+    db = getConn()
+    
+    
+    print('sql',sql)
+    cursor = db.cursor()
+    
+    cursor.execute(sql)
+    data1 = cursor.fetchall()
+    
+    return data1
+
+# del Role
+@app.get('/deleteRole')
+def deleteRole(auth_code:Optional[str] = None,auth_name:Optional[str] = None,id:Optional[str] = None):
+    db = getConn()
+    cursor = db.cursor()
+    delsql=f''' delete from user_role 
+    where auth_code='{auth_code}' and auth_name='{auth_name}' and id ='{id}' '''
+    cursor.execute(delsql)
+    db.commit()
+    print('删除角色成功')
+    return '删除成功'
+
+#add Role
+@app.get('/addRole')
+def addRole(auth_code:Optional[str] = None,auth_name:Optional[str] = None):
+    db = getConn()
+    cursor = db.cursor()
+    addsql=f''' INSERT INTO `part`.`user_role` ( `auth_name`, `auth_code`, `btn_auth`)
+                VALUES ('{auth_name}', '{auth_code}', '["btn.add","btn.edit"]');
+ '''
+    cursor.execute(addsql)
+    db.commit()
+    print('添加角色成功')
+    return '添加角色成功'
+
+
+
+
+@app.get('/updateUserRole')
+def updateUserRole(auth_list:Optional[str] = None,current_authcode: Optional[str] = None):
+    
+    if auth_list==None or current_authcode==None:
+        return
+    print('传过来的auth_list',auth_list)
+    authIds=list(eval(auth_list))
+    authIds.append(31)
+    authIds=set(authIds)
+    authIdStr=auth_list[1:-1]
+    print(authIdStr)
+    #删除原来的权限
+    db = getConn()
+    cursor = db.cursor()
+    delsql=f''' delete from user_role_list where  auth_code='{current_authcode}'  '''
+    cursor.execute(delsql)
+    db.commit()
+    print('删除成功')
+    
+    compent=''
+    path=''
+    name=''
+    title=''
+    icon=''
+    redirect=''
+    parentname=''
+    number=''
+    
+    #add role
+    for i in authIds:
+        print(i)
+        temp=0
+        if i==30:
+            temp=1
+        else:
+            temp=2
+        addsql=f'''
+            INSERT INTO user_role_list
+( `auth_code`, `component`, `path`, `name`, `title`, `icon`, `redirect`, `parentname`, `number`, `menuId`) 
+select ue.auth_code,tt.compent as component ,tt.path,tt.`name`,tt.title,tt.icon,tt.redirect,tt.parentname,{temp} as number,tt.id  as menuId
+from menu_list tt , user_role ue  where tt.id={i} and ue.auth_code='{current_authcode}'
+        
+                '''
+        cursor.execute(addsql)
+        db.commit()
+        print('添加成功')
+    return '添加成功'
+    # for t in temp:
+    #     print('auth_list',t['id'],t['auth_code'],t['menu_name'])
+    #     #update
+        
+    #     sql=f'''  '''
+    #     cursor.execute(sql)
+
+
+
+
 
 # 获取用户列表
 @app.get('/getusers')
-def getusers():
+def getusers(userName:  Optional[str] = None,currentpagecount:  Optional[int] = 0, pagesize: Optional[int] = 0):
     db = getConn()
     print('获取用户列表'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
     cursor = db.cursor()
-    cursor.execute(
-        "select * from user rr left join user_role re on re.auth_code=rr.role")
-    data = cursor.fetchall()
+    #find  username
+    
+    print('userName',userName)
+    if userName!= None:
+        findsql=f''' select * from user where username like '%{userName}%' '''
+        cursor.execute(findsql)
+        res=cursor.fetchall()
+        return res  
+    
+    #10 6
+     # 每页多少条数据 默认10
+    print('currentpagecount',currentpagecount)
+    # 传过来取多少页的数据
+    print('pagesize',pagesize)
+    
 
-    return data
+    # 查询多少条
+    cursor.execute("select count(*) from user rr left join user_role re on re.auth_code=rr.role")
+    data = cursor.fetchall()
+    pages=0
+    total=0
+    # 查询分多少页
+    if currentpagecount != 0:
+        total = data[0][0]
+        tem = total % currentpagecount
+        tem1 = total // currentpagecount
+
+        # 算出总页数
+        print('tem',tem)
+        print('tem1',tem1)
+      
+        pages = tem1 if tem == 0 else tem1+1
+
+    start = currentpagecount*(pagesize-1)
+    end = currentpagecount
+    print('start',start)
+  
+    print('end',end)
+
+    print('pages',pages)
+ 
+    print('total',total)
+    print('获取用户列表'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+    cursor.execute(
+        "select * from user rr left join user_role re on re.auth_code=rr.role order by rr.id   limit {0},{1}".format(start, end))
+    data1 = cursor.fetchall()
+
+    #
+    res = {
+        'total': data[0][0],
+        'data1': data1,
+        'pages': pages
+    }
+    print(res)
+    #db = getConn()
+    # print('获取用户列表'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+    # cursor = db.cursor()
+    # cursor.execute(
+    #     "select * from user rr left join user_role re on re.auth_code=rr.role by ")
+    # data = cursor.fetchall()
+
+    return res
 
 
 @app.get('/updateuser')
 def getusers(username: Optional[str] = None,
              password: Optional[str] = None,
              role: Optional[str] = None,
-             area: Optional[str] = None,
+             area: Optional[str] = "",
+             inspect_area: Optional[str] = "",
              flag: Optional[str] = None):
     db = getConn()
 
     cursor = db.cursor()
     print('area----')
     print(area)
+    print('inspect_area----')
+    print(inspect_area)
     print(role)
-    if flag == '编辑':
-        cursor.execute('''
+    
+    sql=f''' '''
+    area1=''
+    password1=''
+
+    inspect_area1=''
+    if area!='':
+        area1=f''',`area` ='{area}' '''
+    else:
+        area1=f''',`area` =null '''
+    if password!='':
+        password1=f''',password='{password}' '''
+    else:
+        password1=f''',password=null '''
+        
+    if inspect_area!='':
+        inspect_area1=f''',`inspect_area` ='{inspect_area}' '''
+    else:
+        inspect_area1=f''',`inspect_area` =null '''  
+            
+    endsql=f'''
                        UPDATE `part`.`user`
                       SET
-
-                       `password` = '{0}',
-                       `role` = '{1}',
-                       `area` ='{3}'
+                         `role` = '{role}'
+                       {password1}
+                        {area1}
+                        {inspect_area1}
                       WHERE
-                      	`username` = '{2}'
-
-
-                       '''.format(password, role, username, area))
+                      	`username` = '{username}'
+                       '''   
+    print(endsql)
+    if flag == '编辑':
+        cursor.execute(endsql)
         db.commit()
         print('修改信息成功')
         return '修改成功'
@@ -2270,10 +2518,21 @@ def generate_token(key):
 
 # 测试获取路由列表
 
+
+def arr2tree(source, parent):
+    tree = []
+    for item in source:
+        if item["parent_name"] == parent:
+           
+                item["children"] = arr2tree(source, item["name"])
+                tree.append(item)
+    return tree
+
+
 @app.get('/getroutes')
 def getroutes(auth: str):
     # auth: str
-    print(auth)
+    print('auth',auth)
 
     db = getConn()
 
@@ -2281,14 +2540,20 @@ def getroutes(auth: str):
 
     # 父路由
     cursor.execute(
-        "select * from user_role_list where auth_code='{0}' and parentname='' order by number ".format(auth))
+        f''' select * from user_role_list where auth_code='{auth}' and parentname is null order by number ''')
     data1 = cursor.fetchall()
-    print(data1)
+    print('data1 父路由',data1)
     # 子路由
     cursor.execute(
-        "select * from user_role_list where auth_code='{0}' and parentname !='' order by number".format(auth))
+       f''' select * from user_role_list where auth_code='{auth}' and parentname is not null  order by number ''')
     data2 = cursor.fetchall()
-    print(data2)
+    print('data2 子路由',data2)
+    
+    
+    # cursor.execute(
+    #     f''' select * from user_role_list where auth_code='{auth}'  order by number ''')
+    # data3 = cursor.fetchall()
+    # print('data3',data3)
     # 获取后端路由表  通过传进来的角色
     # 处理路由
 
@@ -2313,7 +2578,7 @@ def getroutes(auth: str):
                         "title": ''.join(i[5]),
                         "isLink": "",
                         "isHide": False,
-                        "isKeepAlive": True,
+                        "isKeepAlive": False,
                         "isAffix": False,
                         "isIframe": False,
                         # 处理权限
@@ -2321,9 +2586,8 @@ def getroutes(auth: str):
                         "icon": "iconfont {}".format(i[6])
                 },
 
-
             }
-            if i[7] != '':
+            if i[7] != None:
                 temp['redirect'] = i[7]
                 temp['children'] = []
 
@@ -2352,6 +2616,8 @@ def getroutes(auth: str):
             # path ,name, component,title,auth,icon
             print('roledata'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
         resdata = {"code": 0, "type": "adminMenu", "data": roledata}
+        
+        #print(f''' {auth} 权限  {resdata}''')
         return resdata
     else:
         return '没有权限'
@@ -2373,11 +2639,8 @@ def Verify(user: user):
     db = getConn()
     print('yanzheng')
     cursor = db.cursor()
-    cursor.execute(
-        '''
-          select tt.* from user rr left join user_role_list tt on rr.role=tt.auth_code
-          where rr.username='{0}' and rr.password='{1}'
-        '''.format(user.userName, user.password))
+    sql=f'''  select * from user u  where  u.username='{user.userName}' and u.password = '{user.password}' '''
+    cursor.execute(sql)
     data = cursor.fetchone()
     print(data)
     if data is None:
@@ -2387,14 +2650,12 @@ def Verify(user: user):
         cursor.execute(
             f'''
         INSERT INTO `part`.`operationlog` (
-
           `name`,
           `type`,
           `create_date`
           )
           VALUES
             (
-
               '{user.userName}',
               '登录',
               '{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}'
@@ -2402,11 +2663,10 @@ def Verify(user: user):
 
         ''')
         db.commit()
-
         cursor.execute(
             '''
-select area,btn_auth from user rr left join user_role re on re.auth_code=rr.role
-where rr.username='{0}'
+        select area,btn_auth from user rr left join user_role re on re.auth_code=rr.role
+        where rr.username='{0}'
         '''.format(user.userName))
         areainfo = cursor.fetchone()
         print('areainfo')
@@ -2417,7 +2677,7 @@ where rr.username='{0}'
             pass
 
         data1 = {'flag': 'success', 'userName': user.userName,
-                 'auth': data[1], 'areainfo': areainfo[0], 'btn_auth': areainfo[1]}
+                 'auth': data[3], 'areainfo': areainfo[0], 'btn_auth': areainfo[1]}
 
         print(data1)
         return data1
@@ -2432,15 +2692,41 @@ def savefile(objectUrl: str, filename: str, type: str):
 
 
 @app.get('/getinspection')
-def getinspection(cardid:  Optional[str] = None, flag: Optional[str] = ''):
+def getinspection(cardid:  Optional[str] = None, flag: Optional[str] = '',username:  Optional[str] = None):
     # auth: str
     db = getConn()
     print('获取巡检区域')
     print(type(cardid))
+    cursor = db.cursor()
+    if cardid =='-1':
+        cursor.execute(
+        f''' select inspect_area from `user` where  username = '{username}' ''')
+       
+        data1 =cursor.fetchall()
+        print("获取到电器全部的区域")
+        print(len(data1))
+        print(data1)
+        if data1[0][0]=='':
+            return -1
+        temp=str(data1[0][0])
+        temp1=temp[1:len(temp)-1]
+        
+        sql=f''' select * from machine_inspection where cardname in({temp1})  '''
+        cursor.execute(sql)
+
+        
+        result =cursor.fetchall()
+        print('result')
+        print(result)
+        return result   
+       
+    
+    
+    
     new_cardid = cardid[1:len(cardid)-1]
     #new_cardid = cardid
     print('new_cardid:', new_cardid)
-    cursor = db.cursor()
+    
     cursor.execute(
         '''select * from inspection where cardid='{0}'
         '''.format(new_cardid))
@@ -2448,6 +2734,11 @@ def getinspection(cardid:  Optional[str] = None, flag: Optional[str] = ''):
     print('巡检区域为')
     print(data)
 
+    
+    
+    
+    
+    
     # 获取区域
     if flag == '1':
         cursor.execute(
@@ -2481,7 +2772,7 @@ def getinspection(cardid:  Optional[str] = None, flag: Optional[str] = ''):
 
 
             select * from (
-            select * from maintenance_detail where use_area='{}'
+            select * from maintenance_detail where use_area like '%{}%'
             ) aa
             where useconfirm ="" or maintenanceman =''
                       '''.format(data[2]))
@@ -2507,7 +2798,7 @@ def getinspection(cardid:  Optional[str] = None, flag: Optional[str] = ''):
               FROM
                 repair_detail
               WHERE
-                use_area = '{}'
+                use_area like  '%{}%'
             ) aa
           WHERE
             aa.useconfirm = ''
@@ -2532,7 +2823,7 @@ def getinspection(cardid:  Optional[str] = None, flag: Optional[str] = ''):
               FROM
                 part_detail
               WHERE
-                area = '{}'
+                area like '%{}%'
                       '''.format(data[2]))
 
         part_data = cursor.fetchall()
@@ -2702,8 +2993,12 @@ def getmachine_type(area: Optional[str] = None):
 
 
 @app.get('/getmachine_name')
-def getmachine_name(type: Optional[str] = None, area: Optional[str] = None):
-    return machine.getpartname(type, area)
+def getmachine_name(type: Optional[str] = None, area: Optional[str] = None, flag: Optional[str] = None):
+    return machine.getpartname(type, area,flag)
+
+
+
+
 
 # balance
 
@@ -2981,8 +3276,8 @@ def selectmachine_part(part_spec: Optional[str] = None,
 
 
 @app.get('/getmachine_inspection')
-def getmachine_inspection(cardid:  Optional[str] = None):
-    return machine.getinspection(cardid)
+def getmachine_inspection(cardid:  Optional[str] = None,username:Optional[str] = None):
+    return machine.getinspection(cardid,username)
 
 
 @app.get('/getmachine_inspectionrecord')
@@ -3232,6 +3527,9 @@ def getmachine_parts_singlepart(machine_part_name: Optional[str] = None):
 async def machine_part_uploadfile(machine_part_name: Optional[str] = None, imgid: Optional[str] = None, time1:  Optional[str] = None, file: UploadFile = File(...)):
 
     return await Machine_parts.create_upload_file(machine_part_name, imgid, time1, file)
+
+
+
 
 
 # 获取工装明细
@@ -3527,14 +3825,20 @@ def getMachine_proclinedetail(procline: Optional[str] = '',):
     return Machine_procline.getMachine_proclinedetail(procline)
 
 
+@app.get('/getProclineMachineTypes')
+def getProclineMachineTypes():
+    return Machine_procline.getProclineMachineTypes()
+
+
 @app.get('/getMachine_proclineSummary')
 def getMachine_proclineSummary():
     return Machine_procline.getMachine_proclineSummary()
 
 
 @app.get('/getmachine_contrast')
-def getmachine_contrast():
-    return Machine_procline.getmachine_contrast()
+def getmachine_contrast(machineType: Optional[str] = ""):
+    print('machineType',machineType)
+    return Machine_procline.getmachine_contrast(machineType)
 
 
 @app.post('/machine_procline_detail_uploadfile')
@@ -3546,19 +3850,19 @@ async def machine_procline_detail_uploadfile(flag: Optional[str] = None, imgid: 
 
 
 @app.get('/addmachine_procline_detail')
-def addmachine_procline_detail(procline: Optional[str] = None, part_name: Optional[str] = None, part_spec: Optional[str] = None, area: Optional[str] = None, type: Optional[str] = None):
-    return Machine_procline.addmachine_procline_detail(procline, part_name, part_spec, area, type)
+def addmachine_procline_detail(procline: Optional[str] = None, part_name: Optional[str] = None, part_spec: Optional[str] = None, area: Optional[str] = None, type: Optional[str] = None, username: Optional[str] = None):
+    return Machine_procline.addmachine_procline_detail(procline, part_name, part_spec, area, type, username)
 
 
 @app.get('/deletemachine_procline_detail')
-def deletemachine_procline_detail(id: Optional[str] = None):
+def deletemachine_procline_detail(id: Optional[str] = None, username: Optional[str] = None):
     print("进入删除方法")
-    return Machine_procline.deletemachine_procline_detail(id)
+    return Machine_procline.deletemachine_procline_detail(id, username)
 
 
 @app.get('/updatemachine_procline_detail')
-def updatemachine_procline_detail(id: Optional[str] = None, procline: Optional[str] = None, part_name: Optional[str] = None, part_spec: Optional[str] = None, area: Optional[str] = None, type: Optional[str] = None):
-    return Machine_procline.updatemachine_procline_detail(id, procline, part_name, part_spec, area, type)
+def updatemachine_procline_detail(id: Optional[str] = None, procline: Optional[str] = None, part_name: Optional[str] = None, part_spec: Optional[str] = None, area: Optional[str] = None, type: Optional[str] = None, username: Optional[str] = None):
+    return Machine_procline.updatemachine_procline_detail(id, procline, part_name, part_spec, area, type, username)
 
 
 @app.get('/getVersion')
@@ -3566,8 +3870,8 @@ def getVersion():
     # auth: str
 
     return {
-        'app_download': 'http://61.185.74.251:5556/'+'static/app_list/part3.14.apk',
-        'app_info': '3.14'
+        'app_download': 'http://61.185.74.251:5556/'+'static/app_list/part3.24.apk',
+        'app_info': '3.24'
     }
 
 

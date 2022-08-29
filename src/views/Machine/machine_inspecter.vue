@@ -1,7 +1,36 @@
 <template>
   <div class="system-menu-container">
-    <el-button class="butn" type="primary" @click="test_nfc">点击巡检</el-button>
+
+    <el-button v-if="state.ishsowNFC" class="butn" type="primary" @click="test_nfc">NFC巡检</el-button>
+
+
+
+
+    <el-button v-if="state.ishsow" class="butn" type="primary" @click="open_inspector">点击巡检</el-button>
+
     <Inspectshow ref="Inspectshowref" @sendflag="getflag" />
+
+    <el-dialog v-model="state.dialogFormVisible" title="选择巡检区域">
+      <div>
+        <el-form>
+          <el-form-item label="请选择巡检区域">
+
+            <el-select v-model="state.part_area_value" filterable placeholder="备件区域" clearable>
+              <el-option v-for="item in state.userarea" :key="item['label']" :label="item['label']"
+                :value="item['value']">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+        </el-form>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="state.dialogFormVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="getinfo()">Confirm</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -10,29 +39,112 @@ import { ref, reactive, onMounted } from "vue";
 import Inspectshow from "/@/views/Machine/components/inspect/inspectshow.vue";
 import service from "/@/utils/request";
 import { formatDate111 } from "/@/utils/formatTime";
-import { ElAside, ElMessage } from "element-plus";
-const Inspectshowref = ref();
+import { ElAside, ElMessage, ElMessageBox } from "element-plus";
+import Element from "备份/views/pages/element/index.vue";
+import { Session } from "/@/utils/storage";
+import { json } from "stream/consumers";
+import { Message, MessageBox } from "@element-plus/icons-vue";
+import { error } from "console";
 
-const test = () => {
-  console.log(Inspectshowref.value);
-};
-const getflag = (v: any) => {
-  state.flag = v;
-
-  console.log("state.flag");
-  console.log(state.flag);
-};
+const dialogTableVisible = ref(false)
+const dialogFormVisible = ref(false)
+const formLabelWidth = '140px'
 const state = reactive({
+  ishsowNFC: false,
+  ishsow: false,
+  ishsowNFC: true,
   flag: true,
   w: null,
   cardid: "",
   inspecter: "",
   show: true,
   remarkValue: "",
+  userarea: [],
+  part_area_value: '',
+  dialogFormVisible: false,
+  name: ""
 });
+onMounted(() => {
+  getuserarea();
+  //check();
+})
+
+const check = () => {
+  if (plus.android.importClass("android.content.Intent") == null) {
+    state.ishsow = true;
+  } else {
+    state.ishsowNFC = true;
+  }
+}
+
+const getuserarea = () => {
+  service.get('getmachine_inspection', {
+    params: {
+      username: Session.get("userInfo").userName,
+      cardid: "-1"
+    }
+  }).then((res: any) => {
+    console.log(res)
+    if (res.data == -1) {
+      state.ishsowNFC = true;
+      ElMessage({type:'info',message:'请联系管理员授权'})
+      return;
+    } else {
+      state.ishsowNFC = false;
+      state.ishsow = true;
+      // var temps = eval('(' + res.data[0][0] + ')');
+      state.userarea = res.data.map((item: any) => {
+        return {
+
+          value: item[1],
+          label: item[2],
+
+        }
+      })
+      console.log(state.userarea)
+    }
+  }).catch((err: any) => {
+    ElMessage({
+      type: "warning",
+      message: "NFC巡检"
+    })
+  })
+
+}
+
+const getinfo = () => {
+
+  console.log(state.part_area_value);
+
+  Inspectshowref.value.openDialog(JSON.stringify(state.part_area_value), formatDate111(new Date()));
+  state.dialogFormVisible = false;
+}
+
+
+const Inspectshowref = ref();
+
+const open_inspector = () => {
+  console.log("121212");
+  console.log(Inspectshowref.value);
+
+  state.dialogFormVisible = true;
+
+
+
+
+}
+
+
+
+const getflag = (v: any) => {
+  state.flag = v;
+
+  console.log("state.flag");
+  console.log(state.flag);
+};
 
 const centerDialogVisible = ref(false);
-const dialogBeforeClose = () => {};
+const dialogBeforeClose = () => { };
 
 const newintent1 = () => {
   console.log("newintent");
@@ -47,7 +159,9 @@ const test_nfc = () => {
     state.w = plus.nativeUI.showWaiting("请靠近NFC点检标签");
     console.log(state.w);
     var main = plus.android.runtimeMainActivity();
+
     var Intent = plus.android.importClass("android.content.Intent");
+
     var Activity = plus.android.importClass("android.app.Activity");
     var PendingIntent = plus.android.importClass("android.app.PendingIntent");
     var IntentFilter = plus.android.importClass("android.content.IntentFilter");
@@ -176,6 +290,9 @@ const testback = () => {
   );
   console.log("巡检标签执行完毕");
 };
+
+
+
 </script>
 
 <style lang="less">
@@ -184,18 +301,7 @@ const testback = () => {
   size: 50px;
 }
 
-section
-  > section
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > main
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > div
-  > div
-  > button {
+section>section>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>main>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>div>div>button {
   height: 200px;
   left: 40px;
   font-size: 80px;

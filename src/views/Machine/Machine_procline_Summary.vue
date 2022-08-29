@@ -12,7 +12,7 @@ const state = reactive({
   column: [
     { title: "序号", key: "index", type: "text" },
     { title: "区域", key: "area", type: "text" },
-    { title: "类别", key: "type", type: "text" },
+    { title: "备件类型", key: "type", type: "text" },
     { title: "备件名称", key: "machine_name", type: "text" },
     { title: "圆镀一线", key: "YD_01", type: "text" },
     { title: "圆镀二线", key: "YD_02", type: "text" },
@@ -111,21 +111,22 @@ onMounted(() => {
 const getpartslist = () => {
   service
     .get("getMachine_proclineSummary")
-    .then((res) => {
+    .then((res:any) => {
       console.log(res);
       state.partslist = res.data.map((item: any) => {
         return {
           area: item[0],
-          machine_name: item[1],
-          YD_01: item[2],
-          YD_02: item[3],
-          YD_03: item[4],
-          YD_04: item[5],
-          YD_05: item[6],
-          YD_06: item[7],
-          FD_01: item[8],
-          FD_02: item[9],
-          FD_03: item[10],
+          type:item[1],
+          machine_name: item[2],
+          YD_01: item[3],
+          YD_02: item[4],
+          YD_03: item[5],
+          YD_04: item[6],
+          YD_05: item[7],
+          YD_06: item[8],
+          FD_01: item[9],
+          FD_02: item[10],
+          FD_03: item[11],
         };
       });
 
@@ -185,45 +186,48 @@ const getSpanArr = () => {
 
 <template>
   <div class="system-menu-container">
-    <el-card shadow="always">
-      <el-row :gutter="50">
+         <el-row :gutter="50">
         <el-col :span="12" :xs="0" :sm="12" :md="12" :lg="6" :xl="6"></el-col>
         <el-col :span="12" :xs="0" :sm="12" :md="12" :lg="6" :xl="6"></el-col>
 
         <el-col :span="12" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
-          <Auths :value="['btn.add']">
+          <Auths :value="['btn.export']">
             <el-button @click="exportExcel1()" type="primary" plain>导出</el-button>
           </Auths>
         </el-col>
       </el-row>
       <br />
 
+    <el-card shadow="always">
+ 
       <el-table
         id="outtable"
         v-loading="state.loading"
         :data="state.partslist"
         border
+        stripe
         align="center"
         heigth="500"
         header-align="center"
         max-height="500"
         fit
+        style="width:800px ;"
+        :highlight-current-row="true"
         :row-style="{ height: '10px' }"
         :cell-style="{ padding: '5px 0' }"
         row-key="id"
         :span-method="objectSpanMethod1"
       >
-        <el-table-column label="镀锌车间设备台账清单" align="center" width="auto">
-          <el-table-column type="index" fixed width="50" align="center">
+     
+          <el-table-column type="index"  width="50" align="center"  fixed>
           </el-table-column>
-          <!-- <el-table-column prop="procline" label="产线" width="80" align="center">
-          </el-table-column> -->
-          <el-table-column prop="area" width="80" label="区域" align="center">
+  
+          <el-table-column  prop="area" width="80" label="区域" align="center" fixed>
           </el-table-column>
-          <el-table-column prop="type" label="类别" width="100" align="center">
+        
+            <el-table-column  prop="type" width="80" label="备件类型" align="center" >
           </el-table-column>
-
-          <el-table-column prop="machine_name" align="center" label="名称" width="auto">
+          <el-table-column prop="machine_name" align="center" label="名称" width="200" >
           </el-table-column>
 
           <!-- <el-table-column
@@ -232,27 +236,27 @@ const getSpanArr = () => {
             label="规格型号"
             width="auto"
           > -->
-          <el-table-column prop="YD_01" align="center" label="圆镀一线" width="auto">
+          <el-table-column prop="YD_01" align="center" label="圆镀一线" width="210">
           </el-table-column>
-          <el-table-column prop="YD_02" align="center" label="圆镀二线" width="auto">
+          <el-table-column prop="YD_02" align="center" label="圆镀二线" width="210">
           </el-table-column>
-          <el-table-column prop="YD_03" align="center" label="圆镀三线" width="auto">
+          <el-table-column prop="YD_03" align="center" label="圆镀三线" width="210">
           </el-table-column>
-          <el-table-column prop="YD_04" align="center" label="圆镀四线" width="auto">
+          <el-table-column prop="YD_04" align="center" label="圆镀四线" width="210">
           </el-table-column>
-          <el-table-column prop="YD_05" align="center" label="圆镀五线" width="auto">
-          </el-table-column>
-
-          <el-table-column prop="YD_06" align="center" label="圆镀六线" width="auto">
+          <el-table-column prop="YD_05" align="center" label="圆镀五线" width="210">
           </el-table-column>
 
-          <el-table-column prop="FD_01" align="center" label="方镀一线" width="auto">
+          <el-table-column prop="YD_06" align="center" label="圆镀六线" width="210">
           </el-table-column>
-          <el-table-column prop="FD_02" align="center" label="方镀二线" width="auto">
+
+          <el-table-column prop="FD_01" align="center" label="方镀一线" width="210">
           </el-table-column>
-          <el-table-column prop="FD_03" align="center" label="方镀三线" width="auto">
+          <el-table-column prop="FD_02" align="center" label="方镀二线" width="210">
           </el-table-column>
-        </el-table-column>
+          <el-table-column prop="FD_03" align="center" label="方镀三线" width="210">
+          </el-table-column>
+      
       </el-table>
       <!-- 分页栏 -->
       <!-- <el-pagination
@@ -271,4 +275,27 @@ const getSpanArr = () => {
   font-size: 50px;
   size: 50px;
 }
+.el-table .el-table-column {
+  justify-content: center;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  table-layout: fixed;
+}
+
+
+.el-table__body-wrapper::-webkit-scrollbar {
+  width: 20px; // 横向滚动条
+  height: 20px; // 纵向滚动条 必写
+}
+
+// 滚动条的滑块
+.el-table__body-wrapper::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+
+  border-radius: 10px;
+}
+
+
 </style>

@@ -178,8 +178,10 @@
         >
           <template #default="scope">
             <el-button
-              >>>>>>> e5b1217 (gongzhuang) :disabled="scope.row.receipt == '' ? false :
-              true" @click="onOpenreceiptconfirm(scope.row)" type="success" >{{
+              :disabled="scope.row.receipt == '' ? false : true"
+              @click="onOpenreceiptconfirm(scope.row)"
+              type="success"
+              >{{
                 scope.row.receipt == "" ? "请确认" : scope.row.receipt + "已确认"
               }}</el-button
             >
@@ -272,12 +274,13 @@ import Receiptconfirm from "./components/repair/receiptconfirm.vue";
 import { ElMessageBox } from "element-plus";
 
 import { exportTable } from "/@/utils/exportExcel";
+import ApplicantConfirm from "./components/repair/applicantConfirm.vue";
+
 const exportExcel = () => {
   exportTable("#outTable", `${formatDate111(new Date())}备件外修明细`);
 };
 
 const addrepairref = ref();
-import ApplicantConfirm from "./components/repair/applicantConfirm.vue";
 
 const addMenuRef = ref();
 const tryoutconfirmref = ref();

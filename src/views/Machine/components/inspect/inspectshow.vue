@@ -18,12 +18,13 @@
         >
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="类型" width="60" align="center">
+          <el-table-column prop="type" label="备件备件类型" width="60" align="center">
+          </el-table-column>
+                 <el-table-column prop="use_part_name" label="名称" width="140" align="center">
           </el-table-column>
           <el-table-column prop="spec" label="型号" width="200" align="center">
           </el-table-column>
-          <el-table-column prop="use_part_name" label="名称" width="140" align="center">
-          </el-table-column>
+   
           <el-table-column
             prop="use_procline"
             label="使用产线"
@@ -53,12 +54,13 @@
         >
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
-          <el-table-column align="center" prop="type" label="类型" width="60">
+          <el-table-column align="center" prop="type" label="备件类型" width="60">
+          </el-table-column>
+             <el-table-column align="center" prop="use_part_name" label="名称" width="140">
           </el-table-column>
           <el-table-column align="center" prop="spec" label="型号" width="200">
           </el-table-column>
-          <el-table-column align="center" prop="use_part_name" label="名称" width="140">
-          </el-table-column>
+       
           <el-table-column
             align="center"
             prop="use_procline"
@@ -89,7 +91,7 @@
         >
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="类型" width="60" align="center">
+          <el-table-column prop="type" label="备件类型" width="60" align="center">
           </el-table-column>
           <el-table-column prop="spec" label="型号" width="200" align="center">
           </el-table-column>
@@ -122,7 +124,7 @@
         >
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="类型" width="60" align="center">
+          <el-table-column prop="type" label="备件类型" width="60" align="center">
           </el-table-column>
           <el-table-column prop="spec" label="型号" width="200" align="center">
           </el-table-column>
@@ -155,7 +157,7 @@
         >
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="类型" width="60" align="center">
+          <el-table-column prop="type" label="备件类型" width="60" align="center">
           </el-table-column>
           <el-table-column prop="spec" label="型号" width="200" align="center">
           </el-table-column>
@@ -190,9 +192,9 @@
           height="400"
           show-summary
         >
-          <el-table-column prop="id" label="序号" width="60" align="center">
+          <el-table-column type="index" label="序号" width="60" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="类型" width="60" align="center">
+          <el-table-column prop="type" label="备件类型" width="60" align="center">
           </el-table-column>
           <el-table-column prop="part_name" label="名称" width="120" align="center">
           </el-table-column>
@@ -203,6 +205,22 @@
           </el-table-column>
           <el-table-column prop="original" label="原有" width="50" align="center">
           </el-table-column>
+                <el-table-column prop="img_url" label="图片展示" width="200" align="center">
+                  <template #default="scope">
+                    <div v-if="scope.row.img_url != ''">
+                      <el-image
+                        style="width: 80px; height: 80px"
+                        :preview-src-list="[scope.row.img_url]"
+                        :src="scope.row.img_url"
+                      >
+                      </el-image>
+                    </div>
+                    <div v-else>
+                      无图
+                      <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
+                    </div>
+                  </template>
+                </el-table-column>
         </el-table>
       </div>
       <div>
@@ -302,7 +320,7 @@ const initdialog = () => {
 const openDialog = (row?: any, time?: any, flag?: Boolean) => {
   state.isShowDialog = true;
   state.inspectstarttime = time;
-
+  
   getinspection(row);
 };
 
@@ -338,7 +356,7 @@ const getinspection = (v: String) => {
         cardid: v,
       },
     })
-    .then((res) => {
+    .then((res:any) => {
       state.resdata = res.data;
       console.log("state.resdata");
       console.log(state.resdata);
@@ -384,7 +402,7 @@ const getinspection = (v: String) => {
         });
 
         state.maintenance1_data = state.maintenance1_data.filter(
-          (ele) => ele != undefined
+          (ele:any) => ele != undefined
         );
         // console.log("--------------------------------------------------");
         // console.log("state.maintenance_data");
@@ -496,12 +514,13 @@ const getinspection = (v: String) => {
             balance: item[4],
             original: item[5],
             type: item[7],
+            img_url:item[8]
           };
         });
         state.isshowpart_data = true;
       }
-
-      // console.log(state.part_data);
+console.log('state.part_data');
+       console.log(state.part_data);
     });
 };
 

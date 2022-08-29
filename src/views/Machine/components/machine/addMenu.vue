@@ -1,62 +1,39 @@
 <template>
   <div class="system-menu-container">
-    <el-dialog
-      title="机械备件添加"
-      @close="initForm"
-      v-model="state.isShowDialog"
-      width="769px"
-    >
+    <el-dialog title="机械备件添加" @close="initForm" v-model="state.isShowDialog" width="769px">
       <el-form :model="state.ruleForm" size="small" label-width="80px">
         <el-row :gutter="35">
           <el-col :span="6">
-            <el-upload
-              class="avatar-uploader"
-              ref="upload1"
-              :on-change="imgpreivew"
-              :auto-upload="false"
-              :action="
+            <el-form-item label="备件图片">
+              <el-upload class="avatar-uploader" ref="upload1" :on-change="imgpreivew" :auto-upload="false" :action="
                 'http://61.185.74.251:5556/machine_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString()
-              "
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
-              <img
-                v-if="state.ruleForm.imageUrl"
-                :src="state.ruleForm.imageUrl"
-                class="avatar"
-              />
+              " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
+                <img v-if="state.ruleForm.imageUrl" :src="state.ruleForm.imageUrl" class="avatar" />
 
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+            </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="35">
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="备件名称">
-              <el-input
-                v-model="state.ruleForm.part_name"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.part_name" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="备件规格">
-              <el-input
-                v-model="state.ruleForm.part_spec"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.part_spec" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="搁置区域">
-              <el-select
+              <el-input v-model="state.ruleForm.part_area_value" placeholder="搁置区域" clearable></el-input>
+              <!-- <el-select
                 v-model="state.ruleForm.part_area_value"
                 filterable
                 placeholder="备件区域"
@@ -69,7 +46,7 @@
                   :value="item['value']"
                 >
                 </el-option>
-              </el-select>
+              </el-select> -->
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -79,11 +56,7 @@
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="原有数量">
-              <el-input
-                v-model="state.ruleForm.original"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.original" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
 
@@ -98,15 +71,11 @@
               <el-input v-model="state.ruleForm.type" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
-        </el-row> </el-form
-      ><template #footer
-        ><span class="dialog-footer">
+        </el-row>
+      </el-form><template #footer><span class="dialog-footer">
           <el-button @click="onCancel" size="small">取 消</el-button>
-          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small"
-            >保存</el-button
-          >
-        </span></template
-      >
+          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small">保存</el-button>
+        </span></template>
     </el-dialog>
   </div>
 </template>
@@ -116,6 +85,7 @@ import { reactive, toRefs, onUnmounted, onMounted, ref } from "vue";
 import service from "/@/utils/request";
 import { compress, compressAccurately } from "image-conversion";
 import { ElMessage } from "element-plus";
+import { Session } from "/@/utils/storage";
 
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
 
@@ -181,20 +151,17 @@ const upload1 = ref();
 
 // 新增
 const onSubmit = () => {
-  console.log(state.ruleForm); // 数据，请注意需要转换的类型
-  if (
-    state.ruleForm.part_name == "" ||
-    state.ruleForm.part_spec == "" ||
-    state.ruleForm.part_area_value == "" ||
-    state.ruleForm.balance == "" ||
-    state.ruleForm.original == "" ||
-    state.ruleForm.type == ""
-  ) {
-    ElMessage({
-      type: "warning",
-      message: "请检查各个选项并填写",
-    });
-  } else {
+  if(state.ruleForm.type===""||state.ruleForm.part_name==="" || state.ruleForm.part_spec==="" || state.ruleForm.part_area_value==="" )
+  {
+    ElMessage({type:'warning',message:'请完善备件信息'})
+    return
+  }else if(state.ruleForm.balance==="" ||state.ruleForm.balance===""){
+    ElMessage({type:'warning',message:'请填写件数'})
+    return
+  }
+
+   // 数据，请注意需要转换的类型
+  
     service
       .get("/addmachine_detail", {
         params: {
@@ -205,9 +172,10 @@ const onSubmit = () => {
           original: state.ruleForm.balance,
           remark: state.ruleForm.remark,
           type: state.ruleForm.type,
+          username: Session.get("userInfo").userName,
         },
       })
-      .then((res) => {
+      .then((res:any) => {
         ElMessage({
           type: "success",
           message: res.data.msg,
@@ -219,7 +187,7 @@ const onSubmit = () => {
         initForm();
         closeDialog(); // 关闭弹窗
       })
-      .catch((err) => {
+      .catch((err:any) => {
         ElMessage({
           type: "error",
           message: `${err.data} 请检查填写项`,
@@ -227,7 +195,7 @@ const onSubmit = () => {
         initForm();
         closeDialog(); // 关闭弹窗
       });
-  }
+
   // setBackEndControlRefreshRoutes() // 刷新菜单，未进行后端接口测试
 };
 // 表单初始化，方法：`resetFields()` 无法使用
@@ -259,7 +227,7 @@ const beforeAvatarUpload = (file: any) => {
 
   // return isJPG && isLt2M;
   //压缩
-  return new Promise((resolve) => {
+  return new Promise((resolve:any) => {
     // compress(file, 100).then((res) => {
     //   console.log(res);
     //   resolve(res);
@@ -269,7 +237,7 @@ const beforeAvatarUpload = (file: any) => {
       size: 200,
       width: 500,
       height: 500,
-    }).then((res) => {
+    }).then((res:any) => {
       console.log(res);
       resolve(res);
     });

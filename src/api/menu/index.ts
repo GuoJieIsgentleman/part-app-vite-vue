@@ -1,3 +1,4 @@
+import { ElMessage } from 'element-plus';
 import request from '/@/utils/request';
 
 /**
@@ -11,14 +12,19 @@ import request from '/@/utils/request';
  * @param params 要传的参数值，非必传
  * @returns 返回接口数据
  */
-export function getMenuAdmin(params?: object) {
+export function getMenuAdmin(params?: any) {
+  try {
 
-  return request({
-    url: '/getroutes',
-    // url: '/api/getroutes',
-    method: 'get',
-    params,
-  });
+    return request({
+      url: '/getroutes',
+      // url: '/api/getroutes',
+      method: 'get',
+      params,
+    });
+  } catch (error) {
+      
+  }
+ 
 
 }
 
@@ -28,7 +34,7 @@ export function getMenuAdmin(params?: object) {
  * @param params 要传的参数值，非必传
  * @returns 返回接口数据
  */
-export function getMenuOther(params?: object) {
+export function getMenuOther(params?: any) {
 
   return request({
     url: '/getroutes',

@@ -1,6 +1,7 @@
 // 定义内容
 export default {
   router: {
+    rolesManager: '角色管理',
     Machine_contrast: '机修产线对比',
     Machine_procline_Summary: '机修产线汇总',
     Machine_procline_detial: '机修产线明细',

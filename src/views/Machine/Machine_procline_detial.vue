@@ -6,7 +6,8 @@ import service from "/@/utils/request";
 import { ElMessage, ElMessageBox } from "element-plus";
 import AddMenu from "./components/machine_procline/addMenu.vue";
 import UpdateMenu from "./components/machine_procline/updateMenu.vue";
-
+import { Session } from "/@/utils/storage";
+import Auths from "/@/components/auth/auths.vue";
 const AddMenuref = ref();
 const UpdateMenuref = ref();
 const onOpenAddMenu = () => {
@@ -30,6 +31,7 @@ const onTabelRowDel = (row: any, index: any) => {
         .get("/deletemachine_procline_detail", {
           params: {
             id: row.id,
+            username: Session.get("userInfo").userName,
           },
         })
         .then((res) => {
@@ -37,8 +39,6 @@ const onTabelRowDel = (row: any, index: any) => {
             message: res.data,
             type: "success",
           });
-
-          initpart();
         })
         .catch((err) => {
           ElMessage({
@@ -47,7 +47,7 @@ const onTabelRowDel = (row: any, index: any) => {
           });
         });
     })
-    .catch(() => {});
+    .catch(() => { });
 };
 
 const state = reactive({
@@ -134,7 +134,7 @@ const getpartslist = (procline: String) => {
         procline: procline,
       },
     })
-    .then((res) => {
+    .then((res: any) => {
       if (res.data.length == 0) {
         ElMessageBox({ type: "error", message: "该区域没有机修使用件" });
         return;
@@ -161,7 +161,7 @@ const getpartslist = (procline: String) => {
       console.log("spanArr");
       console.log(state.spanArr);
     })
-    .catch((err) => {
+    .catch((err: any) => {
       ElMessageBox({ type: "error", message: "异常err" + err });
     });
 };
@@ -219,10 +219,8 @@ const getSpanArr = () => {
       <el-row :gutter="50">
         <el-col :span="12" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
           <Auths :value="['btn.add', 'btn.other']">
-            <el-button @click="onOpenAddMenu()" type="danger"
-              >增加产线机修件</el-button
-            ></Auths
-          >
+            <el-button @click="onOpenAddMenu()" type="danger">增加产线机修件</el-button>
+          </Auths>
         </el-col>
         <el-col :span="12" :xs="0" :sm="12" :md="12" :lg="6" :xl="6"></el-col>
         <el-col :span="12" :xs="0" :sm="12" :md="12" :lg="6" :xl="6"></el-col>
@@ -234,191 +232,119 @@ const getSpanArr = () => {
         </el-col>
       </el-row>
       <br />
-      <el-row :gutter="35">
-        <el-col :span="12" :xs="15" :sm="12" :md="12" :lg="20" :xl="12">
+      <el-row :gutter="12">
+        <el-col :span="12" :xs="15" :sm="12" :md="12" :lg="6" :xl="12">
           <div>
             <el-select v-model="state.selectprolince" clearable placeholder="选择产线">
-              <el-option
-                v-for="item in state.use_proline_options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
+              <el-option v-for="item in state.use_proline_options" :key="item.value" :label="item.label"
+                :value="item.value">
               </el-option>
             </el-select>
           </div>
-        </el-col>
-        <el-col class="mb20" :xs="12" :sm="12" :md="12" :lg="12" :xl="12"> </el-col>
-        <el-col class="mb20" :xs="12" :sm="12" :md="12" :lg="12" :xl="12"> </el-col>
-      </el-row>
 
-      <el-row :gutter="50">
-        <el-col :span="12" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+        </el-col>
+        <el-col class="mb20" :xs="12" :sm="12" :md="12" :lg="6" :xl="12">
           <el-button type="primary" @click="find()">查询</el-button>
         </el-col>
+        <el-col class="mb20" :xs="12" :sm="12" :md="12" :lg="12" :xl="12"> </el-col>
       </el-row>
 
-      <el-table
-        id="outtable"
-        v-loading="state.loading"
-        :data="state.partslist"
-        border
-        align="center"
-        heigth="500"
-        header-align="center"
-        max-height="500"
-        fit
-        :row-style="{ height: '10px' }"
-        :cell-style="{ padding: '5px 0' }"
-        row-key="id"
-        :span-method="objectSpanMethod1"
-      >
-        <el-table-column
-          :label="state.line"
-          align="center"
-          width="auto"
-          style="size: 50px"
-        >
-          <el-table-column type="index" fixed width="50" align="center">
-          </el-table-column>
-          <!-- <el-table-column prop="procline" label="产线" width="80" align="center">
-          </el-table-column> -->
-          <el-table-column prop="area" width="80" label="区域" align="center">
-          </el-table-column>
-          <el-table-column prop="type" label="类别" width="100" align="center">
-          </el-table-column>
+      <el-tag class="mx-1" effect="dark" style="size:30px ;">
+        {{ state.line }}
+      </el-tag>
 
-          <el-table-column prop="machine_name" align="center" label="名称" width="auto">
-          </el-table-column>
+      <el-table id="outtable" v-loading="state.loading" :data="state.partslist" border align="center" heigth="500"
+        header-align="center" max-height="500" fit :row-style="{ height: '10px' }" :cell-style="{ padding: '5px 0' }"
+        row-key="id" :span-method="objectSpanMethod1">
 
-          <el-table-column
-            prop="machine_spesc"
-            align="center"
-            label="规格型号"
-            width="auto"
-          >
-          </el-table-column>
-          <el-table-column prop="FLP" align="center" label="法兰盘外径" width="100">
-            <template #default="scope">
-              <div v-if="scope.row.FLP != null">
-                <el-image
-                  style="width: 100px; height: 100px"
-                  :preview-src-list="[scope.row.FLP]"
-                  :src="scope.row.FLP"
-                >
-                </el-image>
-              </div>
-              <div v-else>
-                无图
-                <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
-              </div>
-            </template>
-          </el-table-column>
-
-          <el-table-column prop="ZD" align="center" label="轴对内径" width="100">
-            <template #default="scope">
-              <div v-if="scope.row.ZD != null">
-                <el-image
-                  style="width: 100px; height: 100px"
-                  :preview-src-list="[scope.row.ZD]"
-                  :src="scope.row.ZD"
-                >
-                </el-image>
-              </div>
-              <div v-else>
-                无图
-                <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
-              </div>
-            </template>
-          </el-table-column>
-
-          <el-table-column prop="JC" align="center" label="键槽" width="100">
-            <template #default="scope">
-              <div v-if="scope.row.JC != null">
-                <el-image
-                  style="width: 100px; height: 100px"
-                  :preview-src-list="[scope.row.JC]"
-                  :src="scope.row.JC"
-                >
-                </el-image>
-              </div>
-              <div v-else>
-                无图
-                <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
-              </div>
-            </template>
-          </el-table-column>
-
-          <el-table-column prop="KS" align="center" label="孔数" width="100">
-            <template #default="scope">
-              <div v-if="scope.row.KS != null">
-                <el-image
-                  style="width: 100px; height: 100px"
-                  :preview-src-list="[scope.row.KS]"
-                  :src="scope.row.KS"
-                >
-                </el-image>
-              </div>
-              <div v-else>
-                无图
-                <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
-              </div>
-            </template>
-          </el-table-column>
-
-          <el-table-column prop="KZXJ" width="100" align="center" label="孔中心距">
-            <template #default="scope">
-              <div v-if="scope.row.KZXJ != null">
-                <el-image
-                  style="width: 100px; height: 100px"
-                  :preview-src-list="[scope.row.KZXJ]"
-                  :src="scope.row.KZXJ"
-                >
-                </el-image>
-              </div>
-              <div v-else>
-                无图
-                <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" align="center" min-width="120">
-            <template #default="scope">
-              <Auths :value="['btn.edit']">
-                <el-button
-                  type="primary"
-                  size="small"
-                  @click="onOpenEditMenu(scope.row, scope.$index)"
-                  icon="el-icon-edit"
-                  circle
-                ></el-button>
-              </Auths>
-
-              <Auths :value="['btn.del']">
-                <el-button
-                  type="warning"
-                  size="small"
-                  @click="onTabelRowDel(scope.row, scope.$index)"
-                  icon="el-icon-delete"
-                  circle
-                ></el-button>
-              </Auths>
-            </template>
-          </el-table-column>
+        <el-table-column type="index" width="50" align="center" fixed>
         </el-table-column>
+
+        <el-table-column prop="area" width="80" label="区域" align="center" fixed>
+        </el-table-column>
+        <el-table-column prop="type" label="备件类型" width="100" align="center" >
+        </el-table-column>
+
+        <el-table-column prop="machine_name" align="center" label="名称" width="auto" >
+        </el-table-column>
+
+        <el-table-column prop="machine_spesc" align="center" label="规格型号" width="auto">
+        </el-table-column>
+        <el-table-column prop="FLP" align="center" label="图1" width="100">
+          <template #default="scope">
+            <div v-if="scope.row.FLP != null">
+              <el-image style="width: 100px; height: 100px" :preview-src-list="[scope.row.FLP]" :src="scope.row.FLP">
+              </el-image>
+            </div>
+            <div v-else>无图</div>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="ZD" align="center" label="图2" width="100">
+          <template #default="scope">
+            <div v-if="scope.row.ZD != null">
+              <el-image style="width: 100px; height: 100px" :preview-src-list="[scope.row.ZD]" :src="scope.row.ZD">
+              </el-image>
+            </div>
+            <div v-else>无图</div>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="JC" align="center" label="图3" width="100">
+          <template #default="scope">
+            <div v-if="scope.row.JC != null">
+              <el-image style="width: 100px; height: 100px" :preview-src-list="[scope.row.JC]" :src="scope.row.JC">
+              </el-image>
+            </div>
+            <div v-else>无图</div>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="KS" align="center" label="图4" width="100">
+          <template #default="scope">
+            <div v-if="scope.row.KS != null">
+              <el-image style="width: 100px; height: 100px" :preview-src-list="[scope.row.KS]" :src="scope.row.KS">
+              </el-image>
+            </div>
+            <div v-else>无图</div>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="KZXJ" width="100" align="center" label="图5">
+          <template #default="scope">
+            <div v-if="scope.row.KZXJ != null">
+              <el-image style="width: 100px; height: 100px" :preview-src-list="[scope.row.KZXJ]" :src="scope.row.KZXJ">
+              </el-image>
+            </div>
+            <div v-else>无图</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" min-width="120">
+          <template #default="scope">
+
+            <Auths :value="['btn.edit']" class="displayStyle">
+              <el-button type="primary" size="small" @click="onOpenEditMenu(scope.row, scope.$index)">编辑</el-button>
+            </Auths>
+            <Auths :value="['btn.del']" class="displayStyle">
+              <el-button type="warning" size="small" @click="onTabelRowDel(scope.row, scope.$index)">删除</el-button>
+            </Auths>
+
+          </template>
+        </el-table-column>
+
       </el-table>
-      <!-- 分页栏 -->
-      <!-- <el-pagination
-        :page-sizes="[20, 40, 60, 80]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="state.total"
-      >
-      </el-pagination> -->
+
     </el-card>
+    <AddMenu ref="AddMenuref" />
+    <UpdateMenu ref="UpdateMenuref" />
   </div>
-  <AddMenu ref="AddMenuref" />
-  <UpdateMenu ref="UpdateMenuref" />
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.displayStyle {
+  display: inline-block;
+}
+body{
+  touch-action: pan-y;
+}
+</style>

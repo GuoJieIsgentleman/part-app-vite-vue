@@ -8,6 +8,7 @@
     >
       <el-form :model="state.ruleForm" label-width="80px">
         <el-row :gutter="50">
+         <el-space wrap :size="20">
           <el-col :span="5">
             <el-upload
               class="avatar-uploader"
@@ -28,7 +29,7 @@
               <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
               <img v-if="state.ruleForm.FLP" :src="state.ruleForm.FLP" class="imgstyle" />
 
-              <el-icon v-else class="avatar-uploader-icon"><Plus />法兰盘外径</el-icon>
+              <el-icon v-else class="avatar-uploader-icon">图1</el-icon>
             </el-upload>
           </el-col>
 
@@ -52,7 +53,7 @@
               <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
               <img v-if="state.ruleForm.ZD" :src="state.ruleForm.ZD" class="imgstyle" />
 
-              <el-icon v-else class="avatar-uploader-icon"><Plus />轴对内径</el-icon>
+              <el-icon v-else class="avatar-uploader-icon">图2</el-icon>
             </el-upload></el-col
           >
           <el-col :span="5">
@@ -75,7 +76,7 @@
               <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
               <img v-if="state.ruleForm.JC" :src="state.ruleForm.JC" class="imgstyle" />
 
-              <el-icon v-else class="avatar-uploader-icon"><Plus />键槽</el-icon>
+              <el-icon v-else class="avatar-uploader-icon">图3</el-icon>
             </el-upload></el-col
           >
           <el-col :span="5">
@@ -98,7 +99,7 @@
               <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
               <img v-if="state.ruleForm.KS" :src="state.ruleForm.KS" class="imgstyle" />
 
-              <el-icon v-else class="avatar-uploader-icon"><Plus />孔数</el-icon>
+              <el-icon v-else class="avatar-uploader-icon">图4</el-icon>
             </el-upload>
           </el-col>
           <el-col :span="5">
@@ -125,9 +126,10 @@
                 class="imgstyle"
               />
 
-              <el-icon v-else class="avatar-uploader-icon"><Plus />孔中心距</el-icon>
+              <el-icon v-else class="avatar-uploader-icon">图5</el-icon>
             </el-upload>
           </el-col>
+          </el-space>
         </el-row>
         <el-row :gutter="35">
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -200,6 +202,7 @@ import { reactive, toRefs, onUnmounted, onMounted, ref } from "vue";
 import service from "/@/utils/request";
 import { compress, compressAccurately } from "image-conversion";
 import { ElMessage } from "element-plus";
+import { Session } from "/@/utils/storage";
 
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
 // "element-plus": "^1.0.2-beta.70",
@@ -346,6 +349,7 @@ const onSubmit = () => {
         procline: state.ruleForm.part_area_value,
         type: state.ruleForm.type,
         area: state.ruleForm.area,
+        username: Session.get("userInfo").userName,
       },
     })
     .then((res) => {
@@ -382,8 +386,7 @@ const initForm = () => {
   state.ruleForm.part_name = "";
   state.ruleForm.part_spec = "";
   state.ruleForm.area = "";
-  state.ruleForm.balance = "";
-  state.ruleForm.original = "";
+
   state.ruleForm.imageUrl = "";
   state.ruleForm.remark = "";
   state.ruleForm.type = "";

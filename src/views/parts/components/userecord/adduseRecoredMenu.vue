@@ -317,8 +317,10 @@ const gettype = async (value?: any) => {
 
   //通过area 找type
 
-  let { data: type } = await service.get("/gettype", { params: { area: value } });
+  let { data: type } = await service.get("/gettype", 
+  { params: { area: value } });
 
+  console.log("type:",type)
   state.ruleForm.usetype = type.map((item: any) => {
     return {
       value: item[0],

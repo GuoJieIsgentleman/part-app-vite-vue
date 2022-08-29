@@ -1,7 +1,32 @@
 <template>
   <div class="system-menu-container">
-    <el-button class="butn" type="primary" @click="test_nfc">点击巡检</el-button>
-    <Inspectshow ref="Inspectshowref" @sendflag="getflag" />
+    <el-button  v-if="state.ishsowNFC" class="butn" type="primary" @click="test_nfc">NFC巡检</el-button>
+   
+     <el-button v-if="state.ishsow" class="butn" type="primary" 
+     @click="open_inspector">点击巡检</el-button>
+   <Inspectshow ref="Inspectshowref" @sendflag="getflag" />
+   
+    <el-dialog v-model="state.dialogFormVisible" title="选择巡检区域">
+      <div>
+        <el-form>
+          <el-form-item label="请选择巡检区域">
+
+            <el-select v-model="state.part_area_value" filterable placeholder="备件区域" clearable>
+              <el-option v-for="item in state.userarea" :key="item['label']" :label="item['label']"
+                :value="item['value']">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+        </el-form>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="state.dialogFormVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="getinfo()">Confirm</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -11,7 +36,29 @@ import Inspectshow from "/@/views/parts/components/inspect/inspectshow.vue";
 import service from "/@/utils/request";
 import { formatDate111 } from "/@/utils/formatTime";
 import { ElAside, ElMessage } from "element-plus";
+import { Session } from "/@/utils/storage";
 const Inspectshowref = ref();
+
+const getinfo = () => {
+
+  console.log(state.part_area_value);
+
+  Inspectshowref.value.openDialog(JSON.stringify(state.part_area_value), formatDate111(new Date()));
+  state.dialogFormVisible = false;
+}
+
+
+
+const open_inspector = () => {
+  console.log("121212");
+  console.log(Inspectshowref.value);
+
+  state.dialogFormVisible = true;
+
+
+
+
+}
 
 const test = () => {
   console.log(Inspectshowref.value);
@@ -23,13 +70,59 @@ const getflag = (v: any) => {
   console.log(state.flag);
 };
 const state = reactive({
+  dialogFormVisible:false,
+  ishsow:false,
+  ishsowNFC:false,
   flag: true,
-  w: null,
+  w: null as any,
   cardid: "",
   inspecter: "",
   show: true,
   remarkValue: "",
+  part_area_value:"",
+  userarea:[]
 });
+
+onMounted(() => {
+  getuserarea();
+  //check();
+})
+
+
+
+const getuserarea = () => {
+  service.get('getinspection', {
+    params: {
+      username: Session.get("userInfo").userName,
+      cardid: "-1"
+    }
+  }).then((res: any) => {
+    console.log(res)
+    if (res.data == -1) {
+      state.ishsowNFC = true;
+      return;
+    } else {
+      state.ishsowNFC = false;
+      state.ishsow = true;
+      // var temps = eval('(' + res.data[0][0] + ')');
+      state.userarea = res.data.map((item: any) => {
+        return {
+
+          value: item[1],
+          label: item[2],
+
+        }
+      })
+      console.log(state.userarea)
+    }
+  }).catch((err: any) => {
+    ElMessage({
+      type: "warning",
+      message: "NFC巡检"
+    })
+  })
+
+}
 
 const centerDialogVisible = ref(false);
 const dialogBeforeClose = () => {};

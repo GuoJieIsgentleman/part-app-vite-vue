@@ -18,7 +18,7 @@
         >
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="类型" width="60" align="center">
+          <el-table-column prop="type" label="备件类型" width="60" align="center">
           </el-table-column>
           <el-table-column prop="spec" label="型号" width="200" align="center">
           </el-table-column>
@@ -53,7 +53,7 @@
         >
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
-          <el-table-column align="center" prop="type" label="类型" width="60">
+          <el-table-column align="center" prop="type" label="备件类型" width="60">
           </el-table-column>
           <el-table-column align="center" prop="spec" label="型号" width="200">
           </el-table-column>
@@ -89,7 +89,7 @@
         >
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="类型" width="60" align="center">
+          <el-table-column prop="type" label="备件类型" width="60" align="center">
           </el-table-column>
           <el-table-column prop="spec" label="型号" width="200" align="center">
           </el-table-column>
@@ -122,7 +122,7 @@
         >
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="类型" width="60" align="center">
+          <el-table-column prop="type" label="备件类型" width="60" align="center">
           </el-table-column>
           <el-table-column prop="spec" label="型号" width="200" align="center">
           </el-table-column>
@@ -155,7 +155,7 @@
         >
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="类型" width="60" align="center">
+          <el-table-column prop="type" label="备件类型" width="60" align="center">
           </el-table-column>
           <el-table-column prop="spec" label="型号" width="200" align="center">
           </el-table-column>
@@ -192,7 +192,7 @@
         >
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
-          <el-table-column prop="type" label="类型" width="60" align="center">
+          <el-table-column prop="type" label="备件类型" width="60" align="center">
           </el-table-column>
           <el-table-column prop="part_name" label="名称" width="120" align="center">
           </el-table-column>
