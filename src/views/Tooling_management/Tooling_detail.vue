@@ -164,21 +164,21 @@
 
         <el-table-column label="操作" align="center" min-width="120">
           <template #default="scope">
-            <Auths :value="['btn.edit']">
+            <Auths :value="['btn.edit']" class="displayStyle">
               <el-button
                 type="primary"
                 @click="onOpenEditMenu(scope.row, scope.$index)"
                 icon="el-icon-edit"
-                circle
+            
               ></el-button>
             </Auths>
 
-            <Auths :value="['btn.del']">
+            <Auths :value="['btn.del']"  class="displayStyle">
               <el-button
                 type="warning"
                 @click="onTabelRowDel(scope.row, scope.$index)"
                 icon="el-icon-delete"
-                circle
+               
               ></el-button>
             </Auths>
           </template>
@@ -189,7 +189,7 @@
         background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :page-size="state.pagearray"
+        :page-sizes="state.pagearray"
         @prev-click="prev()"
         @next-click="next()"
         layout="total, sizes, prev, pager, next, jumper"
@@ -632,5 +632,8 @@ const getSummaries = (param: any) => {
   right: 40px;
   bottom: 40px;
   top: 500px;
+}
+.displayStyle{
+  display: inline-block;
 }
 </style>

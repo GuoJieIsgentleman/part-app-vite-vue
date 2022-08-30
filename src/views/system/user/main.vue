@@ -39,15 +39,11 @@
                 <el-drawer ref="elDrawer" v-model="visible" title="角色授权" direction="rtl" custom-class="demo-drawer"
                     close-on-press-escape show-close size="40%">
 
-                    <el-tree ref="tree" :data="state.menus1" 
-                        show-checkbox 
-                        node-key="id" 
-                        :default-expand-all=true
-                        :default-checked-keys="[31]" 
-                        :props="state.defaultProps" />
+                    <el-tree ref="tree" :data="state.menus1" show-checkbox node-key="id" :default-expand-all=true
+                        :default-checked-keys="[31]" :props="state.defaultProps" />
                     <el-button size="mini" type="primary" @click="saveMenu()">保存</el-button>
                 </el-drawer>
-                
+
             </div>
 
 
@@ -63,10 +59,6 @@ import AddRole from "./component/addRole.vue";
 import service from "/@/utils/request";
 import { reactive, onMounted, ref, provide, nextTick } from "vue";
 import { ElMessage, ElMessageBox, ElTree } from "element-plus";
-import { number } from "@intlify/core-base";
-
-
-
 const AddRoleRef: any = ref();
 
 
@@ -80,7 +72,7 @@ const test = () => {
 
 
 
-const tree:any = ref()
+const tree: any = ref()
 
 const roleTable: any = ref()
 const state: any = reactive({
@@ -224,63 +216,50 @@ const rowclick = (row: any, column: any, event: any) => {
 
         return
     }
-    let arr3:any=[]
-    let arr2:any=[]
-   
+    let arr3: any = []
+    let arr2: any = []
+
 
 
     console.log('CheckedKeys', arr3);
 
     //返回id username 所对应的权限 赋值给 menus
     state.current_authcode = row.auth_code;
-     let arr: any = []
+    let arr: any = []
 
     service.get('getUserRoles', {
         params: {
             auth_code: row.auth_code
         }
     }).then((res: any) => {
-       
+
+        console.log('res',res);
+        
         //检索 已经被选中的数组
         res.data.forEach((item: any) => {
 
-            if (item[2] != null) {
+            if (item[5] != null) {
                 arr.push(item[0])
             }
         })
+        arr.push(31)
         visible.value = true
-         
-         //等待抽屉显示出来才开始渲染  所以没显示之前 都没有这个组件 引用 无效
-         //所以方法也就失效了
 
-
-         let temp:any=[1,3,5];
-         arr=arr.map((e:any)=>{
-            return e.toString()
-         })
-         nextTick(()=>{
-            console.log('arr',  arr);
-          
-            console.log('temp',temp);
-            tree.value.setCheckedKeys(arr, false)
-
-            setTimeout(()=>{
-
-            },100)
-
-             console.log('getCheckedKeys', tree.value.getCheckedKeys(true));
-              console.log('渲染完成的 tree ',tree);
-         })
+        //等待抽屉显示出来才开始渲染  所以没显示之前 都没有这个组件 引用 无效
+        //所以方法也就失效了
+      
+       nextTick(()=>{
+        tree.value.setCheckedKeys(arr, false)
        
+       console.log('arr', arr);
+       })
 
         
 
-        
-
-
-
-
-
+           
+            console.log('getCheckedKeys', tree.value.getCheckedKeys(true));
+           
+       
     }).catch((err: any) => {
 
     })
@@ -294,26 +273,26 @@ const saveMenu = () => {
     let arr1 = tree.value.getCheckedKeys()
     let arr2 = tree.value.getHalfCheckedKeys()
     Array.prototype.push.apply(arr1, arr2)
-    console.log('arr1',arr1);
-    // service.get('/updateUserRole', {
-    //     params: {
-    //         auth_list: JSON.stringify(arr1),
-    //         current_authcode: state.current_authcode
-    //     }
-    // }).then((res: any) => {
-    //     console.log(res);
-    //     visible.value = false
-    //     ElMessage({
-    //         type: 'success',
-    //         message: res.data
-    //     })
+    console.log('arr1', arr1);
+    service.get('/updateUserRole', {
+        params: {
+            auth_list: JSON.stringify(arr1),
+            current_authcode: state.current_authcode
+        }
+    }).then((res: any) => {
+        console.log(res);
+        visible.value = false
+        ElMessage({
+            type: 'success',
+            message: res.data
+        })
 
-    //     tree.value.setCheckedKeys([],false)
+        tree.value.setCheckedKeys([], false)
 
 
-    // }).catch((err: any) => {
+    }).catch((err: any) => {
 
-    // })
+    })
 
 }
 onMounted(() => {

@@ -30,23 +30,39 @@
               <el-input v-model="state.ruleForm.part_spec" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
-          <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+          <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="24" :xl="12">
             <el-form-item label="搁置区域">
-              <el-input v-model="state.ruleForm.part_area_value" placeholder="搁置区域" clearable></el-input>
-              <!-- <el-select
-                v-model="state.ruleForm.part_area_value"
-                filterable
-                placeholder="备件区域"
-                clearable
-              >
-                <el-option
-                  v-for="item in state.ruleForm.userarea"
-                  :key="item['value']"
-                  :label="item['label']"
-                  :value="item['value']"
-                >
-                </el-option>
-              </el-select> -->
+              <!-- <el-input v-model="state.ruleForm.part_area_value" placeholder="搁置区域" clearable></el-input> -->
+            
+                <el-row>
+                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                    <el-select v-model="state.floor" filterable placeholder="存放楼层" clearable>
+                      <el-option v-for="item in state.floors" :key="item['value']" :label="item['label']"
+                        :value="item['value']">
+                      </el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                    <el-select v-model="state.shelf" filterable placeholder="存放架编号" clearable>
+                      <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']"
+                        :value="item['value']">
+                      </el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                    <el-select v-model="state.num" filterable placeholder="存放位置编号" clearable>
+                      <el-option v-for="item in 5" :key="item" :label="item" :value="item">
+                        {{ item }}
+                      </el-option>
+                    </el-select>
+                  </el-col>
+
+                  <el-col class="mb20" :xs="24" :sm="18" :md="18" :lg="18" :xl="18">
+                   {{state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num}}
+                  </el-col>
+                </el-row>
+             
+           
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -72,6 +88,7 @@
             </el-form-item>
           </el-col>
         </el-row>
+
       </el-form><template #footer><span class="dialog-footer">
           <el-button @click="onCancel" size="small">取 消</el-button>
           <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small">保存</el-button>
@@ -89,7 +106,123 @@ import { Session } from "/@/utils/storage";
 
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
 
+
 const state = reactive({
+
+  num: '',
+  shelfArea: '',
+  floor: '',
+  floors: [{
+    value: "值班室一楼",
+    label: "值班室一楼",
+  },
+  {
+    value: "值班室二楼",
+    label: "值班室二楼",
+  },
+  {
+    value: "方镀三线一楼",
+    label: "方镀三线一楼",
+  },
+  {
+    value: "方镀三线二楼",
+    label: "方镀三线二楼",
+  },
+  {
+    value: "圆镀四线一楼",
+    label: "圆镀四线一楼",
+  },
+  {
+    value: "圆镀四线二楼",
+    label: "圆镀四线二楼",
+  },
+  {
+    value: "南污水南库",
+    label: "南污水南库",
+  },
+  {
+    value: "南污水北库",
+    label: "南污水北库",
+  },
+  {
+    value: "锌锭库一层",
+    label: "锌锭库一层",
+  },
+  {
+    value: "锌锭库二层",
+    label: "锌锭库二层",
+  },
+  {
+    value: "方管库一层",
+    label: "方管库一层",
+  },
+  {
+    value: "方管库二层",
+    label: "方管库二层",
+  }],
+  shelf: '',
+  shelfs: [
+    {
+      value: "1号架",
+      label: "1号架",
+    },
+    {
+      value: "2号架",
+      label: "2号架",
+    },
+    {
+      value: "3号架",
+      label: "3号架",
+    },
+    {
+      value: "4号架",
+      label: "4号架",
+    },
+    {
+      value: "5号架",
+      label: "5号架",
+    },
+    {
+      value: "6号架",
+      label: "6号架",
+    },
+    {
+      value: "7号架",
+      label: "7号架",
+    },
+    {
+      value: "8号架",
+      label: "8号架",
+    },
+    {
+      value: "9号架",
+      label: "9号架",
+    },
+    {
+      value: "10号架",
+      label: "10号架",
+    },
+    {
+      value: "11号架",
+      label: "11号架",
+    },
+    {
+      value: "12号架",
+      label: "12号架",
+    },
+    {
+      value: "13号架",
+      label: "13号架",
+    },
+    {
+      value: "14号架",
+      label: "14号架",
+    },
+    {
+      value: "15号架",
+      label: "15号架",
+    },
+  ],
   issave: false,
   isShowDialog: false,
   ruleForm: {
@@ -108,6 +241,8 @@ const state = reactive({
     fileList: [],
   },
 });
+
+
 const getusearea = async () => {
   console.log("执行了 machine_usearea");
   let { data: res } = await service.get(`/getmachine_usearea`);
@@ -151,50 +286,53 @@ const upload1 = ref();
 
 // 新增
 const onSubmit = () => {
-  if(state.ruleForm.type===""||state.ruleForm.part_name==="" || state.ruleForm.part_spec==="" || state.ruleForm.part_area_value==="" )
-  {
-    ElMessage({type:'warning',message:'请完善备件信息'})
+
+
+  let tempStr = state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + "-" + state.num
+
+  if (state.ruleForm.type === "" || state.ruleForm.part_name === "" || state.ruleForm.part_spec === "" || state.floor === ""||state.shelf === "") {
+    ElMessage({ type: 'warning', message: '请完善备件信息' })
     return
-  }else if(state.ruleForm.balance==="" ||state.ruleForm.balance===""){
-    ElMessage({type:'warning',message:'请填写件数'})
+  } else if (state.ruleForm.balance === "" || state.ruleForm.balance === "") {
+    ElMessage({ type: 'warning', message: '请填写件数' })
     return
   }
 
-   // 数据，请注意需要转换的类型
-  
-    service
-      .get("/addmachine_detail", {
-        params: {
-          part_name: state.ruleForm.part_name,
-          part_spec: state.ruleForm.part_spec,
-          area: state.ruleForm.part_area_value,
-          balance: state.ruleForm.balance,
-          original: state.ruleForm.balance,
-          remark: state.ruleForm.remark,
-          type: state.ruleForm.type,
-          username: Session.get("userInfo").userName,
-        },
-      })
-      .then((res:any) => {
-        ElMessage({
-          type: "success",
-          message: res.data.msg,
-        });
-        state.ruleForm.id = res.data.id;
-        //调用上传图片的方法
-        console.log(upload1.value);
-        upload1.value.submit();
-        initForm();
-        closeDialog(); // 关闭弹窗
-      })
-      .catch((err:any) => {
-        ElMessage({
-          type: "error",
-          message: `${err.data} 请检查填写项`,
-        });
-        initForm();
-        closeDialog(); // 关闭弹窗
+  // 数据，请注意需要转换的类型
+
+  service
+    .get("/addmachine_detail", {
+      params: {
+        part_name: state.ruleForm.part_name,
+        part_spec: state.ruleForm.part_spec,
+        area: tempStr,
+        balance: state.ruleForm.balance,
+        original: state.ruleForm.balance,
+        remark: state.ruleForm.remark,
+        type: state.ruleForm.type,
+        username: Session.get("userInfo").userName,
+      },
+    })
+    .then((res: any) => {
+      ElMessage({
+        type: "success",
+        message: res.data.msg,
       });
+      state.ruleForm.id = res.data.id;
+      //调用上传图片的方法
+      console.log(upload1.value);
+      upload1.value.submit();
+      initForm();
+      closeDialog(); // 关闭弹窗
+    })
+    .catch((err: any) => {
+      ElMessage({
+        type: "error",
+        message: `${err.data} 请检查填写项`,
+      });
+      initForm();
+      closeDialog(); // 关闭弹窗
+    });
 
   // setBackEndControlRefreshRoutes() // 刷新菜单，未进行后端接口测试
 };
@@ -227,7 +365,7 @@ const beforeAvatarUpload = (file: any) => {
 
   // return isJPG && isLt2M;
   //压缩
-  return new Promise((resolve:any) => {
+  return new Promise((resolve: any) => {
     // compress(file, 100).then((res) => {
     //   console.log(res);
     //   resolve(res);
@@ -237,7 +375,7 @@ const beforeAvatarUpload = (file: any) => {
       size: 200,
       width: 500,
       height: 500,
-    }).then((res:any) => {
+    }).then((res: any) => {
       console.log(res);
       resolve(res);
     });

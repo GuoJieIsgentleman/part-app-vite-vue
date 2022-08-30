@@ -144,6 +144,7 @@
         </el-table-column>
 
         <el-table-column prop="area" min-width="150" align="center" label="搁置产线区域">
+            
         </el-table-column>
         <el-table-column
           prop="balance"
@@ -190,7 +191,7 @@
         background
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :page-size="state.pagearray"
+        :page-sizes="state.pagearray"
         @prev-click="prev()"
         @next-click="next()"
         layout="total, sizes, prev, pager, next, jumper"

@@ -16,6 +16,7 @@ import 'default-passive-events'
 
 import ElementPlus from 'element-plus';
 import 'element-plus/lib/theme-chalk/index.css';
+
 import './theme/index.scss';
 import mitt from 'mitt';
 import screenShort from 'vue-web-screen-shot';
@@ -32,6 +33,9 @@ app
   .use(screenShort, { enableWebRtc: false })
   .use(VueGridLayout)
   .mount('#app');
+
+  
+
 
 app.config.globalProperties.mittBus = mitt();
 

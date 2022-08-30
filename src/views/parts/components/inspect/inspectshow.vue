@@ -267,7 +267,7 @@ const saveinspectlog = () => {
           inspect_area: state.area,
         },
       })
-      .then((res) => {
+      .then((res:any) => {
         ElMessage({
           type: "success",
           message: `巡检完成，本次巡检时间为${subtimeminutes1(
@@ -279,7 +279,7 @@ const saveinspectlog = () => {
         initdialog();
         state.isShowDialog = false;
       })
-      .catch((err) => {
+      .catch((err:any) => {
         ElMessage({
           type: "warning",
           message: err.data,
@@ -342,7 +342,7 @@ const getinspection = (v: String) => {
         cardid: v,
       },
     })
-    .then((res) => {
+    .then((res:any) => {
       state.resdata = res.data;
       console.log("state.resdata");
       console.log(state.resdata);

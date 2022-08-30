@@ -75,7 +75,7 @@ const viteConfig: UserConfig = {
         target: 'http://61.185.74.251:5556',
         ws: true,
         changeOrigin: true,
-        rewrite: path => path.replace(/^\//, '')
+        rewrite: (path:any) => path.replace(/^\//, '')
       },
     },
   },
@@ -95,12 +95,12 @@ const viteConfig: UserConfig = {
     },
    
    
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    }
+    // terserOptions: {
+    //   compress: {
+    //     drop_console: true,
+    //     drop_debugger: true,
+    //   },
+    // }
   },
   define: {
     __VUE_I18N_LEGACY_API__: JSON.stringify(false),

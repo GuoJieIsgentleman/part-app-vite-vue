@@ -204,7 +204,9 @@
           <el-table-column prop="balance" label="库存" width="50" align="center">
           </el-table-column>
           <el-table-column prop="original" label="原有" width="50" align="center">
+            
           </el-table-column>
+        
                 <el-table-column prop="img_url" label="图片展示" width="200" align="center">
                   <template #default="scope">
                     <div v-if="scope.row.img_url != ''">
@@ -282,7 +284,7 @@ const saveinspectlog = () => {
         inspect_area: state.area,
       },
     })
-    .then((res) => {
+    .then((res:any) => {
       ElMessage({
         type: "success",
         message: `巡检成功，本次巡检时间为${subtimeminutes1(
@@ -294,7 +296,7 @@ const saveinspectlog = () => {
       initdialog();
       state.isShowDialog = false;
     })
-    .catch((err) => {
+    .catch((err:any) => {
       ElMessage({
         type: "warning",
         message: err.data,

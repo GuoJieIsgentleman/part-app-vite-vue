@@ -17,7 +17,7 @@
         "echarts": "^5.1.2",
         "echarts-gl": "^2.0.7",
         "echarts-wordcloud": "^2.0.0",
-        "element-plus": "1.0.2-beta.70",
+        "element-plus": "^1.0.2-beta.70",
         "file-saver": "^2.0.5",
         "image-conversion": "^2.1.1",
         "js-table2excel": "^1.0.3",

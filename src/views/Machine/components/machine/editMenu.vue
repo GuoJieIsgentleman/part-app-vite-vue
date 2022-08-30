@@ -106,16 +106,51 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-              <el-form-item label="搁置区域">
+              <el-form-item label="新搁置区域">
+                <el-row>
+                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                    <el-select v-model="state.floor" filterable placeholder="存放楼层" clearable>
+                      <el-option v-for="item in state.floors" :key="item['value']" :label="item['label']"
+                        :value="item['value']">
+                      </el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                    <el-select v-model="state.shelf" filterable placeholder="存放架编号" clearable>
+                      <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']"
+                        :value="item['value']">
+                      </el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                    <el-select v-model="state.num" filterable placeholder="存放位置编号" clearable>
+                      <el-option v-for="item in 5" :key="item" :label="item" :value="item">
+                        {{ item }}
+                      </el-option>
+                    </el-select>
+                  </el-col>
+
+                
+                </el-row>
+            
+            </el-form-item>
+           
+
+            <!-- <el-input v-model="state.ruleForm.area" placeholder=""></el-input> -->
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="最新区域">
+              {{state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num}}
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="原区域">
               <el-input
                 v-model="state.ruleForm.area"
                 placeholder=""
                 clearable
               ></el-input>
             </el-form-item>
-           
-
-            <!-- <el-input v-model="state.ruleForm.area" placeholder=""></el-input> -->
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="结存">
@@ -178,6 +213,121 @@ const isdisabled = ref(true);
 const { t } = useI18n();
 
 const state = reactive({
+  
+  num: '',
+  shelfArea: '',
+  floor: '',
+  floors: [{
+    value: "值班室一楼",
+    label: "值班室一楼",
+  },
+  {
+    value: "值班室二楼",
+    label: "值班室二楼",
+  },
+  {
+    value: "方镀三线一楼",
+    label: "方镀三线一楼",
+  },
+  {
+    value: "方镀三线二楼",
+    label: "方镀三线二楼",
+  },
+  {
+    value: "圆镀四线一楼",
+    label: "圆镀四线一楼",
+  },
+  {
+    value: "圆镀四线二楼",
+    label: "圆镀四线二楼",
+  },
+  {
+    value: "南污水南库",
+    label: "南污水南库",
+  },
+  {
+    value: "南污水北库",
+    label: "南污水北库",
+  },
+  {
+    value: "锌锭库一层",
+    label: "锌锭库一层",
+  },
+  {
+    value: "锌锭库二层",
+    label: "锌锭库二层",
+  },
+  {
+    value: "方管库一层",
+    label: "方管库一层",
+  },
+  {
+    value: "方管库二层",
+    label: "方管库二层",
+  }],
+  shelf: '',
+  shelfs: [
+    {
+      value: "1号架",
+      label: "1号架",
+    },
+    {
+      value: "2号架",
+      label: "2号架",
+    },
+    {
+      value: "3号架",
+      label: "3号架",
+    },
+    {
+      value: "4号架",
+      label: "4号架",
+    },
+    {
+      value: "5号架",
+      label: "5号架",
+    },
+    {
+      value: "6号架",
+      label: "6号架",
+    },
+    {
+      value: "7号架",
+      label: "7号架",
+    },
+    {
+      value: "8号架",
+      label: "8号架",
+    },
+    {
+      value: "9号架",
+      label: "9号架",
+    },
+    {
+      value: "10号架",
+      label: "10号架",
+    },
+    {
+      value: "11号架",
+      label: "11号架",
+    },
+    {
+      value: "12号架",
+      label: "12号架",
+    },
+    {
+      value: "13号架",
+      label: "13号架",
+    },
+    {
+      value: "14号架",
+      label: "14号架",
+    },
+    {
+      value: "15号架",
+      label: "15号架",
+    },
+  ],
   usernmae: Session.get("userInfo").userName,
   issave: false,
   isShowDialog: false,
@@ -261,20 +411,7 @@ const beforeAvatarUpload = (file: any) => {
 
 // 打开弹窗
 const openDialog = (row: any, index: any) => {
-  // state.ruleForm.name = row.name;
-  // state.ruleForm.component = '';
-  // state.ruleForm.isLink = row.meta.isLink ? 'true' : '';
-  // state.ruleForm.menuSort = '';
-  // state.ruleForm.meta.title = t(row.meta.title);
-  // // 回显时，图标选择器有这个图标才可以回显，菜单中使用了阿里的、element plus的，二者不可共存
-  // state.ruleForm.meta.icon = row.meta.icon;
-  // state.ruleForm.meta.isHide = row.meta.isHide ? 'true' : 'false';
-  // state.ruleForm.meta.isKeepAlive = row.meta.isKeepAlive ? 'true' : 'false';
-  // state.ruleForm.meta.isAffix = row.meta.isAffix ? 'true' : 'false';
-  // state.ruleForm.meta.isLink = row.meta.isLink ? row.meta.isLink : '';
-  // state.ruleForm.meta.isIframe = row.meta.isIframe ? 'true' : '';
-  // state.ruleForm.meta.auth = row.meta.auth ? row.meta.auth.join(',') : '';
-  // state.ruleForm.id = row.id;
+
   state.ruleForm.index = index;
   state.ruleForm.id = row.id;
   state.ruleForm.part_name = row.part_name;
@@ -302,14 +439,7 @@ const closeDialog = (row?: object) => {
   state.isShowDialog = false;
   initForm();
 };
-// 是否内嵌下拉改变
-const onSelectIframeChange = () => {
-  // if (state.ruleForm.meta.isIframe === 'true') {
-  // 	state.ruleForm.isLink = 'true';
-  // } else {
-  // 	state.ruleForm.isLink = '';
-  // }
-};
+
 // 取消
 const onCancel = () => {
   closeDialog();
@@ -335,14 +465,14 @@ const onSubmit = () => {
   }
   state.issave = !state.issave;
   //请求
-
+  let temp=state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num
   service
     .get("/updatemachine_part", {
       params: {
         id: state.ruleForm.id,
         part_name: state.ruleForm.part_name,
         part_spec: state.ruleForm.part_spec,
-        area: state.ruleForm.area,
+        area:temp==="-" ? state.ruleForm.area:temp,
         type: state.ruleForm.type,
         new_balance: state.ruleForm.balance,
         new_original: state.ruleForm.original,

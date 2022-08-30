@@ -52,7 +52,7 @@ const formLabelWidth = '140px'
 const state = reactive({
   ishsowNFC: false,
   ishsow: false,
-  ishsowNFC: true,
+ 
   flag: true,
   w: null,
   cardid: "",
