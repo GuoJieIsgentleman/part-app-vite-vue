@@ -206,6 +206,11 @@
           <el-table-column prop="original" label="原有" width="50" align="center">
             
           </el-table-column>
+          <el-table-column prop="area" label="存放区域" width="185" align="center">
+            <template #default="scope">
+              <el-button @click="updateArea(scope.row)">{{scope.row.area}}</el-button>
+            </template>
+          </el-table-column>
         
                 <el-table-column prop="img_url" label="图片展示" width="200" align="center">
                   <template #default="scope">
@@ -236,16 +241,29 @@
         </span>
       </template>
     </el-dialog>
+
+    <UpdateArea ref="UpdateAreaRef" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, toRefs, onUnmounted, inject } from "vue";
+import UpdateArea from './updateArea.vue'
+import { reactive, toRefs, onUnmounted, inject ,ref} from "vue";
 import service from "/@/utils/request";
 import { ElMessage } from "element-plus";
 import { formatDate111, subtimeminutes, subtimeminutes1 } from "/@/utils/formatTime";
 import { Session } from "/@/utils/storage";
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
+
+      
+const UpdateAreaRef=ref()
+
+const  updateArea=(row:any)=>{
+    console.log('row',row);
+    UpdateAreaRef.value.openDialog(row)
+    
+}
+
 
 const state = reactive({
   isshowtag: false,

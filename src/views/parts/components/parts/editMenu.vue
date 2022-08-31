@@ -222,54 +222,26 @@ const state = reactive({
   num: '',
   shelfArea: '',
   floor: '',
-  floors: [{
-    value: "值班室一楼",
-    label: "值班室一楼",
-  },
-  {
-    value: "值班室二楼",
-    label: "值班室二楼",
-  },
-  {
-    value: "方镀三线一楼",
-    label: "方镀三线一楼",  
-  },
-  {
-    value: "方镀三线二楼",
-    label: "方镀三线二楼",
-  },
-  {
-    value: "圆镀四线一楼",
-    label: "圆镀四线一楼",
-  },
-  {
-    value: "圆镀四线二楼",
-    label: "圆镀四线二楼",
-  },
-  {
-    value: "南污水南库",
-    label: "南污水南库",
-  },
-  {
-    value: "南污水北库",
-    label: "南污水北库",
-  },
-  {
-    value: "锌锭库一层",
-    label: "锌锭库一层",
-  },
-  {
-    value: "锌锭库二层",
-    label: "锌锭库二层",
-  },
-  {
-    value: "方管库一层",
-    label: "方管库一层",
-  },
-  {
-    value: "方管库二层",
-    label: "方管库二层",
-  }],
+  floors: [   {
+        value: "值班室一楼",
+        label: "值班室一楼",
+      },
+      {
+        value: "值班室二楼",
+        label: "值班室二楼",
+      },
+      {
+        value: "方镀三线一楼",
+        label: "方镀三线一楼",
+      },
+      {
+        value: "圆镀四线一楼",
+        label: "圆镀四线一楼",
+      },
+      {
+        value: "南污水南库",
+        label: "南污水南库",
+      }],
   shelf: '',
   shelfs: [
     {

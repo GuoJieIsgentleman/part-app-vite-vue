@@ -177,7 +177,6 @@ const onOpenEditMenu = (row: object, index: any) => {
   editMenuRef.value.openDialog(row, index);
 };
 
-let dom: any = null;
 
 const setdata = (v: any, v1: any) => {
   //set table 值
@@ -194,14 +193,6 @@ const setdata = (v: any, v1: any) => {
 };
 
 const currentPage4 = (val: any) => {
-  // console.log(val.area);
-};
-
-const filterHandler = (value: any, row: any, column: any) => { };
-
-const clearFilter = () => { };
-const resetDateFilter = () => { };
-const handleClick = (val: any) => {
   // console.log(val.area);
 };
 
@@ -233,7 +224,6 @@ const state = reactive({
     part_name: [],
     usespesc: [],
   },
-
   part_spec_options: [] as any[],
   part_spec_value: "",
   part_name_value: "",
@@ -284,17 +274,11 @@ const reciveparts = (page?: any, pagesize?: any) => {
       },
     })
     .then((res: any) => {
-
-     
-
       if (res.data != null) {
         state.pagecount = res.data.pages;
         state.total = res.data.total;
         state.loading = false;
         state.partslist = res.data.data1.map((item: any) => {
-       
-
-
           return {
             id: item[0],
             part_name: item[1],
@@ -319,15 +303,19 @@ const reciveparts = (page?: any, pagesize?: any) => {
 };
 
 const checkIsShow = (area: any) => {
+
+  
   let flag = false;
 
   if (
     Session.get("userInfo").authPageList[0] === "Monitor" || 
-    Session.get("userInfo").authPageList[0] === "machine_monitor"
-   
+    Session.get("userInfo").authPageList[0] === "machine_monitor"||
+    Session.get("userInfo").authPageList[0] === "electrician_manager"
 
   ) {
     state.areainfo.map((item: any) => {
+      console.log('item',item);
+      
       if (area.slice(0, 5) == item.slice(0, 5)) {
         flag = true;
       }
@@ -340,7 +328,7 @@ const checkIsShow = (area: any) => {
     return true
   }
 
-  console.log(`${area}+++++++++${flag}`);
+
   return flag;
 };
 
@@ -576,6 +564,7 @@ const getSummaries = (param: any) => {
 }
 
 .displayStyle{
+
   display: inline-block;
 
 }

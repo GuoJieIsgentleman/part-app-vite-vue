@@ -1,3 +1,4 @@
+from distutils.log import error
 import json
 import pinyin
 import sys
@@ -704,10 +705,17 @@ def updatemachine_part(
         type: Optional[str] = None,
         new_balance: Optional[int] = None,
         new_original: Optional[int] = None,
-        connection: Optional[str] = None):
+        connection: Optional[str] = None,
+        flag: Optional[str] = None):
     db = conn.getConn()
     print('更改备件结存')
     cursor = db.cursor()
+    if flag=='巡检区域更换':
+        updateSql=f''' update  machine_detail  set area='{area}'  where id={id} '''
+        cursor.execute(updateSql)
+        db.commit()
+        print('更新区域完成')
+        return '更新完成'
     print('id')
     print(id)
     print('part_name')
@@ -755,7 +763,7 @@ def updatemachine_part(
                 'data': data
             }
             return res
-        except ConnectionError:
+        except Exception:
             print('异常')
             return '更新失败'
     else:

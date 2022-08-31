@@ -719,11 +719,21 @@ def updatpart(
         type: Optional[str] = None,
         new_balance: Optional[int] = None,
         new_original: Optional[int] = None,
-        connection: Optional[str] = None):
+        connection: Optional[str] = None,
+        flag: Optional[str] = None):
     db = getConn()
     print('更改备件结存')
     cursor = db.cursor()
 
+    if flag=='巡检区域更换':
+        updateSql=f''' update  part_detail  set area='{area}'  where id={id} '''
+        cursor.execute(updateSql)
+        db.commit()
+        print('更新区域完成')
+        return '更新完成'
+        
+    
+    
     if id != None:
         print('--更改备件信息--')
         try:
@@ -2340,7 +2350,7 @@ def updateUserRole(auth_list:Optional[str] = None,current_authcode: Optional[str
     for i in authIds:
         print(i)
         temp=0
-        if i==30:
+        if i==31:
             temp=1
         else:
             temp=2
@@ -3247,7 +3257,8 @@ def updatemachine_part(username: Optional[str] = None,
                        type: Optional[str] = None,
                        new_balance: Optional[int] = None,
                        new_original: Optional[int] = None,
-                       connection: Optional[str] = None):
+                       connection: Optional[str] = None,
+                       flag: Optional[str] = None):
     return machine.updatemachine_part(username, id,
                                       part_name,
                                       part_spec,

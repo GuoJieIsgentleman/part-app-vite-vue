@@ -146,32 +146,12 @@ import { ElMessage } from "element-plus";
   shelfArea: '',
   floor: '',
   floors: [{
-    value: "值班室一楼",
-    label: "值班室一楼",
-  },
-  {
-    value: "值班室二楼",
-    label: "值班室二楼",
-  },
-  {
-    value: "方镀三线一楼",
-    label: "方镀三线一楼",
-  },
-  {
     value: "方镀三线二楼",
     label: "方镀三线二楼",
   },
   {
-    value: "圆镀四线一楼",
-    label: "圆镀四线一楼",
-  },
-  {
     value: "圆镀四线二楼",
     label: "圆镀四线二楼",
-  },
-  {
-    value: "南污水南库",
-    label: "南污水南库",
   },
   {
     value: "南污水北库",
