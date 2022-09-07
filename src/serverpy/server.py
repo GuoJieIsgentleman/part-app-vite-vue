@@ -787,7 +787,6 @@ class userecordform(BaseModel):
     confirm: str
     use_procline: str
     handle: str
-
     flag: str
 
 
@@ -3073,6 +3072,23 @@ def getmachine_userecord(flag: Optional[str] = '',
                                 prolince,
                                 area)
 
+
+
+
+@app.get('/getMachine_repair')
+def getMachine_repair(flag: Optional[str] = None,
+              flag1: Optional[str] = '',
+              start: Optional[str] = '',
+              end: Optional[str] = '',
+              prolince: Optional[str] = '',
+              area: Optional[str] = ''):
+
+    return machine.getMachine_repair(flag,
+                                  flag1,
+                                  start,
+                                  end,
+                                  prolince,
+                                  area)
 
 # 机修保养记录
 

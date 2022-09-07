@@ -204,8 +204,8 @@ const getpartslist = (procline: String) => {
 };
 
 const quchong=(temp:any,label:any)=>{
-  var res = [];//去重复后的集合
-            var tem = {};
+  var res:any = [];//去重复后的集合
+            var tem:any = {};
             for (var i = 0; i < temp.length; i++) {
                 if (!tem[temp[i][label]]) {
                     res.push(temp[i]);
@@ -330,10 +330,10 @@ const getInfoByType = (val: any) => {
 
         <el-table-column prop="area" width="80" label="区域" align="center" fixed>
         </el-table-column>
-        <el-table-column prop="type" label="备件类型" width="100" align="center">
+        <el-table-column prop="type" label="备件类型" width="100" align="center" fixed>
         </el-table-column>
 
-        <el-table-column prop="machine_name" align="center" label="名称" width="auto">
+        <el-table-column prop="machine_name" align="center" label="名称" width="auto" fixed>
         </el-table-column>
 
         <el-table-column prop="machine_spesc" align="center" label="规格型号" width="auto">

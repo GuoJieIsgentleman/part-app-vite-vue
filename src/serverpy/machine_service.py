@@ -591,6 +591,7 @@ def getbalance(type: Optional[str] = None,
     data = cursor.fetchall()
     print('getbalance'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 
+    print(len(data))
     print(data)
     return data
 
@@ -769,6 +770,70 @@ def updatemachine_part(
             return '更新失败'
     else:
         return '更新失败'
+
+
+
+
+# 获取外修记录
+
+def getMachine_repair(flag: Optional[str] = None,
+              flag1: Optional[str] = '',
+              start: Optional[str] = '',
+              end: Optional[str] = '',
+              prolince: Optional[str] = '',
+              area: Optional[str] = ''):
+    db = conn.getConn()
+
+    cursor = db.cursor()
+    try:
+        if flag == 'all' and flag1 == '':
+            print('获取所有外修记录')
+            cursor.execute("select * from machine_repair")
+            data = cursor.fetchall()
+            return data
+        elif flag != 'all' and flag1 == '':
+            print('获取未确认外修记录')
+            cursor.execute(
+                "select * from machine_repair where useconfirm = '' or applicant='' or tryout='' or receipt='' ")
+            data = cursor.fetchall()
+            return data
+
+        if flag1 == '筛选查询':
+            sql = 'select * from machine_repair where 1=1 '
+
+            starttime = ''
+            endtime = ''
+            prolince1 = ''
+            area1 = ''
+            msg1 = ''
+
+            if flag == '是':
+                msg1 = " and remark='{}'".format("无库存备件外修")
+            if area != '':
+                area1 = " and use_area='{}'".format(area)
+            if start != '':
+                starttime = " and use_date >'{}'".format(start)
+            if end != '':
+                endtime = " and use_date<'{}'".format(end)
+                print('end')
+                print(end)
+            if prolince != '':
+                prolince1 = "  and use_procline='{}'".format(prolince)
+                print('prolince')
+                print(prolince)
+                print(prolince1)
+            sql = "select * from machine_repair where 1=1 {0}{1}{2}{3} {4}order by use_date".format(
+                starttime, endtime, prolince1, area1, msg1)
+            print(sql)
+            cursor.execute(sql)
+            data = cursor.fetchall()
+
+            return data
+    except SystemError:
+        print('查询异常')
+
+
+
 
 
 class userecordform(BaseModel):
@@ -1179,17 +1244,17 @@ def updatemaintenance(id: int,
         print('useconfirm')
         print(useconfirm)
 
-    #     if scrap == "外修":
-    #         print('转换到外修'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-    #         cursor.execute('''
-    #                INSERT INTO `part`.`machine_repair`
-    #               (`user`, `use_area`,`type`, `spec`, `use_part_name`,`use_count`, `user_reason`, `use_date`,`use_procline`)
-    #               VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}',
-    #                       '{6}', DATE_FORMAT('{7}','%Y-%m-%d %H:%i:%s'),'{8}');
-    # '''.format(user, use_area, type, spec, use_part_name, use_count, '', use_date, use_procline))
-    #         db.commit()
+        if scrap == "外修":
+            print('转换到外修'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+            cursor.execute('''
+                   INSERT INTO `part`.`machine_repair`
+                  (`user`, `use_area`,`type`, `spec`, `use_part_name`,`use_count`, `user_reason`, `use_date`,`use_procline`)
+                  VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}',
+                          '{6}', DATE_FORMAT('{7}','%Y-%m-%d %H:%i:%s'),'{8}');
+    '''.format(user, use_area, type, spec, use_part_name, use_count, '', use_date, use_procline))
+            db.commit()
 
-        # return '增加外修成功'
+            return '增加外修成功'
         # 保养件数
         # 如果搁置区域有 就加1 否则就新增一条
 
@@ -1693,6 +1758,11 @@ def updateuserecord(id: int,
 
         db.commit()
         print('--------设备整改记录添加完成--------')
+        
+  
+     
+        
+   
     return '成功！'
 
 
@@ -1855,6 +1925,8 @@ def updatemachine_equipment_rectification(id: Optional[str] = '',
         cursor.execute(sql2)
         db.commit()
     return '更新完成'
+
+
 
 
 def machine_update_log(

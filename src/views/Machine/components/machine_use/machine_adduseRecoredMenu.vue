@@ -206,6 +206,10 @@ const state = reactive({
       label: "报废",
     },
     {
+      value: "外修",
+      label: "外修",
+    },
+    {
       value: "设备整改",
       label: "设备整改",
     },
@@ -281,13 +285,6 @@ const state = reactive({
   value: "",
   issave: false,
   isShowDialog: false,
-
-  /**
-   * 参数请参考 `/src/router/route.ts` 中的 `dynamicRoutes` 路由菜单格式（请注意参数类型！）
-   * 受到 `element plus` 类型 `string/number/object` 影响，不可使用 `:value="true"`
-   * 的写法，所以传值到后台时，需要转换成布尔值，否则页面可能出现玄学。
-   * 路由权限标识为数组格式，基本都需要自行转换类型
-   */
   ruleForm: {
     original: 0,
     confirm: "",
@@ -311,8 +308,7 @@ const state = reactive({
 });
 
 const gettype = async (value?: any) => {
-  console.log("进来了");
-  console.log(value);
+
 
   //通过area 找type
 
@@ -363,8 +359,6 @@ const getpartname = async (value?: any) => {
     },
   });
 
-  console.log("partname");
-  console.log(partname);
 
   state.ruleForm.part_name = partname.map((item: any) => {
     return {
@@ -385,8 +379,7 @@ const getbalance = async (value?: any) => {
     },
   });
 
-  console.log("balance");
-  console.log(balance);
+
 
   state.ruleForm.balance = balance[0][4];
   state.ruleForm.original = balance[0][5];
@@ -399,7 +392,7 @@ const openDialog = async (row?: object) => {
 
   // 领用区域获取
   let { data: res } = await service.get(`/getmachine_usearea`);
-  console.log(res);
+
   state.ruleForm.userarea = res.map((item: any) => {
     return {
       value: item[0],
@@ -415,15 +408,7 @@ const closeDialog = (row?: object) => {
   initForm();
   state.isShowDialog = false;
 };
-// 是否内嵌下拉改变
-// const onSelectIframeChange = () => {
-// 	if (state.ruleForm.meta.isIframe === 'true') {
-// 		state.ruleForm.isLink = 'true';
-// 	} else {
-// 		state.ruleForm.isLink = '';
-// 	}
-// };
-// 取消
+
 const onCancel = () => {
   closeDialog();
   initForm();
@@ -486,11 +471,7 @@ const onSubmit = () => {
     state.ruleForm.use_count = 0;
   }
 
-  // let { data: res } = await service.get("/adduserecord", {
-  //   params: {
-  //     ruleForm: state.ruleForm,
-  //   },
-  // });
+
 
   // 数据，请注意需要转换的类型
   // 关闭弹窗
@@ -519,172 +500,172 @@ const initForm = () => {
   state.ruleForm.reason = "";
 };
 
-const newintent1 = () => {
-  console.log("newintent");
+// const newintent1 = () => { 
+//console.log("newintent");
 
-  setTimeout(handle_nfc_data, 1000);
-};
-const test_nfc = () => {
-  if (state.flag == true) {
-    state.flag = false;
-    console.log("state.flag");
-    console.log(state.flag);
-    state.w = plus.nativeUI.showWaiting("请靠近NFC点检标签");
-    console.log(state.w);
-    var main = plus.android.runtimeMainActivity();
-    var Intent = plus.android.importClass("android.content.Intent");
-    var Activity = plus.android.importClass("android.app.Activity");
-    var PendingIntent = plus.android.importClass("android.app.PendingIntent");
-    var IntentFilter = plus.android.importClass("android.content.IntentFilter");
-    var NfcAdapter = plus.android.importClass("android.nfc.NfcAdapter");
-    var nfcAdapter = NfcAdapter.getDefaultAdapter(main);
-    var intent = new Intent(main, main.getClass());
-    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-    var pendingIntent = PendingIntent.getActivity(main, 0, intent, 0);
-    var ndef = new IntentFilter("android.nfc.action.TECH_DISCOVERED");
-    ndef.addDataType("*/*");
-    var intentFiltersArray = [ndef];
-    var techListsArray = [
-      ["android.nfc.tech.IsoDep"],
-      ["android.nfc.tech.NfcA"],
-      ["android.nfc.tech.NfcB"],
-      ["android.nfc.tech.NfcF"],
-      ["android.nfc.tech.Nfcf"],
-      ["android.nfc.tech.NfcV"],
-      ["android.nfc.tech.NdefFormatable"],
-      ["android.nfc.tech.MifareClassi"],
-      ["android.nfc.tech.MifareUltralight"],
-    ];
+//   setTimeout(handle_nfc_data, 1000);
+// };
+// const test_nfc = () => {
+//   if (state.flag == true) {
+//     state.flag = false;
+//     console.log("state.flag");
+//     console.log(state.flag);
+//     state.w = plus.nativeUI.showWaiting("请靠近NFC点检标签");
+//     console.log(state.w);
+//     var main = plus.android.runtimeMainActivity();
+//     var Intent = plus.android.importClass("android.content.Intent");
+//     var Activity = plus.android.importClass("android.app.Activity");
+//     var PendingIntent = plus.android.importClass("android.app.PendingIntent");
+//     var IntentFilter = plus.android.importClass("android.content.IntentFilter");
+//     var NfcAdapter = plus.android.importClass("android.nfc.NfcAdapter");
+//     var nfcAdapter = NfcAdapter.getDefaultAdapter(main);
+//     var intent = new Intent(main, main.getClass());
+//     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//     var pendingIntent = PendingIntent.getActivity(main, 0, intent, 0);
+//     var ndef = new IntentFilter("android.nfc.action.TECH_DISCOVERED");
+//     ndef.addDataType("*/*");
+//     var intentFiltersArray = [ndef];
+//     var techListsArray = [
+//       ["android.nfc.tech.IsoDep"],
+//       ["android.nfc.tech.NfcA"],
+//       ["android.nfc.tech.NfcB"],
+//       ["android.nfc.tech.NfcF"],
+//       ["android.nfc.tech.Nfcf"],
+//       ["android.nfc.tech.NfcV"],
+//       ["android.nfc.tech.NdefFormatable"],
+//       ["android.nfc.tech.MifareClassi"],
+//       ["android.nfc.tech.MifareUltralight"],
+//     ];
 
-    document.addEventListener("newintent", newintent1, false);
-    document.addEventListener(
-      "pause",
-      function (e) {
-        if (nfcAdapter) {
-          nfcAdapter.disableForegroundDispatch(main);
-          console.log("pause");
-        }
-      },
-      false
-    );
-    document.addEventListener(
-      "resume",
-      function (e) {
-        if (nfcAdapter) {
-          console.log("resume");
-          nfcAdapter.enableForegroundDispatch(
-            main,
-            pendingIntent,
-            intentFiltersArray,
-            techListsArray
-          );
-        }
-      },
-      false
-    );
-    nfcAdapter.enableForegroundDispatch(
-      main,
-      pendingIntent,
-      intentFiltersArray,
-      techListsArray
-    );
-  } else {
-    ElMessage({
-      type: "warning",
-      message: "请执行完本次巡检",
-    });
-  }
-};
-const handle_nfc_data = () => {
-  state.w.setTitle("请勿移开标签\n正在读取数据...");
-  var main = plus.android.runtimeMainActivity();
-  var runtimeIntent = main.getIntent();
+//     document.addEventListener("newintent", newintent1, false);
+//     document.addEventListener(
+//       "pause",
+//       function (e) {
+//         if (nfcAdapter) {
+//           nfcAdapter.disableForegroundDispatch(main);
+//           console.log("pause");
+//         }
+//       },
+//       false
+//     );
+//     document.addEventListener(
+//       "resume",
+//       function (e) {
+//         if (nfcAdapter) {
+//           console.log("resume");
+//           nfcAdapter.enableForegroundDispatch(
+//             main,
+//             pendingIntent,
+//             intentFiltersArray,
+//             techListsArray
+//           );
+//         }
+//       },
+//       false
+//     );
+//     nfcAdapter.enableForegroundDispatch(
+//       main,
+//       pendingIntent,
+//       intentFiltersArray,
+//       techListsArray
+//     );
+//   } else {
+//     ElMessage({
+//       type: "warning",
+//       message: "请执行完本次巡检",
+//     });
+//   }
+// };
+// const handle_nfc_data = () => {
+//   state.w.setTitle("请勿移开标签\n正在读取数据...");
+//   var main = plus.android.runtimeMainActivity();
+//   var runtimeIntent = main.getIntent();
 
-  var b = runtimeIntent.getExtras();
-  plus.android.importClass(b);
-  var set = b.keySet();
-  plus.android.importClass(set);
-  var sb;
-  var i = set.iterator();
-  plus.android.importClass(i);
-  var hasNest = i.hasNext();
-  var NfcA = plus.android.importClass("android.nfc.tech.NfcA");
-  var IsoDep = plus.android.importClass("android.nfc.tech.IsoDep");
-  var Tag = plus.android.importClass("android.nfc.Tag");
-  var key = i.next();
-  var v = b.get(key);
+//   var b = runtimeIntent.getExtras();
+//   plus.android.importClass(b);
+//   var set = b.keySet();
+//   plus.android.importClass(set);
+//   var sb;
+//   var i = set.iterator();
+//   plus.android.importClass(i);
+//   var hasNest = i.hasNext();
+//   var NfcA = plus.android.importClass("android.nfc.tech.NfcA");
+//   var IsoDep = plus.android.importClass("android.nfc.tech.IsoDep");
+//   var Tag = plus.android.importClass("android.nfc.Tag");
+//   var key = i.next();
+//   var v = b.get(key);
 
-  if (v instanceof NfcA) {
-    var atqa = v.getAtqa();
-    var sak = v.getSak();
-    var tag = g.getTag();
-    plus.android.importClass(tag);
-    var techList = tag.getTechList();
-    console.log("NfcA Atqa=" + atqa + ";Sak=" + sak + ";techList=" + techList);
-  } else if (v instanceof IsoDep) {
-    var tag = g.getTag();
-    plus.android.importClass(tag);
-    var techList = tag.getTechList();
-    console.log("IsoDep techList=" + techList);
-  } else if (v instanceof Tag) {
-    var tag = v;
-    var techList = tag.getTechList();
-    console.log("Tag techList=" + techList);
-  }
-  console.log("v=" + v);
-  state.cardid = v;
-  console.log("cardid=" + state.cardid);
+//   if (v instanceof NfcA) {
+//     var atqa = v.getAtqa();
+//     var sak = v.getSak();
+//     var tag = g.getTag();
+//     plus.android.importClass(tag);
+//     var techList = tag.getTechList();
+//     console.log("NfcA Atqa=" + atqa + ";Sak=" + sak + ";techList=" + techList);
+//   } else if (v instanceof IsoDep) {
+//     var tag = g.getTag();
+//     plus.android.importClass(tag);
+//     var techList = tag.getTechList();
+//     console.log("IsoDep techList=" + techList);
+//   } else if (v instanceof Tag) {
+//     var tag = v;
+//     var techList = tag.getTechList();
+//     console.log("Tag techList=" + techList);
+//   }
+//   console.log("v=" + v);
+//   state.cardid = v;
+//   console.log("cardid=" + state.cardid);
 
-  //获取值
-  // getinspection(JSON.stringify(v));
+//   //获取值
+//   // getinspection(JSON.stringify(v));
 
-  getinspection(JSON.stringify(v));
+//   getinspection(JSON.stringify(v));
 
-  document.removeEventListener("newintent", newintent1, false);
-  //关闭事件监听器
+//   document.removeEventListener("newintent", newintent1, false);
+//   //关闭事件监听器
 
-  state.w.close();
-  // getinspection("[77,-25,-78,33]");
-  // state.isShowDialog = !state.isShowDialog;
-  // document.getElementById("a").innerHTML = state.resdata;
-  // // document.getElementById("b").innerHTML = v;
-  // sb = key + "=" + v + "\n";
-  // hasNest = i.hasNext();
-  // console.log("hasNest=" + hasNest);
-  // console.log("v=" + v);
-};
+//   state.w.close();
+//   // getinspection("[77,-25,-78,33]");
+//   // state.isShowDialog = !state.isShowDialog;
+//   // document.getElementById("a").innerHTML = state.resdata;
+//   // // document.getElementById("b").innerHTML = v;
+//   // sb = key + "=" + v + "\n";
+//   // hasNest = i.hasNext();
+//   // console.log("hasNest=" + hasNest);
+//   // console.log("v=" + v);
+// };
 
-//获取点检区域
-const getinspection = (v: String) => {
-  const loading = ElLoading.service({
-    lock: true,
-    text: "请将手机靠近NFC",
-    background: "rgba(0, 0, 0, 0.7)",
-  });
-  service
-    .get("/getmachine_inspection", {
-      params: {
-        cardid: v,
-        flag: "1",
-      },
-    })
-    .then((res) => {
-      console.log(res.data);
-      state.ruleForm.userarea = res.data.map((item: any) => {
-        return {
-          label: item[0],
-          value: item[0],
-        };
-      });
-      loading.close();
-      state.flag = true;
-    })
-    .catch((err) => {
-      ElMessage({
-        type: "error",
-        message: err.data,
-      });
-      state.flag = true;
-    });
-};
+// //获取点检区域
+// const getinspection = (v: String) => {
+//   const loading = ElLoading.service({
+//     lock: true,
+//     text: "请将手机靠近NFC",
+//     background: "rgba(0, 0, 0, 0.7)",
+//   });
+//   service
+//     .get("/getmachine_inspection", {
+//       params: {
+//         cardid: v,
+//         flag: "1",
+//       },
+//     })
+//     .then((res) => {
+//       console.log(res.data);
+//       state.ruleForm.userarea = res.data.map((item: any) => {
+//         return {
+//           label: item[0],
+//           value: item[0],
+//         };
+//       });
+//       loading.close();
+//       state.flag = true;
+//     })
+//     .catch((err) => {
+//       ElMessage({
+//         type: "error",
+//         message: err.data,
+//       });
+//       state.flag = true;
+//     });
+// };
 </script>

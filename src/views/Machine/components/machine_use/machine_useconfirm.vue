@@ -126,6 +126,10 @@ const state = reactive({
       value: "设备整改",
       label: "设备整改",
     },
+    {
+      value: "外修",
+      label: "外修",
+    },
   ],
   handle: "",
   issave: false,
@@ -152,13 +156,11 @@ onMounted(async () => {
       label: item[0],
     };
   });
-  console.log("areaArr");
-  console.log(state.ruleForm.areaArr);
+ 
 });
 // 打开弹窗
-const openDialog = async (row?: any) => {
-  console.log("rowobjec");
-  console.log(row);
+const openDialog =  (row?: any) => {
+ 
   state.partsdetail = row;
 
   state.isShowDialog = true;
@@ -166,21 +168,28 @@ const openDialog = async (row?: any) => {
 };
 
 defineExpose({ openDialog });
-const getbalance = async () => {
-  let { data: balance } = await service.get("/getmachine_balance", {
+const getbalance =  () => {
+
+
+
+  service.get("/getmachine_balance", {
     params: {
       area: state.partsdetail.use_area,
       type: state.partsdetail.type,
       spec: state.partsdetail.spec,
       part_name: state.partsdetail.use_part_name,
     },
-  });
+  }).then((res:any)=>{
 
-  console.log("balance");
-  console.log(balance);
+    console.log(res.data);
+    
+    state.ruleForm.balance=res.data[0][4]
 
-  state.ruleForm.balance = balance[0][4];
-  state.ruleForm.original = balance[0][5];
+    state.ruleForm.original=res.data[0][5]
+  })
+
+ 
+
 };
 
 // 关闭弹窗
@@ -225,8 +234,7 @@ const onSubmit = async (v: any) => {
       },
     });
 
-    console.log("更新外修明细返回值");
-    console.log(res);
+   
     if (res == "成功！") {
       ElMessage.success({
         message: "保存成功",
@@ -251,12 +259,12 @@ const onSubmit = async (v: any) => {
 const initForm = () => {
   state.ruleForm.name = "";
   // state.ruleForm.part_spec = "";
-  // state.ruleForm.area = "";
-  // state.ruleForm.balance = "";
-  // state.ruleForm.original = "";
-  // state.ruleForm.remark = "";
+  state.ruleForm.area = "";
+  state.ruleForm.balance = 0;
+  state.ruleForm.original = 0;
+  state.ruleForm.remark = "";
 
   // state.ruleForm.type = "";
-  state.ruleForm.name = "";
+
 };
 </script>

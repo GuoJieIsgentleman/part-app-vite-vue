@@ -1,6 +1,7 @@
 // 定义内容
 export default {
   router: {
+    machine_repair:"机修外修",
     part_contrast: '电器产线对比',
     part_procline_Summary: '电器产线汇总',
     part_procline_detial: '电器产线明细',

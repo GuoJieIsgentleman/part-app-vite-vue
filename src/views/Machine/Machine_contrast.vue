@@ -18,7 +18,7 @@
       <el-row :gutter="50">
         <el-col :span="12" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
           <el-select v-model="state.type" filterable placeholder="备件类型" clearable>
-            <el-option v-for="item in state.types" :label="item.label" :value="item.value">
+            <el-option v-for="item in state.types"  :label="item.label" :value="item.value">
             </el-option>
           </el-select>
         </el-col>
@@ -38,8 +38,7 @@
           </el-table-column> -->
           <el-table-column prop="type" width="300" label="备件类型" align="center">
           </el-table-column>
-          <el-table-column prop="name" width="300" label="备件名称" align="center">
-          </el-table-column>
+        
           <el-table-column prop="spec" width="300" label="规格型号" align="center">
           </el-table-column>
           <el-table-column prop="kucun" label="备件库存" width="80" align="center">
@@ -115,10 +114,10 @@ const getpartslist = () => {
       state.partslist = res.data.map((item: any) => {
         return {
           type: item[0],
-          name: item[1],
-          spec: item[2],
-          kucun: item[3],
-          cx: item[4],
+         // name: item[1],
+          spec: item[1],
+          kucun: item[2],
+          cx: item[3],
         };
       });
 

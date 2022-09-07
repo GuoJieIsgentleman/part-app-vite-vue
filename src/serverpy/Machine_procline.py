@@ -159,21 +159,21 @@ def getmachine_contrast(machineType: Optional[str] = ""):
     
     cursor.execute(f''' 
             
-				select * from (
+			select * from (
 
-       select IFNULL(e.mdtype,e.type) as type,IFNULL(e.part_name,e.machine_name) as name,IFNULL(e.part_spec,e.machine_spesc) as spec,IFNULL(e.kucun,''),IFNULL(e.cx,'') from 
+       select IFNULL(e.mdtype,e.type) as type,IFNULL(e.part_spec,e.machine_spesc) as spec,IFNULL(e.kucun,''),IFNULL(e.cx,'') from 
           (
           select * from 
-          ( select md.type as mdtype ,md.part_spec,md.part_name,sum(md.balance) as  kucun from machine_detail  md  group  by md.part_spec,md.part_name,md.type) a
+          ( select md.type as mdtype ,md.part_spec,sum(md.balance) as  kucun from machine_detail  md  group  by md.part_spec,md.type) a
           left join
-          (select mpd.type,mpd.machine_spesc,mpd.machine_name,count(mpd.machine_spesc) as cx from machine_procline_detial   mpd group  by mpd.machine_spesc,mpd.machine_name,mpd.type)b
-          on a.part_spec=b.machine_spesc and a.part_name=b.machine_name and a.mdtype=b.type
+          (select mpd.type,mpd.machine_spesc,count(mpd.machine_spesc) as cx from machine_procline_detial   mpd group  by mpd.machine_spesc,mpd.type)b
+          on a.part_spec=b.machine_spesc  and a.mdtype=b.type
           UNION
           select * from 
-          ( select md.type as mdtype,md.part_spec,md.part_name,sum(md.balance) from machine_detail  md  group  by md.part_spec,md.part_name,md.type) c
+          ( select md.type as mdtype,md.part_spec,sum(md.balance) from machine_detail  md  group  by md.part_spec,md.type) c
           right join
-          (select mpd.type,mpd.machine_spesc,mpd.machine_name,count(mpd.machine_spesc)  from machine_procline_detial   mpd group  by mpd.machine_spesc,mpd.machine_name,mpd.type)d
-          on c.part_spec=d.machine_spesc and c.part_name=d.machine_name and c.mdtype=d.type
+          (select mpd.type,mpd.machine_spesc,count(mpd.machine_spesc)  from machine_procline_detial   mpd group  by mpd.machine_spesc,mpd.type)d
+          on c.part_spec=d.machine_spesc  and c.mdtype=d.type
           ) e 
 						)aa 
           {sql}

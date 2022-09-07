@@ -38,8 +38,7 @@
           </el-table-column> -->
           <el-table-column prop="type" width="300" label="备件类型" align="center">
           </el-table-column>
-          <el-table-column prop="name" width="300" label="备件名称" align="center">
-          </el-table-column>
+    
           <el-table-column prop="spec" width="300" label="规格型号" align="center">
           </el-table-column>
           <el-table-column prop="kucun" label="备件库存" width="80" align="center">
@@ -63,7 +62,7 @@ import { ElMessage, ElMessageBox } from "element-plus";
 
 const state = reactive({
   column: [
-    { title: "备件名称", key: "name", type: "text" },
+
     { title: "型号", key: "spec", type: "text" },
     { title: "库存", key: "kucun", type: "text" },
     { title: "产线使用", key: "cx", type: "text" },
@@ -115,10 +114,10 @@ const getpartslist = () => {
       state.partslist = res.data.map((item: any) => {
         return {
           type: item[0],
-          name: item[1],
-          spec: item[2],
-          kucun: item[3],
-          cx: item[4],
+        
+          spec: item[1],
+          kucun: item[2],
+          cx: item[3],
         };
       });
 
