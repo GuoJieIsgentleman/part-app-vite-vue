@@ -106,7 +106,7 @@
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-              <el-form-item label="新搁置区域">
+              <el-form-item label="新搁置区域" :label-width="85">
                 <el-row>
                   <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
                     <el-select v-model="state.floor" filterable placeholder="存放楼层" clearable>
@@ -434,7 +434,7 @@ const emit = defineEmits(["senddata"]);
 // };
 const onSubmit = () => {
   // 做保存 更新表的操作
-  
+  let temp=state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num
   if(state.ruleForm.type===""||state.ruleForm.part_name==="" || state.ruleForm.part_spec==="" || state.ruleForm.area==="" )
   {
     ElMessage({type:'warning',message:'请完善备件信息'})
@@ -445,7 +445,7 @@ const onSubmit = () => {
   }
   state.issave = !state.issave;
   //请求
-  let temp=state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num
+  
   service
     .get("/updatemachine_part", {
       params: {

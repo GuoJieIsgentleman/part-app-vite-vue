@@ -43,7 +43,7 @@
             </el-table-column>
           </el-table>
 
-          <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          <el-pagination style="width:800px ;" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
             :page-size="state.pagesize" :page-sizes="state.pagearray" @prev-click="prev()" @next-click="next()"
             layout="total, sizes, prev, pager, next, jumper" :total="state.total" prev-text="上一页" next-text="下一页"
             :page-count="state.pagecount" />
@@ -94,7 +94,8 @@ const findUser = () => {
 
     }
   }).then((res: any) => {
-
+    console.log('res',res);
+    
     state.tableData.data = res.data.map((item: any) => {
       return {
         id: item[0],

@@ -95,7 +95,7 @@
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="搁置区域">
-              <el-select
+              <!-- <el-select
                 v-model="state.ruleForm.part_area_value"
                 filterable
                 placeholder="备件区域"
@@ -108,7 +108,35 @@
                   :value="item['value']"
                 >
                 </el-option>
-              </el-select>
+              </el-select> -->
+              <el-row>
+                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                    <el-select v-model="state.floor" filterable placeholder="存放楼层" clearable>
+                      <el-option v-for="item in state.floors" :key="item['value']" :label="item['label']"
+                        :value="item['value']">
+                      </el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                    <el-select v-model="state.shelf" filterable placeholder="存放架编号" clearable>
+                      <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']"
+                        :value="item['value']">
+                      </el-option>
+                    </el-select>
+                  </el-col>
+                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                    <el-select v-model="state.num" filterable placeholder="存放位置编号" clearable>
+                      <el-option v-for="item in 5" :key="item" :label="item" :value="item">
+                        {{ item }}
+                      </el-option>
+                    </el-select>
+                  </el-col>
+
+                  <el-col class="mb20" :xs="24" :sm="18" :md="18" :lg="18" :xl="18">
+                   {{state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num}}
+                  </el-col>
+                </el-row>
+             
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -161,6 +189,121 @@ import { compressAccurately } from "image-conversion";
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
 
 const state = reactive({
+  
+  num: '',
+  shelfArea: '',
+  floor: '',
+  floors: [
+  {
+        value: "值班室一楼",
+        label: "值班室一楼",
+      },
+      {
+        value: "值班室二楼",
+        label: "值班室二楼",
+      },
+      {
+        value: "方镀三线一楼",
+        label: "方镀三线一楼",
+      },
+      {
+        value: "圆镀四线一楼",
+        label: "圆镀四线一楼",
+      },
+      {
+        value: "南污水南库",
+        label: "南污水南库",
+      },{
+    value: "方镀三线二楼",
+    label: "方镀三线二楼",
+  },
+  {
+    value: "圆镀四线二楼",
+    label: "圆镀四线二楼",
+  },
+  {
+    value: "南污水北库",
+    label: "南污水北库",
+  },
+  {
+    value: "锌锭库一层",
+    label: "锌锭库一层",
+  },
+  {
+    value: "锌锭库二层",
+    label: "锌锭库二层",
+  },
+  {
+    value: "方管库一层",
+    label: "方管库一层",
+  },
+  {
+    value: "方管库二层",
+    label: "方管库二层",
+  }],
+  shelf: '',
+  shelfs: [
+    {
+      value: "1号架",
+      label: "1号架",
+    },
+    {
+      value: "2号架",
+      label: "2号架",
+    },
+    {
+      value: "3号架",
+      label: "3号架",
+    },
+    {
+      value: "4号架",
+      label: "4号架",
+    },
+    {
+      value: "5号架",
+      label: "5号架",
+    },
+    {
+      value: "6号架",
+      label: "6号架",
+    },
+    {
+      value: "7号架",
+      label: "7号架",
+    },
+    {
+      value: "8号架",
+      label: "8号架",
+    },
+    {
+      value: "9号架",
+      label: "9号架",
+    },
+    {
+      value: "10号架",
+      label: "10号架",
+    },
+    {
+      value: "11号架",
+      label: "11号架",
+    },
+    {
+      value: "12号架",
+      label: "12号架",
+    },
+    {
+      value: "13号架",
+      label: "13号架",
+    },
+    {
+      value: "14号架",
+      label: "14号架",
+    },
+    {
+      value: "15号架",
+      label: "15号架",
+    },
+  ],
   machine_part_id: "",
   singleparts: [
     {
@@ -231,8 +374,22 @@ const onCancel = () => {
 
 const upload1 = ref();
 const onSubmit = () => {
-  // 数据，请注意需要转换的类型
-  closeDialog(); // 关闭弹窗
+
+
+
+
+  let tempStr = state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + "-" + state.num
+
+  if(state.machine_part_id=='' || state.ruleForm.machine_part_name===''
+  ||state.ruleForm.part_spec==='' ||state.ruleForm.part_name===''|| state.ruleForm.type==='')
+  {
+    ElMessage({type:'warning',message:'请完善成套备件信息'})
+    return
+  }
+  if(state.ruleForm.balance===''){
+    ElMessage({type:'warning',message:'请填写库存'})
+    return
+  }
 
   service
     .get("/addmachine_part", {
@@ -241,7 +398,7 @@ const onSubmit = () => {
         machine_part_name: state.ruleForm.machine_part_name,
         part_name: state.ruleForm.part_name,
         part_spec: state.ruleForm.part_spec,
-        area: state.ruleForm.part_area_value,
+        area: tempStr,
         balance: state.ruleForm.balance,
         original: state.ruleForm.balance,
         remark: state.ruleForm.remark,
@@ -257,7 +414,7 @@ const onSubmit = () => {
       });
       state.ruleForm.id = res.data.id;
       //调用上传图片的方法
-      console.log(upload1.value);
+    
       upload1.value.submit();
       initForm();
       closeDialog();
@@ -273,7 +430,7 @@ const onSubmit = () => {
 };
 
 const imgpreivew = (file: any) => {
-  console.log(file.raw.type);
+ 
   if (file.raw.type == "image/jpeg") {
     //图片的raw 转换为url
     state.ruleForm.imageUrl = URL.createObjectURL(file.raw);

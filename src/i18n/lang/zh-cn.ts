@@ -1,6 +1,9 @@
 // 定义内容
 export default {
   router: {
+    part_contrast: '电器产线对比',
+    part_procline_Summary: '电器产线汇总',
+    part_procline_detial: '电器产线明细',
     rolesManager: '角色管理',
     Machine_contrast: '机修产线对比',
     Machine_procline_Summary: '机修产线汇总',

@@ -1,36 +1,22 @@
 <template>
   <div class="system-menu-container">
-    <el-dialog
-      :title="state.area + '巡检明细'"
-      v-model="state.isShowDialog"
-      width="769px"
-      show-close="false"
-      destroy-on-close
-      close="closedialog"
-    >
+    <el-dialog :title="state.area + '巡检明细'" v-model="state.isShowDialog" width="769px" show-close="false"
+      destroy-on-close close="closedialog">
       <div v-if="state.isshowmaintenance1_data">
-        <span> <el-tag type="warning"> 保养件未确认明细</el-tag></span>
-        <el-table
-          :data="state.maintenance1_data"
-          style="width: 100%"
-          border
-          :cell-class-name="addClass"
-        >
+        <span>
+          <el-tag type="warning"> 保养件未确认明细</el-tag>
+        </span>
+        <el-table :data="state.maintenance1_data" style="width: 100%" border :cell-class-name="addClass">
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
           <el-table-column prop="type" label="备件备件类型" width="60" align="center">
           </el-table-column>
-                 <el-table-column prop="use_part_name" label="名称" width="140" align="center">
+          <el-table-column prop="use_part_name" label="名称" width="140" align="center">
           </el-table-column>
           <el-table-column prop="spec" label="型号" width="200" align="center">
           </el-table-column>
-   
-          <el-table-column
-            prop="use_procline"
-            label="使用产线"
-            width="140"
-            align="center"
-          >
+
+          <el-table-column prop="use_procline" label="使用产线" width="140" align="center">
           </el-table-column>
           <el-table-column prop="user" label="领用人" width="140" align="center">
           </el-table-column>
@@ -45,28 +31,20 @@
         </el-table>
       </div>
       <div class="" v-if="state.isshowmaintenance_data">
-        <span> <el-tag type="warning"> 保养件未保养明细</el-tag></span>
-        <el-table
-          :data="state.maintenance_data"
-          style="width: 100%"
-          border
-          :cell-class-name="addClass"
-        >
+        <span>
+          <el-tag type="warning"> 保养件未保养明细</el-tag>
+        </span>
+        <el-table :data="state.maintenance_data" style="width: 100%" border :cell-class-name="addClass">
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
           <el-table-column align="center" prop="type" label="备件类型" width="60">
           </el-table-column>
-             <el-table-column align="center" prop="use_part_name" label="名称" width="140">
+          <el-table-column align="center" prop="use_part_name" label="名称" width="140">
           </el-table-column>
           <el-table-column align="center" prop="spec" label="型号" width="200">
           </el-table-column>
-       
-          <el-table-column
-            align="center"
-            prop="use_procline"
-            label="使用产线"
-            width="140"
-          >
+
+          <el-table-column align="center" prop="use_procline" label="使用产线" width="140">
           </el-table-column>
           <el-table-column align="center" prop="user" label="领用人" width="140">
           </el-table-column>
@@ -82,13 +60,10 @@
       </div>
 
       <div class="" v-if="state.isshowrepair_data">
-        <span> <el-tag type="danger"> 外修件未申请外修</el-tag></span>
-        <el-table
-          :data="state.repair_data"
-          style="width: 100%"
-          border
-          :cell-class-name="addClass1"
-        >
+        <span>
+          <el-tag type="danger"> 外修件未申请外修</el-tag>
+        </span>
+        <el-table :data="state.repair_data" style="width: 100%" border :cell-class-name="addClass1">
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
           <el-table-column prop="type" label="备件类型" width="60" align="center">
@@ -115,13 +90,10 @@
         </el-table>
       </div>
       <div class="" v-if="state.isshowrepair1_data">
-        <span> <el-tag type="danger"> 外修件回厂未试机明细</el-tag></span>
-        <el-table
-          :data="state.repair1_data"
-          style="width: 100%"
-          border
-          :cell-class-name="addClass1"
-        >
+        <span>
+          <el-tag type="danger"> 外修件回厂未试机明细</el-tag>
+        </span>
+        <el-table :data="state.repair1_data" style="width: 100%" border :cell-class-name="addClass1">
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
           <el-table-column prop="type" label="备件类型" width="60" align="center">
@@ -148,13 +120,10 @@
         </el-table>
       </div>
       <div class="" v-if="state.isshowrepair2_data">
-        <span> <el-tag type="danger"> 外修件未回厂明细</el-tag></span>
-        <el-table
-          :data="state.repair2_data"
-          style="width: 100%"
-          border
-          :cell-class-name="addClass1"
-        >
+        <span>
+          <el-tag type="danger"> 外修件未回厂明细</el-tag>
+        </span>
+        <el-table :data="state.repair2_data" style="width: 100%" border :cell-class-name="addClass1">
           <el-table-column prop="id" label="序号" width="60" align="center">
           </el-table-column>
           <el-table-column prop="type" label="备件类型" width="60" align="center">
@@ -182,16 +151,17 @@
       </div>
 
       <div class="">
-        <span><el-tag type="success"> 备件明细</el-tag></span>
-        <el-table
-          :data="state.part_data"
-          style="width: 100%"
-          :cell-class-name="addClass2"
-          v-if="state.isshowpart_data"
-          border
-          height="400"
-          show-summary
-        >
+        <span>
+          <el-tag type="success"> 备件明细</el-tag>
+        </span>
+        <span>
+          <el-select clearable  v-model="state.shelf" filterable placeholder="存放货架"  @change="getinfo">
+            <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']" :value="item['value']">
+            </el-option>
+          </el-select>
+        </span>
+        <el-table :data="state.part_data1" style="width: 100%" :cell-class-name="addClass2" v-if="state.isshowpart_data"
+          border height="400" show-summary>
           <el-table-column type="index" label="序号" width="60" align="center">
           </el-table-column>
           <el-table-column prop="type" label="备件类型" width="60" align="center">
@@ -204,30 +174,36 @@
           <el-table-column prop="balance" label="库存" width="50" align="center">
           </el-table-column>
           <el-table-column prop="original" label="原有" width="50" align="center">
-            
+
           </el-table-column>
           <el-table-column prop="area" label="存放区域" width="185" align="center">
+          </el-table-column>
+          <el-table-column prop="partimgsrc" label="图片展示" width="200" align="center">
             <template #default="scope">
-              <el-button @click="updateArea(scope.row)">{{scope.row.area}}</el-button>
+              <div v-if="scope.row.partimgsrc != '' ">
+                <el-image style="width: 80px; height: 80px" :preview-src-list="[scope.row.partimgsrc]"
+                  :src="scope.row.partimgsrc">
+                </el-image>
+              </div>
+              <div v-else>
+                无图
+                <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
+              </div>
             </template>
           </el-table-column>
-        
-                <el-table-column prop="img_url" label="图片展示" width="200" align="center">
-                  <template #default="scope">
-                    <div v-if="scope.row.img_url != ''">
-                      <el-image
-                        style="width: 80px; height: 80px"
-                        :preview-src-list="[scope.row.img_url]"
-                        :src="scope.row.img_url"
-                      >
-                      </el-image>
-                    </div>
-                    <div v-else>
-                      无图
-                      <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
-                    </div>
-                  </template>
-                </el-table-column>
+
+          <el-table-column label="操作" align="center" min-width="120">
+            <template #default="scope">
+              <Auths :value="['btn.edit']" class="displayStyle">
+                <el-button type="primary" @click="onOpenEditMenu(scope.row, scope.$index)">编辑
+                </el-button>
+              </Auths>
+
+              <!-- <Auths :value="['btn.del']" class="displayStyle">
+                <el-button type="warning" @click="onTabelRowDel(scope.row, scope.$index)">删除</el-button>
+              </Auths> -->
+            </template>
+          </el-table-column>
         </el-table>
       </div>
       <div>
@@ -237,35 +213,141 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="closeDialog()">取消</el-button>
-          <el-button type="primary" @click="saveinspectlog()">确认</el-button>
+          <el-button @click="saveinspectlog()" type="primary">确认</el-button>
         </span>
       </template>
     </el-dialog>
-
+    <EditMenu ref="editMenuRef" @senddata="setdata" />
     <UpdateArea ref="UpdateAreaRef" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import UpdateArea from './updateArea.vue'
-import { reactive, toRefs, onUnmounted, inject ,ref} from "vue";
+import { reactive, toRefs, onUnmounted, inject, ref } from "vue";
 import service from "/@/utils/request";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { formatDate111, subtimeminutes, subtimeminutes1 } from "/@/utils/formatTime";
 import { Session } from "/@/utils/storage";
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
+import EditMenu from "/@/views/Machine/components/machine/editMenu.vue";
 
-      
-const UpdateAreaRef=ref()
+const UpdateAreaRef = ref()
 
-const  updateArea=(row:any)=>{
-    console.log('row',row);
-    UpdateAreaRef.value.openDialog(row)
-    
+const updateArea = (row: any) => {
+  console.log('row', row);
+  UpdateAreaRef.value.openDialog(row)
+
 }
 
+const editMenuRef = ref()
+const onOpenEditMenu = (row: object, index: any) => {
+  editMenuRef.value.openDialog(row, index);
+};
+
+
+
+const setdata = (v: any, v1: any) => {
+  //set table 值
+  console.log('返回', v, v1);
+
+};
+
+const onTabelRowDel = (row: any, index: any) => {
+  ElMessageBox.confirm("此操作将永久删除备件信息, 是否继续?", "提示", {
+    confirmButtonText: "删除",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(() => {
+      console.log(row);
+      service
+        .get("/deletemachine", {
+          params: {
+            id: row.id,
+          },
+        })
+        .then((res) => {
+          ElMessage({
+            message: res.data,
+            type: "success",
+          });
+
+          //initpart();
+        })
+        .catch((err) => {
+          ElMessage({
+            message: err.data,
+            type: "warning",
+          });
+        });
+    })
+    .catch(() => { });
+};
 
 const state = reactive({
+  shelfs: [
+    {
+      value: "1号架",
+      label: "1号架",
+    },
+    {
+      value: "2号架",
+      label: "2号架",
+    },
+    {
+      value: "3号架",
+      label: "3号架",
+    },
+    {
+      value: "4号架",
+      label: "4号架",
+    },
+    {
+      value: "5号架",
+      label: "5号架",
+    },
+    {
+      value: "6号架",
+      label: "6号架",
+    },
+    {
+      value: "7号架",
+      label: "7号架",
+    },
+    {
+      value: "8号架",
+      label: "8号架",
+    },
+    {
+      value: "9号架",
+      label: "9号架",
+    },
+    {
+      value: "10号架",
+      label: "10号架",
+    },
+    {
+      value: "11号架",
+      label: "11号架",
+    },
+    {
+      value: "12号架",
+      label: "12号架",
+    },
+    {
+      value: "13号架",
+      label: "13号架",
+    },
+    {
+      value: "14号架",
+      label: "14号架",
+    },
+    {
+      value: "15号架",
+      label: "15号架",
+    },
+  ],
   isshowtag: false,
   area: "",
   isshowpart_data: false,
@@ -280,7 +362,8 @@ const state = reactive({
   repair_data: [],
   repair1_data: [],
   repair2_data: [],
-  part_data: [],
+  part_data: [] as any ,
+  part_data1: [] as any,
   resdata: [] as any,
   remark: "",
   cardid: "",
@@ -302,7 +385,7 @@ const saveinspectlog = () => {
         inspect_area: state.area,
       },
     })
-    .then((res:any) => {
+    .then((res: any) => {
       ElMessage({
         type: "success",
         message: `巡检成功，本次巡检时间为${subtimeminutes1(
@@ -314,7 +397,7 @@ const saveinspectlog = () => {
       initdialog();
       state.isShowDialog = false;
     })
-    .catch((err:any) => {
+    .catch((err: any) => {
       ElMessage({
         type: "warning",
         message: err.data,
@@ -340,7 +423,7 @@ const initdialog = () => {
 const openDialog = (row?: any, time?: any, flag?: Boolean) => {
   state.isShowDialog = true;
   state.inspectstarttime = time;
-  
+
   getinspection(row);
 };
 
@@ -368,7 +451,7 @@ const onCancel = () => {
 };
 // 新增
 
-const initForm = () => {};
+const initForm = () => { };
 const getinspection = (v: String) => {
   service
     .get("/getmachine_inspection", {
@@ -376,7 +459,7 @@ const getinspection = (v: String) => {
         cardid: v,
       },
     })
-    .then((res:any) => {
+    .then((res: any) => {
       state.resdata = res.data;
       console.log("state.resdata");
       console.log(state.resdata);
@@ -422,7 +505,7 @@ const getinspection = (v: String) => {
         });
 
         state.maintenance1_data = state.maintenance1_data.filter(
-          (ele:any) => ele != undefined
+          (ele: any) => ele != undefined
         );
         // console.log("--------------------------------------------------");
         // console.log("state.maintenance_data");
@@ -534,13 +617,14 @@ const getinspection = (v: String) => {
             balance: item[4],
             original: item[5],
             type: item[7],
-            img_url:item[8]
+            partimgsrc: item[8]
           };
         });
+        state.part_data1=state.part_data
         state.isshowpart_data = true;
       }
-console.log('state.part_data');
-       console.log(state.part_data);
+      console.log('state.part_data');
+      console.log(state.part_data);
     });
 };
 
@@ -559,16 +643,20 @@ const addClass2 = ({ row, column, rowIndex, columnIndex }: any) => {
     return "warning-row2";
   }
 };
-// return {
-//   addClass,
-//   addClass1,
-//   addClass2,
-//   state,
-//   openDialog,
-//   closeDialog,
-//   getinspection,
-//   saveinspectlog,
-// };
+
+
+const getinfo=(val:any)=>{
+
+  console.log('val',val);
+ 
+
+  state.part_data1=state.part_data.filter((item:any)=>{
+     
+            return  item.area.indexOf(val)!=-1
+  })
+
+}
+
 </script>
 
 <style lang="less">
@@ -576,100 +664,45 @@ const addClass2 = ({ row, column, rowIndex, columnIndex }: any) => {
   background-color: rgb(230, 162, 60);
   color: rgb(0, 0, 0);
 }
+
 .el-table .warning-row1 {
   background-color: rgb(245, 108, 108);
   color: rgb(34, 10, 10);
 }
+
 .el-table .warning-row2 {
   background-color: rgb(103, 194, 58);
   color: rgb(28, 1, 1);
 }
 
-.warning-row el-table__header-wrapper > table > thead > tr > th > div {
+.warning-row el-table__header-wrapper>table>thead>tr>th>div {
   background-color: rgb(230, 162, 60) !important;
 }
 
-.warning-row1 el-table__header-wrapper > table > thead > tr > th > div {
+.warning-row1 el-table__header-wrapper>table>thead>tr>th>div {
   background-color: rgb(245, 108, 108) !important;
 }
 
-.warning-row2 el-table__header-wrapper > table > thead > tr > th > div {
+.warning-row2 el-table__header-wrapper>table>thead>tr>th>div {
   background-color: rgb(103, 194, 58) !important;
 }
 
-section
-  > section
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > main
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > div
-  > div
-  > button
-  > span {
+section>section>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>main>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>div>div>button>span {
   font-size: 50px;
   position: relative;
 }
-section
-  > section
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > main
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > div
-  > div
-  > button {
+
+section>section>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>main>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>div>div>button {
   margin: 6% 6%;
 }
 
-section
-  > section
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > main
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > div
-  > div
-  > div
-  > div
-  > div
-  > div.el-dialog__body
-  > div
-  > span
-  > span {
+section>section>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>main>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>div>div>div>div>div>div.el-dialog__body>div>span>span {
   font-size: 30px;
   padding: 10px;
   height: 50px;
 }
-section
-  > section
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > main
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > div
-  > div
-  > div
-  > div
-  > div
-  > div.el-dialog__body
-  > div:nth-child(1)
-  > div
-  > div.el-table__header-wrapper
-  > table
-  > thead {
+
+section>section>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>main>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>div>div>div>div>div>div.el-dialog__body>div:nth-child(1)>div>div.el-table__header-wrapper>table>thead {
   background-color: rgb(230, 162, 60);
 }
 </style>

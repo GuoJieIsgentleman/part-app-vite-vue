@@ -21,96 +21,45 @@
       <el-row :gutter="24">
         <el-col :span="12" :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
           <el-tag type="danger" style="background-color: red; color: white">
-            库存数为1时显示红色</el-tag
-          >
+            库存数为1时显示红色</el-tag>
         </el-col>
         <el-col :span="12" :xs="12" :sm="12" :md="12" :lg="12" :xl="12"> </el-col>
       </el-row>
-      <el-select
-        v-model="state.part_area_value"
-        filterable
-        placeholder="备件区域"
-        clearable
-      >
-        <el-option
-          v-for="item in state.ruleForm.userarea"
-          :key="item['value']"
-          :label="item['label']"
-          :value="item['value']"
-        >
+      <el-select v-model="state.part_area_value" filterable placeholder="备件区域" clearable>
+        <el-option v-for="item in state.ruleForm.userarea" :key="item['value']" :label="item['label']"
+          :value="item['value']">
+        </el-option>
+      </el-select>
+      <el-select v-model="state.shelf" filterable placeholder="存放货架" clearable>
+        <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']" :value="item['value']">
+        </el-option>
+      </el-select>
+      <el-select @change="getpartname(state.part_type_value)" v-model="state.part_type_value" filterable
+        placeholder="备件类型" clearable>
+        <el-option v-for="item in state.ruleForm.usetype" :key="item['value']" :label="item['label']"
+          :value="item['value']">
         </el-option>
       </el-select>
 
-      <el-select
-        @change="getpartname(state.part_type_value)"
-        v-model="state.part_type_value"
-        filterable
-        placeholder="备件类型"
-        clearable
-      >
-        <el-option
-          v-for="item in state.ruleForm.usetype"
-          :key="item['value']"
-          :label="item['label']"
-          :value="item['value']"
-        >
+      <el-select v-model="state.part_name_value" @change="getspesc(state.part_name_value)" filterable placeholder="备件名称"
+        clearable>
+        <el-option v-for="item in state.ruleForm.part_name" :key="item['value']" :label="item['label']"
+          :value="item['value']">
         </el-option>
       </el-select>
-
-      <el-select
-        v-model="state.part_name_value"
-        @change="getspesc(state.part_name_value)"
-        filterable
-        placeholder="备件名称"
-        clearable
-      >
-        <el-option
-          v-for="item in state.ruleForm.part_name"
-          :key="item['value']"
-          :label="item['label']"
-          :value="item['value']"
-        >
-        </el-option>
-      </el-select>
-      <el-select
-        v-model="state.part_spec_value"
-        filterable
-        placeholder="规格型号"
-        clearable
-      >
-        <el-option
-          v-for="item in state.ruleForm.usespesc"
-          :key="item['value']"
-          :label="item['label']"
-          :value="item['value']"
-        >
+      <el-select v-model="state.part_spec_value" filterable placeholder="规格型号" clearable>
+        <el-option v-for="item in state.ruleForm.usespesc" :key="item['value']" :label="item['label']"
+          :value="item['value']">
         </el-option>
       </el-select>
 
       <el-button @click="selectparts()" type="success">查询</el-button>
 
       <!-- :row-class-name="tableRowClassName" -->
-      <el-table
-        id="outTable"
-        v-loading="state.loading"
-        :data="state.partslist"
-        :ref="filterTable"
-        border
-        show
-        align="center"
-        height="600"
-        style="width: 100%"
-        header-align="center"
-        max-height="900"
-        fit
-        :row-style="{ height: '10px' }"
-        :cell-style="{ padding: '5px 0' }"
-        size="mini"
-        :cell-class-name="addClass"
-        show-summary
-        :summary-method="getSummaries"
-        row-key="id"
-      >
+      <el-table id="outTable" v-loading="state.loading" :data="state.partslist" :ref="filterTable" border show
+        align="center" height="600" style="width: 100%" header-align="center" max-height="900" fit
+        :row-style="{ height: '10px' }" :cell-style="{ padding: '5px 0' }" size="mini" :cell-class-name="addClass"
+        show-summary :summary-method="getSummaries" row-key="id">
         <el-table-column prop="id" label="序号" fixed width="50" align="center">
         </el-table-column>
         <el-table-column prop="part_name" label="备件名称" width="180" align="center">
@@ -119,21 +68,13 @@
         <el-table-column prop="part_spec" label="规格型号" width="180" align="center">
         </el-table-column>
 
-        <el-table-column
-          prop="connection"
-          label="机械连接方式"
-          width="180"
-          align="center"
-        >
+        <el-table-column prop="connection" label="机械连接方式" width="180" align="center">
         </el-table-column>
         <el-table-column prop="partimgsrc" label="图片展示" width="200" align="center">
           <template #default="scope">
             <div v-if="scope.row.partimgsrc != ''">
-              <el-image
-                style="width: 100px; height: 100px"
-                :preview-src-list="[scope.row.partimgsrc]"
-                :src="scope.row.partimgsrc"
-              >
+              <el-image style="width: 100px; height: 100px" :preview-src-list="[scope.row.partimgsrc]"
+                :src="scope.row.partimgsrc">
               </el-image>
             </div>
             <div v-else>
@@ -144,21 +85,11 @@
         </el-table-column>
 
         <el-table-column prop="area" min-width="150" align="center" label="搁置产线区域">
-            
+
         </el-table-column>
-        <el-table-column
-          prop="balance"
-          label="结存剩余（台)"
-          min-width="100"
-          align="center"
-        >
+        <el-table-column prop="balance" label="结存剩余（台)" min-width="100" align="center">
         </el-table-column>
-        <el-table-column
-          prop="original"
-          label="原有数量（台)"
-          min-width="100"
-          align="center"
-        >
+        <el-table-column prop="original" label="原有数量（台)" min-width="100" align="center">
         </el-table-column>
         <el-table-column prop="type" label="备件类型" width="100" align="center">
         </el-table-column>
@@ -166,41 +97,21 @@
         <el-table-column label="操作" align="center" min-width="120">
           <template #default="scope">
             <Auths :value="['btn.edit']" class="displayStyle">
-              <el-button
-                type="primary"
-                v-if="scope.row['isShow']"
-                @click="onOpenEditMenu(scope.row, scope.$index)"
-                
-              
-              >编辑</el-button>
+              <el-button type="primary" v-if="scope.row['isShow']" @click="onOpenEditMenu(scope.row, scope.$index)">编辑
+              </el-button>
             </Auths>
 
             <Auths :value="['btn.del']" class="displayStyle">
-              <el-button
-                type="warning"
-                @click="onTabelRowDel(scope.row, scope.$index)"
-               
-              
-              >删除</el-button>
+              <el-button type="warning" @click="onTabelRowDel(scope.row, scope.$index)">删除</el-button>
             </Auths>
           </template>
         </el-table-column>
       </el-table>
       <!-- 分页栏 -->
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :page-sizes="state.pagearray"
-        @prev-click="prev()"
-        @next-click="next()"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="state.total"
-        prev-text="上一页"
-        next-text="下一页"
-        :pageSize="state.pagesize"
-        :page-count="state.pagecount"
-      >
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :page-sizes="state.pagearray" @prev-click="prev()" @next-click="next()"
+        layout="total, sizes, prev, pager, next, jumper" :total="state.total" prev-text="上一页" next-text="下一页"
+        :pageSize="state.pagesize" :page-count="state.pagecount">
       </el-pagination>
     </el-card>
     <AddMenu ref="addMenuRef" />
@@ -274,14 +185,78 @@ const currentPage4 = (val: any) => {
   // console.log(val.area);
 };
 
-const filterHandler = (value: any, row: any, column: any) => {};
+const filterHandler = (value: any, row: any, column: any) => { };
 
-const clearFilter = () => {};
-const resetDateFilter = () => {};
+const clearFilter = () => { };
+const resetDateFilter = () => { };
 const handleClick = (val: any) => {
   // console.log(val.area);
 };
 const state = reactive({
+  currentPage: 1,
+  shelf: '',
+  shelfs: [
+    {
+      value: "1号架",
+      label: "1号架",
+    },
+    {
+      value: "2号架",
+      label: "2号架",
+    },
+    {
+      value: "3号架",
+      label: "3号架",
+    },
+    {
+      value: "4号架",
+      label: "4号架",
+    },
+    {
+      value: "5号架",
+      label: "5号架",
+    },
+    {
+      value: "6号架",
+      label: "6号架",
+    },
+    {
+      value: "7号架",
+      label: "7号架",
+    },
+    {
+      value: "8号架",
+      label: "8号架",
+    },
+    {
+      value: "9号架",
+      label: "9号架",
+    },
+    {
+      value: "10号架",
+      label: "10号架",
+    },
+    {
+      value: "11号架",
+      label: "11号架",
+    },
+    {
+      value: "12号架",
+      label: "12号架",
+    },
+    {
+      value: "13号架",
+      label: "13号架",
+    },
+    {
+      value: "14号架",
+      label: "14号架",
+    },
+    {
+      value: "15号架",
+      label: "15号架",
+    },
+  ],
   areainfo:
     Session.get("userInfo").areainfo == null ? "" : Session.get("userInfo").areainfo,
   column: [
@@ -331,7 +306,7 @@ const state = reactive({
   srcList: [""],
   rowdata: [],
 });
-const filterTable = (el: any) => {};
+const filterTable = (el: any) => { };
 
 const getusearea = async () => {
   console.log("执行了 getmachine_usearea");
@@ -353,7 +328,7 @@ const reciveparts = (page?: any, pagesize?: any) => {
         pagesize: pagesize,
       },
     })
-    .then((res:any) => {
+    .then((res: any) => {
       console.log(res);
       if (res != null) {
         state.pagecount = res.data.pages;
@@ -378,7 +353,7 @@ const reciveparts = (page?: any, pagesize?: any) => {
       console.log("state.partslist");
       console.log(state.partslist);
     })
-    .catch((err:any) => {
+    .catch((err: any) => {
       ElMessage({ type: "error", message: err.data });
     });
 };
@@ -402,7 +377,7 @@ const checkIsShow = (area: any) => {
     });
   }
 
-  
+
   console.log(`${area}+++++++++${flag}`);
   return flag;
 };
@@ -432,44 +407,44 @@ const gettype = async (value?: any) => {
 };
 
 //----------------------------------
-const getpartname =  (value?: any) => {
+const getpartname = (value?: any) => {
   //通过area 找type
 
-   service.get("/getmachine_name", {
+  service.get("/getmachine_name", {
     params: {
       type: value,
-      flag:"all"
+      flag: "all"
       // spec: state.ruleForm.model2,
     },
-  }).then((res:any)=>{
+  }).then((res: any) => {
 
-      console.log(res.data.specs)
-     console.log(res.data.names)
-   
-     state.ruleForm.part_name=  res.data.names.map((item:any)=>{
-          return {
-            value:item[0],
-            label:item[0]
-          }
-        })
+    console.log(res.data.specs)
+    console.log(res.data.names)
 
-
-        state.ruleForm.usespesc=res.data.specs.map((item:any)=>{
-          return {
-            value:item[0],
-            label:item[0]
-          }
-        })
+    state.ruleForm.part_name = res.data.names.map((item: any) => {
+      return {
+        value: item[0],
+        label: item[0]
+      }
+    })
 
 
-  }).catch((err:any)=>{
+    state.ruleForm.usespesc = res.data.specs.map((item: any) => {
+      return {
+        value: item[0],
+        label: item[0]
+      }
+    })
+
+
+  }).catch((err: any) => {
 
   })
 
 
 
 
- 
+
 };
 //---------------------------------------
 
@@ -530,19 +505,27 @@ const onTabelRowDel = (row: any, index: any) => {
           });
         });
     })
-    .catch(() => {});
+    .catch(() => { });
 };
 
-const selectparts = async () => {
-  let { data: res } = await service.get("/selectmachine", {
+const selectparts =  () => {
+
+  if (state.part_spec_value == "" && state.part_name_value === "" && state.part_area_value + state.shelf === "" && state.part_type_value === "") {
+
+    reciveparts(10, 1);
+    return;
+  }
+
+
+  service.get("/selectmachine", {
     params: {
       part_spec: state.part_spec_value,
       part_name: state.part_name_value,
-      area: state.part_area_value,
+      area: state.part_area_value + state.shelf,
       type: state.part_type_value,
     },
-  });
-  state.partslist = res.map((item: any[]) => {
+  }).then((res:any)=>{
+    state.partslist = res.data.map((item: any[]) => {
     return {
       id: item[0],
       part_name: item[1],
@@ -557,6 +540,8 @@ const selectparts = async () => {
       isShow: checkIsShow(item[3]),
     };
   });
+  })
+  
 };
 
 const addClass = ({ row, column, rowIndex, columnIndex }: any) => {
@@ -622,6 +607,7 @@ const getSummaries = (param: any) => {
   width: 20px; // 横向滚动条
   height: 20px; // 纵向滚动条 必写
 }
+
 // 滚动条的滑块
 .el-table__body-wrapper::-webkit-scrollbar-thumb {
   background-color: #ddd;
@@ -641,22 +627,25 @@ const getSummaries = (param: any) => {
   background-color: rgb(88, 199, 78);
   color: white;
 }
+
 .el-table .success-row {
   --el-table-tr-background-color: var(--el-color-success-lighter);
 }
-.el-table tbody tr:hover > td {
+
+.el-table tbody tr:hover>td {
   background-color: #96b7dc !important;
   color: black;
 }
 
-#app > section > div.el-backtop {
+#app>section>div.el-backtop {
   cursor: pointer;
   z-index: 5;
   right: 40px;
   bottom: 40px;
   top: 500px;
 }
-.displayStyle{
+
+.displayStyle {
   display: inline-block;
 
 }

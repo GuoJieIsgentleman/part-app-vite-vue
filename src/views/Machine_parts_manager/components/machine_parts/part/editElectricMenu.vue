@@ -8,7 +8,65 @@
     >
       <el-form :model="state.ruleForm" size="small" label-width="80px">
         <el-row :gutter="35">
-          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"> </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"> 
+            <el-form-item label="备件图片">
+              <div v-if="state.ruleForm.imgsrc != ''">
+                <!-- <img :src="ruleForm.imgsrc" alt="" style="height: 40%; width: 40%" /> -->
+                <el-upload
+                  class="avatar-uploader"
+                  multiple="false"
+                  ref="upload"
+                  :action="
+                    'http://61.185.74.251:5556/machine_part_uploadfile?imgid=' +
+                    state.ruleForm.id +
+                    '&&time1=' +
+                    new Date().getTime().toString()+
+                    '&&machine_part_name='+state.ruleForm.machine_part_name
+                  "
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess"
+                  :before-upload="beforeAvatarUpload"
+                >
+                  <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
+                  <img
+                    v-if="state.ruleForm.imageUrl == ''"
+                    :src="state.ruleForm.imgsrc"
+                    class="avatar"
+                  />
+                  <img v-else :src="state.ruleForm.imageUrl" class="avatar" />
+
+                  <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
+                </el-upload>
+              </div>
+              <div v-else>
+                <el-upload
+                  class="avatar-uploader"
+                  :multiple="false"
+                  :action="
+                    'http://61.185.74.251:5556/machine_part_uploadfile?imgid=' +
+                    state.ruleForm.id +
+                    '&&time1=' +
+                    new Date().getTime().toString()+
+                    '&&machine_part_name='+state.ruleForm.machine_part_name
+                  "
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess"
+                  :before-upload="beforeAvatarUpload"
+                >
+                  <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
+                  <img
+                    v-if="state.ruleForm.imageUrl"
+                    :src="state.ruleForm.imageUrl"
+                    class="avatar"
+                  />
+
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+                <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
+              </div>
+            </el-form-item>
+          
+          </el-col>
         </el-row>
         <el-row :gutter="35">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -43,20 +101,7 @@
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="搁置区域">
               <el-input disabled v-model="state.ruleForm.area"></el-input>
-              <!-- <el-select
-                v-model="state.ruleForm.area"
-                filterable
-                placeholder="备件区域"
-                clearable
-              >
-                <el-option
-                  v-for="item in state.ruleForm.userarea"
-                  :key="item['value']"
-                  :label="item['label']"
-                  :value="item['value']"
-                >
-                </el-option>
-              </el-select> -->
+            
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -155,47 +200,51 @@ const getusearea = async () => {
   console.log(state.ruleForm.userarea);
 };
 
-// const upload = ref();
-// const handleAvatarSuccess = (res: any, file: any) => {
-//   state.ruleForm.imageUrl = URL.createObjectURL(file.raw);
-//   ElMessage({
-//     type: "success",
-//     message: "上传成功",
-//   });
-//   console.log("upload");
-//   console.log(upload);
-// };
-// const beforeAvatarUpload = (file: any) => {
-//   const isJPG = file.type === "image/jpeg";
-//   const isLt2M = file.size / 1024 / 1024 < 2;
+const upload = ref();
+const handleAvatarSuccess = (res: any, file: any) => {
+  state.ruleForm.imageUrl = URL.createObjectURL(file.raw);
+  ElMessage({
+    type: "success",
+    message: "上传成功",
+  });
+  console.log("upload");
+  console.log(upload);
+};
+const beforeAvatarUpload = (file: any) => {
+  const isJPG = file.type === "image/jpeg";
+  const isLt2M = file.size / 1024 / 1024 < 2;
 
-//   console.log("file");
-//   console.log(file);
-//   if (!isJPG) {
-//     ElMessage.error("图片必须为JPG格式");
-//   }
+  console.log("file");
+  console.log(file);
+  if (!isJPG) {
+    ElMessage.error("图片必须为JPG格式");
+  }
 
-//   // return isJPG && isLt2M;
-//   //压缩
-//   return new Promise((resolve) => {
-//     // compress(file, 100).then((res) => {
-//     //   console.log(res);
-//     //   resolve(res);
-//     // });
+  // return isJPG && isLt2M;
+  //压缩
+  return new Promise((resolve) => {
+    // compress(file, 100).then((res) => {
+    //   console.log(res);
+    //   resolve(res);
+    // });
 
-//     compressAccurately(file, {
-//       size: 200,
-//       width: 500,
-//       height: 500,
-//     }).then((res) => {
-//       console.log(res);
-//       resolve(res);
-//     });
-//   });
-// };
+    compressAccurately(file, {
+      size: 200,
+      width: 500,
+      height: 500,
+    }).then((res) => {
+      console.log(res);
+      resolve(res);
+    });
+  });
+};
 
 // 打开弹窗
 const openDialog = (row: any, index: any) => {
+
+console.log('编辑row',row);
+
+
   state.ruleForm.index = index;
   state.ruleForm.id = row.id;
   state.ruleForm.type = row.type;
@@ -207,6 +256,9 @@ const openDialog = (row: any, index: any) => {
   state.ruleForm.type = row.type;
   state.isShowDialog = true;
   state.ruleForm.machine_part_name = row.machine_part_name;
+  state.ruleForm.imgsrc=row.partimgsrc
+
+
   // state.ruleForm.imgsrc = row.partimgsrc;
   // state.ruleForm.connection = row.connection;
   getusearea();
@@ -262,6 +314,7 @@ const onSubmit = () => {
       // sendata(res.data.data);
       emit("senddata", res.data.data, state.ruleForm.index);
       initForm();
+      upload.value.submit();
       closeDialog();
     })
     .catch((err) => {

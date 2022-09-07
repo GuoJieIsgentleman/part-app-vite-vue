@@ -58,24 +58,24 @@
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="18" :xl="12">
-            <el-form-item label="新搁置区域">
+            <el-form-item label="新搁置区域" :label-width="90">
               
-              <el-row>
-                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+              <el-row :gutter="35">
+                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="7" :xl="12">
                     <el-select :disabled="state.ruleForm.scrap == '报废' ? true : false" v-model="state.floor" filterable placeholder="存放楼层" clearable>
                       <el-option v-for="item in state.floors" :key="item['value']" :label="item['label']"
                         :value="item['value']">
                       </el-option>
                     </el-select>
                   </el-col>
-                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="7" :xl="12">
                     <el-select :disabled="state.ruleForm.scrap == '报废' ? true : false"  v-model="state.shelf" filterable placeholder="存放架编号" clearable>
                       <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']"
                         :value="item['value']">
                       </el-option>
                     </el-select>
                   </el-col>
-                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="6" :xl="12">
+                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="7" :xl="12">
                     <el-select :disabled="state.ruleForm.scrap == '报废' ? true : false" v-model="state.num" filterable placeholder="存放位置编号" clearable>
                       <el-option v-for="item in 5" :key="item" :label="item" :value="item">
                         {{ item }}
@@ -333,6 +333,8 @@ import { ElMessage } from "element-plus";
     //确认提交
     const initmachine_maintenance: any = inject("initmachine_maintenance");
     const onSubmit = (v: any) => {
+
+     let  temp=state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num
       if (v == "") {
         ElMessage.warning({
           message: "请重新输入",
@@ -343,7 +345,7 @@ import { ElMessage } from "element-plus";
           message: "保养人未确认",
           type: "warning",
         });
-      } else if (state.ruleForm.scrap == "不报废" && state.ruleForm.area == "") {
+      } else if (state.ruleForm.scrap == "不报废" && temp == "-") {
         ElMessage.warning({
           message: "最新搁置区域未填写",
           type: "warning",

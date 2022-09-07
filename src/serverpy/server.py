@@ -10,6 +10,7 @@ import tooling_manager
 import sys
 import machine_service as machine
 import Machine_parts_service as Machine_parts
+import part_procline_service as part_procline
 
 import base64
 import hmac
@@ -790,9 +791,6 @@ class userecordform(BaseModel):
     flag: str
 
 
-# user: str, area: str, type: str, spec: str, part_name: str,
-#                  use_count: str, reason: str, use_date: str, confirm: str,
-#                  use_procline: str, handle: str
 
 
 @app.post('/adduserecord')
@@ -865,19 +863,7 @@ def adduserecord(userecordform: Optional[userecordform] = None):
                userecordform.use_date, userecordform.confirm,
                userecordform.handle))
     db.commit()
-# <<<<<<< HEAD
-#     print('--------保养--------')
-#     #保养记录
-#     if userecordform.handle == '保养':
 
-#         cursor.execute('''
-#                    INSERT INTO `part`.`maintenance_detail`
-#                    ( `user`, `use_area`, `type`, `spec`,
-#                    `use_part_name`, `use_count`, `user_reason`,
-#                    `use_date`, `useconfirm`)
-#                    VALUES ('{0}', '{1}', '{2}', '{3}',
-#                    '{4}', '{5}', '{6}', '{7}', '{8}');
-# =======
     print('--------{}领用记录添加完成--------'.format(userecordform.handle) +
           time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 
@@ -892,7 +878,7 @@ def adduserecord(userecordform: Optional[userecordform] = None):
                    `use_date`, `useconfirm`,`use_procline`)
                    VALUES ('{0}', '{1}', '{2}', '{3}',
                    '{4}', '{5}', '{6}', '{7}', '{8}','{9}');
->>>>>>> e5b1217 (gongzhuang)
+
           '''.format(userecordform.user, userecordform.area,
                      userecordform.type, userecordform.spec,
                      userecordform.part_name, userecordform.use_count,
@@ -913,7 +899,7 @@ def adduserecord(userecordform: Optional[userecordform] = None):
                    `use_date`, `useconfirm`,`use_procline`)
                    VALUES ('{0}', '{1}', '{2}', '{3}',
                    '{4}', '{5}', '{6}', '{7}', '{8}','{9}');
->>>>>>> e5b1217 (gongzhuang)
+
           '''.format(userecordform.user, userecordform.area,
                      userecordform.type, userecordform.spec,
                      userecordform.part_name, userecordform.use_count,
@@ -934,7 +920,7 @@ def adduserecord(userecordform: Optional[userecordform] = None):
                    `use_date`, `useconfirm`,`use_procline`)
                    VALUES ('{0}', '{1}', '{2}', '{3}',
                    '{4}', '{5}', '{6}', '{7}', '{8}','{9}');
->>>>>>> e5b1217 (gongzhuang)
+
           '''.format(userecordform.user, userecordform.area,
                      userecordform.type, userecordform.spec,
                      userecordform.part_name, userecordform.use_count,
@@ -1721,7 +1707,7 @@ def updatescrap(id: int,
                         SET
                          `applyformconfirm` = '{0}',
                          `applyformconfirmdate`='{2}'
->>>>>>> e5b1217 (gongzhuang)
+
 
                         WHERE
                         	(`id` = '{1}');
@@ -1922,6 +1908,60 @@ def addparts(
     res = {'msg': '添加成功', 'id': data[0][0]}
 
     return res
+
+# 获取电器机修件
+
+
+@app.get('/getPart_proclinedetail')
+def getPart_proclinedetail(procline:Optional[str] = ""):
+    return part_procline.getPart_proclinedetail(procline)
+
+
+
+@app.get('/getProclinePartTypes')
+def getProclinePartTypes():
+    return part_procline.getProclinePartTypes()
+
+
+@app.get('/getPart_proclineSummary')
+def getPart_proclineSummary():
+    return part_procline.getPart_proclineSummary()
+
+
+@app.get('/getPart_contrast')
+def getPart_contrast(machineType: Optional[str] = ""):
+    print('machineType',machineType)
+    return part_procline.getPart_contrast(machineType)
+
+
+@app.post('/Part_procline_detail_uploadfile')
+async def Part_procline_detail_uploadfile(flag: Optional[str] = None, imgid: Optional[str] = None, time1:  Optional[str] = None, file: UploadFile = File(...)):
+
+    return await part_procline.create_upload_file(flag, imgid, time1, file)
+
+# 添加产线使用件
+
+
+@app.get('/addPart_procline_detail')
+def addPart_procline_detail(procline: Optional[str] = None, part_name: Optional[str] = None, part_spec: Optional[str] = None, area: Optional[str] = None, type: Optional[str] = None, username: Optional[str] = None):
+    return part_procline.addPart_procline_detail(procline, part_name, part_spec, area, type, username)
+
+
+@app.get('/deletePart_procline_detail')
+def deletePart_procline_detail(id: Optional[str] = None, username: Optional[str] = None):
+    print("进入删除方法")
+    return part_procline.deletePart_procline_detail(id, username)
+
+
+@app.get('/updatePart_procline_detail')
+def updatePart_procline_detail(id: Optional[str] = None, procline: Optional[str] = None, part_name: Optional[str] = None, part_spec: Optional[str] = None, area: Optional[str] = None, type: Optional[str] = None, username: Optional[str] = None):
+    return part_procline.updatepart_procline_detail(id, procline, part_name, part_spec, area, type, username)
+
+
+
+
+
+
 
 
 @app.get('/getrolelist')
@@ -2148,8 +2188,7 @@ def getmenus(currentpagecount:  Optional[int] = 0, pagesize: Optional[int] = 0):
     cursor.execute(
         "select * from part_detail order by id  limit {0},{1}".format(start, end))
     data1 = cursor.fetchall()
-
-    #
+ 
     res = {
         'total': data[0][0],
         'data1': data1,
@@ -2163,52 +2202,39 @@ def getmenus(currentpagecount:  Optional[int] = 0, pagesize: Optional[int] = 0):
 
 @app.get('/selectpart')
 def selectpart(
-    part_spec: Optional[str] = None,
-    part_name: Optional[str] = None,
-    area: Optional[str] = None,
-    type: Optional[str] = None,
+    part_spec: Optional[str] = "",
+    part_name: Optional[str] = "",
+    area: Optional[str] = "",
+    type: Optional[str] = "",
+   
 ):
     db = getConn()
     print('查询备件'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-
     cursor = db.cursor()
-    # print('打印输出')
-    # print(part_spec)
-    # print(part_name)
-    # print(area)
-    # print(type)
-
-    temlist = {
-        'part_spec': part_spec,
-        'part_name': part_name,
-        'area': area,
-        'type': type
-    }
-    strsql = ""
-    for k, v in temlist.items():
-        if v != "":
-            if k == 'area':
-                temsql = "and {0} like '{1}%'".format(k, v)
-                strsql += temsql
-            else:
-                temsql1 = "and {0}='{1}'".format(k, v)
-                strsql += temsql1
-    print('strsql')
-    print(strsql)
-    sql = "select * from part_detail "
-    mid = 'where 1=1 '
-    if strsql == '':
-        cursor.execute(sql)
-        print('进到空字符串')
-        data = cursor.fetchall()
-        return data
-    else:
-        # testsql = sql + mid + strsql
-        # print(testsql)
-        cursor.execute(sql + mid + strsql)
-        data = cursor.fetchall()
-        # print('进到有条件')
-        return data
+    part_spec1=''
+    part_name1=''
+    area1=''
+    type1=''
+    if part_spec !="":
+        part_spec1=f''' and part_spec like '%{part_spec}%'  '''
+    if part_name !="":
+        part_name1=f''' and part_name  like '%{part_name}%'  '''
+    if area !="":
+        area1=f''' and area like '%{area}%'  '''
+    if type !="":
+        type1=f''' and type like '%{type}%'  '''           
+    
+    tempsql=f'''{part_spec1}{part_name1}{area1}{type1}'''
+    
+    
+    sql=f''' select  * from part_detail  
+    where 1=1 {tempsql} order by id
+     '''
+    
+    print("执行查询sql  ",sql)
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    return data
 
 @app.get('/getroles')
 def getroles(currentpagecount:  Optional[int] = 0, pagesize: Optional[int] = 0):
@@ -2386,7 +2412,10 @@ def getusers(userName:  Optional[str] = None,currentpagecount:  Optional[int] = 
     
     print('userName',userName)
     if userName!= None:
-        findsql=f''' select * from user where username like '%{userName}%' '''
+        findsql=f''' 
+        select * from user rr left join user_role re on re.auth_code=rr.role
+        where rr.username  like '%{userName}%'
+        order by rr.id   '''
         cursor.execute(findsql)
         res=cursor.fetchall()
         return res  
@@ -2940,7 +2969,7 @@ async def create_upload_file(imgid: str, time1:  Optional[str] = None, file: Upl
         time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())+".jpg"
     print(imgsrc)
     file = open(
-        "F:\partapp\part-app-vite-momo\part-app-vite\part-app-vite\src\serverpy\static\img\{}".format(imgsrc), "wb")
+        "G:\part-app-vite\part-app-vite\src\serverpy\static\img\{}".format(imgsrc), "wb")
     file.write(contents)
 
     # 传到静态地址
@@ -3841,6 +3870,8 @@ def getProclineMachineTypes():
     return Machine_procline.getProclineMachineTypes()
 
 
+
+
 @app.get('/getMachine_proclineSummary')
 def getMachine_proclineSummary():
     return Machine_procline.getMachine_proclineSummary()
@@ -3881,8 +3912,8 @@ def getVersion():
     # auth: str
 
     return {
-        'app_download': 'http://61.185.74.251:5556/'+'static/app_list/part3.24.apk',
-        'app_info': '3.24'
+        'app_download': 'http://61.185.74.251:5556/'+'static/app_list/part3.28.apk',
+        'app_info': '3.28'
     }
 
 
@@ -3910,6 +3941,9 @@ def add_park_log(item: aa):
     db.commit()
     print("插入停车数据成功")
     return '插入停车数据成功'
+
+
+
 
 
 if __name__ == '__main__':

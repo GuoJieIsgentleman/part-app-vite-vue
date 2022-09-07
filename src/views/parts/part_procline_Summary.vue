@@ -93,7 +93,7 @@ const exportExcel1 = () => {
   table2excel(
     state.column,
     state.partslist,
-    `${formatDate111(new Date())}机修产线汇总.xlsx`
+    `${formatDate111(new Date())}电器产线汇总.xlsx`
   );
 };
 
@@ -129,7 +129,7 @@ onMounted(() => {
 
 const getpartslist = () => {
   service
-    .get("getMachine_proclineSummary")
+    .get("getPart_proclineSummary")
     .then((res:any) => {
       console.log(res);
       state.partslist = res.data.map((item: any) => {

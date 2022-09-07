@@ -181,8 +181,14 @@
 
       <div class="">
         <span><el-tag type="success"> 备件明细</el-tag></span>
+        <span>
+          <el-select clearable  v-model="state.shelf" filterable placeholder="存放货架" clearble  @change="getinfo">
+            <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']" :value="item['value']">
+            </el-option>
+          </el-select>
+        </span>
         <el-table
-          :data="state.part_data"
+          :data="state.part_data1"
           style="width: 100%"
           :cell-class-name="addClass2"
           v-if="state.isshowpart_data"
@@ -204,26 +210,32 @@
           <el-table-column prop="original" label="原有" width="50" align="center">
           </el-table-column>
           <el-table-column prop="area" label="存放区域" width="185" align="center">
-            <template #default="scope">
-              <el-button @click="updateArea(scope.row)">{{scope.row.area}}</el-button>
-            </template>
+        
           </el-table-column>
-          <el-table-column prop="img_url" label="图片展示" width="200" align="center">
+          <el-table-column prop="partimgsrc" label="图片展示" width="200" align="center">
                   <template #default="scope">
-                    <div v-if="scope.row.img_url != ''">
+                    <div v-if="scope.row.partimgsrc != ''">
                       <el-image
                         style="width: 80px; height: 80px"
-                        :preview-src-list="[scope.row.img_url]"
-                        :src="scope.row.img_url"
+                        :preview-src-list="[scope.row.partimgsrc]"
+                        :src="scope.row.partimgsrc"
                       >
                       </el-image>
                     </div>
                     <div v-else>
-                      无图
-                      <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
+                      无图  
                     </div>
                   </template>
                 </el-table-column>
+                <el-table-column label="操作" align="center" min-width="120">
+            <template #default="scope">
+              <Auths :value="['btn.edit']" class="displayStyle">
+                <el-button type="primary"  @click="onOpenEditMenu(scope.row, scope.$index)">编辑
+                </el-button>
+              </Auths>
+
+            </template>
+          </el-table-column>
         </el-table>
       </div>
       <div>
@@ -238,6 +250,7 @@
       </template>
     </el-dialog>
     <UpdateArea ref="UpdateAreaRef" />
+    <EditMenu ref="editMenuRef" @senddata="setdata" />
   </div>
 </template>
 
@@ -249,20 +262,101 @@ import { ElMessage } from "element-plus";
 import { formatDate111, subtimeminutes, subtimeminutes1 } from "/@/utils/formatTime";
 import { Session } from "/@/utils/storage";
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
-import UpdateArea from './updateArea.vue'     
+import UpdateArea from './updateArea.vue'  
+import EditMenu from "/@/views/parts/components/parts/editMenu.vue";   
 const UpdateAreaRef=ref()
 
 const  updateArea=(row:any)=>{
     console.log('row',row);
     UpdateAreaRef.value.openDialog(row)
     
+
+
 }
+
+const editMenuRef=ref()
+
+const setdata = (v: any, v1: any) => {
+  //set table 值
+
+};  
+
+const onOpenEditMenu = (row: object, index: any) => {
+  // console.log("索引值" + index);
+  // console.log(state.partslist[index]);
+  // console.log("---------------------------------------");
+  // console.log(row);
+
+  editMenuRef.value.openDialog(row, index);
+};
 
 
       
 
 
 const state = reactive({
+  shelfs: [
+    {
+      value: "1号架",
+      label: "1号架",
+    },
+    {
+      value: "2号架",
+      label: "2号架",
+    },
+    {
+      value: "3号架",
+      label: "3号架",
+    },
+    {
+      value: "4号架",
+      label: "4号架",
+    },
+    {
+      value: "5号架",
+      label: "5号架",
+    },
+    {
+      value: "6号架",
+      label: "6号架",
+    },
+    {
+      value: "7号架",
+      label: "7号架",
+    },
+    {
+      value: "8号架",
+      label: "8号架",
+    },
+    {
+      value: "9号架",
+      label: "9号架",
+    },
+    {
+      value: "10号架",
+      label: "10号架",
+    },
+    {
+      value: "11号架",
+      label: "11号架",
+    },
+    {
+      value: "12号架",
+      label: "12号架",
+    },
+    {
+      value: "13号架",
+      label: "13号架",
+    },
+    {
+      value: "14号架",
+      label: "14号架",
+    },
+    {
+      value: "15号架",
+      label: "15号架",
+    },
+  ],
   isshowtag: false,
   area: "",
   isshowpart_data: false,
@@ -278,6 +372,7 @@ const state = reactive({
   repair1_data: [],
   repair2_data: [],
   part_data: [],
+  part_data1: [],
   resdata: [] as any,
   remark: "",
   cardid: "",
@@ -428,11 +523,7 @@ const getinspection = (v: String) => {
         state.maintenance1_data = state.maintenance1_data.filter(
           (ele) => ele != undefined
         );
-        // console.log("--------------------------------------------------");
-        // console.log("state.maintenance_data");
-        // console.log(state.maintenance_data);
-        // console.log("state.maintenance1_data");
-        // console.log(state.maintenance1_data);
+
         if (state.maintenance_data.length > 0 && state.maintenance_data[0] != undefined) {
           state.isshowmaintenance_data = true;
         }
@@ -520,12 +611,7 @@ const getinspection = (v: String) => {
         if (state.repair2_data.length > 0) {
           state.isshowrepair2_data = true;
         }
-        // console.log("state.isshowrepair_data");
-        // console.log(state.isshowrepair_data);
-        // console.log("state.isshowrepair1_data");
-        // console.log(state.isshowrepair1_data);
-        // console.log("state.isshowrepair2_data");
-        // console.log(state.isshowrepair2_data);
+ 
       }
 
       if (state.resdata["part_data"].length > 0) {
@@ -538,8 +624,10 @@ const getinspection = (v: String) => {
             balance: item[4],
             original: item[5],
             type: item[7],
+            partimgsrc:item[8]
           };
         });
+        state.part_data1=state.part_data
         state.isshowpart_data = true;
       }
 
@@ -562,16 +650,18 @@ const addClass2 = ({ row, column, rowIndex, columnIndex }: any) => {
     return "warning-row2";
   }
 };
-// return {
-//   addClass,
-//   addClass1,
-//   addClass2,
-//   state,
-//   openDialog,
-//   closeDialog,
-//   getinspection,
-//   saveinspectlog,
-// };
+
+
+const getinfo=(val:any)=>{
+
+console.log('val',val);
+
+state.part_data1=state.part_data.filter((item:any)=>{
+   
+          return  item.area.indexOf(val)!=-1
+})
+
+}
 </script>
 
 <style lang="less">

@@ -343,7 +343,7 @@ const getusearea = async () => {
       label: item[0],
     };
   });
-  console.log(state.ruleForm.userarea);
+
 };
 
 const upload = ref();
@@ -353,15 +353,13 @@ const handleAvatarSuccess = (res: any, file: any) => {
     type: "success",
     message: "上传成功",
   });
-  console.log("upload");
-  console.log(upload);
+
 };
 const beforeAvatarUpload = (file: any) => {
   const isJPG = file.type === "image/jpeg";
   const isLt2M = file.size / 1024 / 1024 < 2;
 
-  console.log("file");
-  console.log(file);
+  
   if (!isJPG) {
     ElMessage.error("图片必须为JPG格式");
   }
@@ -387,20 +385,7 @@ const beforeAvatarUpload = (file: any) => {
 
 // 打开弹窗
 const openDialog = (row: any, index: any) => {
-  // state.ruleForm.name = row.name;
-  // state.ruleForm.component = '';
-  // state.ruleForm.isLink = row.meta.isLink ? 'true' : '';
-  // state.ruleForm.menuSort = '';
-  // state.ruleForm.meta.title = t(row.meta.title);
-  // // 回显时，图标选择器有这个图标才可以回显，菜单中使用了阿里的、element plus的，二者不可共存
-  // state.ruleForm.meta.icon = row.meta.icon;
-  // state.ruleForm.meta.isHide = row.meta.isHide ? 'true' : 'false';
-  // state.ruleForm.meta.isKeepAlive = row.meta.isKeepAlive ? 'true' : 'false';
-  // state.ruleForm.meta.isAffix = row.meta.isAffix ? 'true' : 'false';
-  // state.ruleForm.meta.isLink = row.meta.isLink ? row.meta.isLink : '';
-  // state.ruleForm.meta.isIframe = row.meta.isIframe ? 'true' : '';
-  // state.ruleForm.meta.auth = row.meta.auth ? row.meta.auth.join(',') : '';
-  // state.ruleForm.id = row.id;
+ 
   state.ruleForm.index = index;
   state.ruleForm.id = row.id;
   state.ruleForm.part_name = row.part_name;

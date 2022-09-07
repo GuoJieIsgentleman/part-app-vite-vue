@@ -222,36 +222,7 @@ const state = reactive({
   },
 });
 
-// const getusearea = () => {
 
-
-//   service.get('getmachine_inspection', {
-//     params: {
-//       username: Session.get("userInfo").userName,
-//       cardid: "-1"
-//     }
-//   }).then((res: any) => {
-
-//     // var temps = eval('(' + res.data[0][0] + ')');
-//     state.ruleForm.userarea = res.data.map((item: any) => {
-//       return {
-
-//         value: item[1],
-//         label: item[2],
-
-//       }
-//     })
-
-//   }
-//   ).catch((err: any) => {
-//     ElMessage({
-//       type: "warning",
-//       message: err.data
-//     })
-//   })
-
-// }
-//   onMounted(getusearea);
   // 打开弹窗
   const openDialog = (row?: object) => {
     console.log(row);
@@ -272,7 +243,10 @@ const state = reactive({
 
   const upload1 = ref();
   const onSubmit = () => {
-    if (state.ruleForm.type === "" || state.ruleForm.part_name === "" || state.ruleForm.part_spec === "" || state.ruleForm.part_area_value === "") {
+
+    let temp=state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num
+
+    if (state.ruleForm.type === "" || state.ruleForm.part_name === "" || state.ruleForm.part_spec === "" || temp === "-") {
       ElMessage({ type: 'warning', message: '请完善备件信息' })
       return
     } else if (state.ruleForm.balance === "" || state.ruleForm.balance === "") {
@@ -285,7 +259,7 @@ const state = reactive({
         params: {
           part_name: state.ruleForm.part_name,
           part_spec: state.ruleForm.part_spec,
-          area:state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num,
+          area:temp,
           balance: state.ruleForm.balance,
           original: state.ruleForm.balance,
           remark: state.ruleForm.remark,

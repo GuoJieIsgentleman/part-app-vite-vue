@@ -306,11 +306,12 @@ async def create_upload_file(imgid: str, time1:  Optional[str] = None, file: Upl
         print(time1)
 
         contents = await file.read()
+        print('contents',contents)
         imgsrc = imgid+"_" + \
             time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())+".jpg"
         print(imgsrc)
         file = open(
-            "F:\partapp\part-app-vite-momo\part-app-vite\part-app-vite\src\serverpy\static\machine_img\{}".format(imgsrc), "wb")
+            "G:\part-app-vite\part-app-vite\src\serverpy\static\machine_img\{}".format(imgsrc), "wb")
         file.write(contents)
 
         # 传到静态地址

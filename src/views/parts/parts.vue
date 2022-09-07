@@ -30,7 +30,10 @@
           :value="item['value']">
         </el-option>
       </el-select>
-
+      <el-select v-model="state.shelf" filterable placeholder="存放货架" clearable>
+        <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']" :value="item['value']">
+        </el-option>
+      </el-select>
       <el-select @change="getpartname(state.part_type_value)" v-model="state.part_type_value" filterable
         placeholder="备件类型" clearable>
         <el-option v-for="item in state.ruleForm.usetype" :key="item['value']" :label="item['label']"
@@ -76,7 +79,7 @@
             </div>
             <div v-else>
               无图
-              <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
+
             </div>
           </template>
         </el-table-column>
@@ -94,27 +97,31 @@
           <template #default="scope">
 
             <Auths :value="['btn.edit']" class="displayStyle">
-              <el-button size="small" type="primary" v-if="scope.row['isShow']" @click="onOpenEditMenu(scope.row, scope.$index)"
-                >编辑</el-button>
+              <el-button size="small" type="primary" v-if="scope.row['isShow']"
+                @click="onOpenEditMenu(scope.row, scope.$index)">编辑</el-button>
             </Auths>
-         
-            <Auths :value="['btn.del']"  class="displayStyle">
-              <el-button size="small" type="warning" @click="onTabelRowDel(scope.row, scope.$index)"  >
-              删除
+
+            <Auths :value="['btn.del']" class="displayStyle">
+              <el-button size="small" type="warning" @click="onTabelRowDel(scope.row, scope.$index)">
+                删除
               </el-button>
             </Auths>
           </template>
         </el-table-column>
       </el-table>
       <!-- 分页栏 -->
-      <el-pagination
-       background @size-change="handleSizeChange"
-       @current-change="handleCurrentChange"
-        :page-size="state.pagesize"
-        :page-sizes="state.pagearray"
-        @prev-click="prev()" @next-click="next()"
+      <el-pagination background 
+        @size-change="handleSizeChange" 
+        @current-change="handleCurrentChange"
+        :page-size="state.pagesize" 
+        :page-sizes="state.pagearray" 
+        @prev-click="prev()" 
+        @next-click="next()"
         layout="total, sizes, prev, pager, next, jumper" 
-        :total="state.total" prev-text="上一页" next-text="下一页"
+        :total="state.total" 
+        prev-text="上一页" 
+        next-text="下一页"
+        :current-page="state.currentPage"
         :page-count="state.pagecount" />
     </el-card>
     <AddMenu ref="addMenuRef" />
@@ -151,28 +158,30 @@ const IsPC = () => {
 
 //分页功能
 const prev = () => {
-  console.log("前一页");
+ // console.log("前一页");
 };
 const next = () => {
-  console.log("下一页");
+ // console.log("下一页");
 };
 
 const handleSizeChange = (val: any) => {
-  console.log("每页" + val);
+  // console.log("每页" + val);
   state.pagesize = val;
   reciveparts(state.pagesize, 1);
   //初始化 页数
 };
 const handleCurrentChange = (val: any) => {
-  console.log("改变页数" + val);
+  // console.log("改变页数" + val);
+
+  state.currentPage=val;
   reciveparts(state.pagesize, val);
 };
 
 const onOpenEditMenu = (row: object, index: any) => {
-  console.log("索引值" + index);
-  console.log(state.partslist[index]);
-  console.log("---------------------------------------");
-  console.log(row);
+  // console.log("索引值" + index);
+  // console.log(state.partslist[index]);
+  // console.log("---------------------------------------");
+  // console.log(row);
 
   editMenuRef.value.openDialog(row, index);
 };
@@ -196,11 +205,71 @@ const currentPage4 = (val: any) => {
   // console.log(val.area);
 };
 
-// operateDelState:
-//   Session.get("userInfo").btn_auth == null ? "" : Session.get("userInfo").btn_auth,
-// operateEditState:
-//   Session.get("userInfo").btn_auth == null ? "" : Session.get("userInfo").btn_auth,
 const state = reactive({
+  currentPage:1,
+  shelf:'',
+  shelfs: [
+    {
+        value: "1号架",
+        label: "1号架",
+      },
+      {
+        value: "2号架",
+        label: "2号架",
+      },
+      {
+        value: "3号架",
+        label: "3号架",
+      },
+      {
+        value: "4号架",
+        label: "4号架",
+      },
+      {
+        value: "5号架",
+        label: "5号架",
+      },
+      {
+        value: "6号架",
+        label: "6号架",
+      },
+      {
+        value: "7号架",
+        label: "7号架",
+      },
+      {
+        value: "8号架",
+        label: "8号架",
+      },
+      {
+        value: "9号架",
+        label: "9号架",
+      },
+      {
+        value: "10号架",
+        label: "10号架",
+      },
+      {
+        value: "11号架",
+        label: "11号架",
+      },
+      {
+        value: "12号架",
+        label: "12号架",
+      },
+      {
+        value: "13号架",
+        label: "13号架",
+      },
+      {
+        value: "14号架",
+        label: "14号架",
+      },
+      {
+        value: "15号架",
+        label: "15号架",
+      },
+    ],
   areainfo: Session.get("userInfo").areainfo,
   column: [
     { title: "序号", key: "id", type: "text" },
@@ -278,6 +347,8 @@ const reciveparts = (page?: any, pagesize?: any) => {
         state.pagecount = res.data.pages;
         state.total = res.data.total;
         state.loading = false;
+
+
         state.partslist = res.data.data1.map((item: any) => {
           return {
             id: item[0],
@@ -294,8 +365,7 @@ const reciveparts = (page?: any, pagesize?: any) => {
           };
         });
       }
-      console.log("state.partslist");
-      console.log(state.partslist);
+   
     })
     .catch((err: any) => {
       ElMessage({ type: "error", message: err.data });
@@ -309,13 +379,10 @@ const checkIsShow = (area: any) => {
 
   if (
     Session.get("userInfo").authPageList[0] === "Monitor" || 
-    Session.get("userInfo").authPageList[0] === "machine_monitor"||
     Session.get("userInfo").authPageList[0] === "electrician_manager"
 
   ) {
     state.areainfo.map((item: any) => {
-      console.log('item',item);
-      
       if (area.slice(0, 5) == item.slice(0, 5)) {
         flag = true;
       }
@@ -337,7 +404,7 @@ const checkIsShow = (area: any) => {
 const initpart = () => {
   //置0
   state.partslist = [];
-  console.log("执行了 initpart");
+
   getusearea();
   reciveparts(10, 1);
 };
@@ -375,9 +442,6 @@ const getpartname = async (value?: any) => {
     };
   });
 };
-//---------------------------------------
-
-//---------------------------------------
 
 const getspesc = async (value?: any) => {
   //通过area 找type
@@ -396,8 +460,6 @@ const getspesc = async (value?: any) => {
     };
   });
 };
-
-//---------------------------------------
 
 onMounted(() => {
   initpart();
@@ -436,18 +498,26 @@ const onTabelRowDel = (row: any, index: any) => {
     .catch(() => { });
 };
 
-const selectparts = async () => {
-  console.log("state.");
+const selectparts =  () => {
+  if(state.part_spec_value==""&&state.part_name_value==="" &&state.part_area_value+state.shelf===""&&state.part_type_value==="" ){
 
-  let { data: res } = await service.get("/selectpart", {
+    reciveparts(10, 1);
+    return;
+  }
+
+  
+
+  service.get("/selectpart", {
     params: {
       part_spec: state.part_spec_value,
       part_name: state.part_name_value,
-      area: state.part_area_value,
+      area: state.part_area_value+state.shelf,
       type: state.part_type_value,
+ 
     },
-  });
-  state.partslist = res.map((item: any) => {
+  }).then((res:any)=>{
+   
+    state.partslist = res.data.map((item: any) => {
     return {
       id: item[0],
       part_name: item[1],
@@ -457,12 +527,21 @@ const selectparts = async () => {
       original: item[5],
       remark: item[6],
       type: item[7],
-
       partimgsrc: item[8],
       connection: item[9],
       isShow: checkIsShow(item[3]),
-    };
-  });
+    }
+  })
+  
+  state.pagecount = Math.ceil(state.partslist.length / state.pagesize);
+  state.total = state.partslist.length;
+
+  //state.partslist=state.partslist.slice((state.currentPage-1)*state.pagesize,state.currentPage*state.pagesize)
+
+    //计算当前页面的行数
+
+})
+  
 };
 
 const addClass = ({ row, column, rowIndex, columnIndex }: any) => {
@@ -563,7 +642,7 @@ const getSummaries = (param: any) => {
   top: 500px;
 }
 
-.displayStyle{
+.displayStyle {
 
   display: inline-block;
 

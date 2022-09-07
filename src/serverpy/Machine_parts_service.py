@@ -147,16 +147,16 @@ def getmachine_part_names(area: str):
 # 上传成套图片
 async def create_upload_file(machine_part_name: str, imgid: str, time1:  Optional[str] = None, file: UploadFile = File(...)):
 
-    print(file.filename)
-    print(file.content_type)
-    print(file.filename)
-    print(time1)
+    
     contents = await file.read()
     imgsrc = imgid+"_" + \
         time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())+".jpg"
     print(imgsrc)
+    
+    print('machine_part_name',machine_part_name)
+    
     file = open(
-        "F:\partapp\part-app-vite-momo\part-app-vite\part-app-vite\src\serverpy\static\machine_parts_img\{}".format(imgsrc), "wb")
+        "G:\part-app-vite\part-app-vite\src\serverpy\static\machine_parts_img\{}".format(imgsrc), "wb")
     file.write(contents)
 
     # 传到静态地址
@@ -166,28 +166,12 @@ async def create_upload_file(machine_part_name: str, imgid: str, time1:  Optiona
 
     # 先查询这个成套名称明细有几个 如果有2个就更新为一个url
 
-    sql = f''' select count(*) from machine_parts_detail  where machine_part_name='{machine_part_name}' '''
-    cursor.execute(sql)
-    rs = cursor.fetchone()
-    print('rs', rs)
-    print(rs[0])
-    if rs[0] > 1:
-        sql1 = f'''select partimgsrc from machine_parts_detail  where machine_part_name='{machine_part_name}' and partimgsrc !=''  '''
-        cursor.execute(sql)
-        rs1 = cursor.fetchone()
-        sql2 = f''' update machine_parts_detail set partimgsrc ='{rs1[0]}'  where machine_part_name='{machine_part_name}' and partimgsrc ='' '''
+    tempUrl='http://61.185.74.251:5556/static/machine_parts_img/'+imgsrc
 
-    else:
-        cursor.execute('''
-          UPDATE `part`.`machine_parts_detail`
-          SET
-          `partimgsrc` = '{0}'
-          WHERE
-            (`id` = '{1}')
-                    '''.format('http://61.185.74.251:5556/static/machine_parts_img/'+imgsrc, imgid))
-
-        db.commit()
-        return '上传成功'
+    sql2 = f''' update machine_parts_detail set partimgsrc ='{tempUrl}'  where machine_part_name='{machine_part_name}' '''
+    cursor.execute(sql2)
+    db.commit()
+    return '上传成功'
 
 
 def selectpart(

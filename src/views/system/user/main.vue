@@ -39,8 +39,8 @@
                 <el-drawer ref="elDrawer" v-model="visible" title="角色授权" direction="rtl" custom-class="demo-drawer"
                     close-on-press-escape show-close size="40%">
 
-                    <el-tree ref="tree" :data="state.menus1" show-checkbox node-key="id" :default-expand-all=true
-                        :default-checked-keys="[31]" :props="state.defaultProps" />
+                    <el-tree @node-click="nodeClick" ref="tree" :data="state.menus1" show-checkbox node-key="id"
+                        :default-expand-all=true :default-checked-keys="[31]" :props="state.defaultProps" />
                     <el-button size="mini" type="primary" @click="saveMenu()">保存</el-button>
                 </el-drawer>
 
@@ -51,6 +51,24 @@
 
         </el-card>
         <AddRole ref="AddRoleRef" />
+        <el-dialog v-model="state.btnDialog" title="菜单按钮">
+
+            <div style="width:300px ;display: flex;">
+             
+                <el-checkbox-group  v-model="state.checked1"
+                    v-for="item in state.checkes">
+                    <el-checkbox :label="item" :key="item">{{ item }}</el-checkbox>
+                </el-checkbox-group>
+
+
+            </div>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="state.btnDialog = false">Cancel</el-button>
+                    <el-button size="mini" type="primary" @click="saveBtn()">保存</el-button>
+                </span>
+            </template>
+        </el-dialog>
     </div>
 </template>
 <script setup lang="ts">
@@ -65,9 +83,18 @@ const AddRoleRef: any = ref();
 
 const visible = ref(false)
 
-const test = () => {
-    state.checkedList.length = 0
+const nodeClick = (node: any, prop: any, event: any) => {
+    console.log('节点被点击后node', node);
+    console.log('节点被点击后prop', prop);
+    console.log('节点被点击后event', event);
 
+    //打开菜单按钮
+    state.btnDialog = true
+}
+
+const saveBtn=()=>{
+    console.log(state.checked1);
+    
 }
 
 
@@ -76,6 +103,11 @@ const tree: any = ref()
 
 const roleTable: any = ref()
 const state: any = reactive({
+
+    checkes:['增加','删除','导出'],
+    checked1: [],
+    checked2: false,
+    btnDialog: false,
     current_authcode: "", //当前点击的权限code
     menus: [
     ],
@@ -98,56 +130,7 @@ const state: any = reactive({
     },
     expandList: [],
     checkedList: [],
-    data: [
-        {
-            id: 1,
-            label: 'Level one 1',
-            children: [
-                {
-                    id: 4,
-                    label: 'Level two 1-1',
-                    children: [
-                        {
-                            id: 9,
-                            label: 'Level three 1-1-1',
-                        },
-                        {
-                            id: 10,
-                            label: 'Level three 1-1-2',
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            id: 2,
-            label: 'Level one 2',
-            children: [
-                {
-                    id: 5,
-                    label: 'Level two 2-1',
-                },
-                {
-                    id: 6,
-                    label: 'Level two 2-2',
-                },
-            ],
-        },
-        {
-            id: 3,
-            label: 'Level one 3',
-            children: [
-                {
-                    id: 7,
-                    label: 'Level two 3-1',
-                },
-                {
-                    id: 8,
-                    label: 'Level two 3-2',
-                },
-            ],
-        },
-    ]
+    temp_row: null,
 });
 
 
@@ -159,7 +142,6 @@ onMounted(() => {
     service.get('/getUserRoles'
     ).then((res: any) => {
         console.log('res', res);
-
         state.menus = res.data.map((item: any) => {
             return {
                 id: item[0],
@@ -169,24 +151,11 @@ onMounted(() => {
             }
         })
         //展示树形结构 
-
-
         state.menus1 = listToTree(state.menus)
-
-        //  state.menus1 = generateOptions(state.menus)
-
-
-        console.log('state.menus1', state.menus1);
-
-
-
     }).catch((err: any) => {
 
     })
-
 })
-
-
 const listToTree = (arr: any) => {
     let array: any = []
     arr.forEach((item: any) => { // 遍历对象数组   
@@ -209,19 +178,16 @@ const listToTree = (arr: any) => {
 }
 
 const rowclick = (row: any, column: any, event: any) => {
+    console.log('点击后显示的table  row', row);
 
-
+    //获取临时的row
+    state.temp_row = row
     if (column.no != 1) {
-        console.log('column.no', column.no);
 
         return
     }
     let arr3: any = []
     let arr2: any = []
-
-
-
-    console.log('CheckedKeys', arr3);
 
     //返回id username 所对应的权限 赋值给 menus
     state.current_authcode = row.auth_code;
@@ -233,8 +199,6 @@ const rowclick = (row: any, column: any, event: any) => {
         }
     }).then((res: any) => {
 
-        console.log('res',res);
-        
         //检索 已经被选中的数组
         res.data.forEach((item: any) => {
 
@@ -247,19 +211,16 @@ const rowclick = (row: any, column: any, event: any) => {
 
         //等待抽屉显示出来才开始渲染  所以没显示之前 都没有这个组件 引用 无效
         //所以方法也就失效了
-      
-       nextTick(()=>{
-        tree.value.setCheckedKeys(arr, false)
-       
-       console.log('arr', arr);
-       })
 
-        
+        nextTick(() => {
+            tree.value.setCheckedKeys(arr, false)
 
-           
-            console.log('getCheckedKeys', tree.value.getCheckedKeys(true));
-           
-       
+
+        })
+
+
+
+
     }).catch((err: any) => {
 
     })
@@ -288,7 +249,7 @@ const saveMenu = () => {
         })
 
         tree.value.setCheckedKeys([], false)
-
+        state.temp_row = null
 
     }).catch((err: any) => {
 

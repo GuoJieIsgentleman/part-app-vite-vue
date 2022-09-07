@@ -98,7 +98,7 @@ onMounted(() => {
 const getpartslist = () => {
 
   service
-    .get("getmachine_contrast", {
+    .get("getPart_contrast", {
       params: {
         machineType: state.type,
 
@@ -169,7 +169,9 @@ const find = () => {
 
 
 const getTypes = () => {
-  service.get('getProclineMachineTypes').then((res: any) => {
+  service.get('getProclinePartTypes').then((res: any) => {
+
+
     state.types = res.data.map((item: any) => {
       return {
         label: item[0],

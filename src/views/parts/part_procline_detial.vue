@@ -4,8 +4,8 @@ import table2excel from "js-table2excel";
 import { formatDate111 } from "/@/utils/formatTime";
 import service from "/@/utils/request";
 import { ElMessage, ElMessageBox } from "element-plus";
-import AddMenu from "./components/machine_procline/addMenu.vue";
-import UpdateMenu from "./components/machine_procline/updateMenu.vue";
+import AddMenu from "./components/part_procline/addMenu.vue";
+import UpdateMenu from "./components/part_procline/updateMenu.vue";
 import { Session } from "/@/utils/storage";
 import Auths from "/@/components/auth/auths.vue";
 const AddMenuref = ref();
@@ -110,7 +110,24 @@ const state = reactive({
   spanArr: [] as any,
   pos: 0,
   selectType: '',
-  Types: []
+  Types:[],
+  // Types: [
+  //   {
+  //     value: "减速机",
+  //     label: "减速机",
+  //   },
+  //   {
+  //     value: "升降涡轮蜗杆",
+  //     label: "升降涡轮蜗杆",
+  //   },
+  //   {
+  //     value: "液压马达",
+  //     label: "液压马达",
+  //   },
+  //   {
+  //     value: "转向机",
+  //     label: "转向机",
+  //   }]
 });
 
 const exportExcel1 = () => {
@@ -125,13 +142,16 @@ const find = () => {
   getpartslist(state.selectprolince);
 };
 
+
+
+
 onMounted(() => {
   getpartslist("圆镀一线");
 });
 
 const getpartslist = (procline: String) => {
   service
-    .get("getMachine_proclinedetail", {
+    .get("getPart_proclinedetail", {
       params: {
         flag: "all",
         procline: procline,
@@ -158,7 +178,6 @@ const getpartslist = (procline: String) => {
           KZXJ: item[10],
         };
       });
-      state.partslist1 = state.partslist
 
       let temp=res.data.map((item: any) => {
         return {
@@ -174,6 +193,7 @@ const getpartslist = (procline: String) => {
       state.Types=quchong(temp,"label")
       state.partslist1 = state.partslist
 
+      
       state.line = state.partslist[0]["procline"];
       getSpanArr();
 

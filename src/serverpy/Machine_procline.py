@@ -15,8 +15,14 @@ import connect as conn
 def getMachine_proclinedetail(procline):
     db = conn.getConn()
     cursor = db.cursor()
+    
+    procline1=""
+    if procline!="":
+        procline1=f''' and procline='{procline}'  '''
+    else:
+        procline1=f''' and procline='圆镀一线'  '''
     cursor.execute(
-        f'''select * from machine_procline_detial where procline='{procline}' ''')
+        f'''select * from machine_procline_detial where 1=1  {procline1} ''')
 
     res = cursor.fetchall()
 
@@ -194,7 +200,7 @@ async def create_upload_file(flag: Optional[str] = None, imgid: Optional[str] = 
             time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())+".jpg"
         print('imgsrc==='+imgsrc)
         file = open(
-            "F:\partapp\part-app-vite-momo\part-app-vite\part-app-vite\src\serverpy\static\machine_procline_imgs\{}".format(imgsrc), "wb")
+            "G:\part-app-vite\part-app-vite\src\serverpy\static\machine_procline_imgs\{}".format(imgsrc), "wb")
         file.write(contents)
 
         # 传到静态地址

@@ -303,7 +303,7 @@ async def create_upload_file(imgid: str, time1:  Optional[str] = None, file: Upl
             time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())+".jpg"
         print(imgsrc)
         file = open(
-            "F:\partapp\part-app-vite-momo\part-app-vite\part-app-vite\src\serverpy\static\\tooling_img\{}".format(imgsrc), "wb")
+            "G:\part-app-vite\part-app-vite\src\serverpy\static\\tooling_img\{}".format(imgsrc), "wb")
         file.write(contents)
 
         file.close()

@@ -137,6 +137,8 @@
         <el-table-column prop="type1" label="类型" width="50" align="center">
         </el-table-column>
 
+
+
         <el-table-column prop="part_name" label="单体备件名称" width="200" align="center">
         </el-table-column>
         <el-table-column prop="part_spec" label="规格型号" width="200" align="center">
@@ -188,44 +190,51 @@
 
         <el-table-column label="操作" align="center" width="210">
           <template #default="scope">
-            <Auths :value="['btn.add']">
+         
               <div v-if="scope.row['type1'] == '机械' ? true : false">
+                <Auths :value="['btn.edit']" class="btnDisplay">
                 <el-button
                   type="primary"
                   size="mini"
                   @click="onEditMenu(scope.row, scope.$index, 0)"
                   >修改</el-button
                 >
+                </Auths>
+                <Auths :value="['btn.del']" class="btnDisplay">
                 <el-button
                   type="info"
                   size="mini"
                   @click="onRowDel(scope.row, scope.$index, 0)"
                   >删除</el-button
                 >
+                </Auths>
               </div>
               <div v-else>
+                <Auths :value="['btn.add']" class="btnDisplay">
                 <el-button
                   type="success"
                   size="mini"
                   v-if="scope.row['balance'] == 0 ? true : false"
                   @click="onOpenElectricaddMenu(scope.row, scope.$index)"
                   >增加</el-button
-                >
-
+                ></Auths>
+                   <Auths :value="['btn.edit']" class="btnDisplay">
                 <el-button
                   type="warning"
                   size="mini"
                   @click="onEditMenu(scope.row, scope.$index, 1)"
                   >修改</el-button
-                >
+                ></Auths>
+                <Auths :value="['btn.del']" class="btnDisplay">
                 <el-button
                   type="danger"
                   size="mini"
                   @click="onRowDel(scope.row, scope.$index, 1)"
                   >删除</el-button
                 >
+                </Auths>
               </div>
-            </Auths>
+          
           </template>
         </el-table-column>
       </el-table>
@@ -316,18 +325,9 @@ const onOpenMachineEditMenu = (row: object, index: any) => {
 let dom: any = null;
 
 const setdata = (v: any, v1: any) => {
-  //set table 值
+
   console.log("设置表格的值");
-  // state.partslist[v1].id = v[0][0];
-  // state.partslist[v1].part_name = v[0][1];
-  // state.partslist[v1].part_spec = v[0][2];
-  // state.partslist[v1].area = v[0][3];
-  // state.partslist[v1].balance = v[0][4];
-  // state.partslist[v1].original = v[0][5];
-  // state.partslist[v1].remark = v[0][6];
-  // state.partslist[v1].type = v[0][7];
-  // state.partslist[v1].partimgsrc = v[0][8];
-  // state.partslist[v1].connection = v[0][9];
+
 };
 
 const filterHandler = (value: any, row: any, column: any) => {};
@@ -820,5 +820,8 @@ const objectSpanMethod1 = ({ row, column, rowIndex, columnIndex }: any) => {
   right: 40px;
   bottom: 40px;
   top: 500px;
+}
+.btnDisplay{
+  display: inline-block;
 }
 </style>

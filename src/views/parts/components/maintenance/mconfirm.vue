@@ -58,7 +58,7 @@
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="18" :xl="12">
-            <el-form-item label="新搁置区域">
+            <el-form-item label="新搁置区域" label-width="80">
                  
               <el-row>
                   <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
