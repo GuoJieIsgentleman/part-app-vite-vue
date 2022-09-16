@@ -11,7 +11,6 @@ import sys
 import machine_service as machine
 import Machine_parts_service as Machine_parts
 import part_procline_service as part_procline
-
 import base64
 import hmac
 import json
@@ -3153,7 +3152,32 @@ def updatemachine_maintenance(id: int,
                                      flag)
 
 
-# 获取机修报废
+
+
+class Machine_repair(BaseModel):
+   username:Optional[str] = ''
+   id: Optional[str] = ''
+   use_count: Optional[str] = '0'
+   use_area:Optional[str] = ''
+   use_date: Optional[str] = ''
+   use_part_name: Optional[str] = ''
+   use_reason: Optional[str] = ''
+   type:Optional[str] = ''
+   spec: Optional[str] = ''
+   new_area: Optional[str] = ''
+   applicant: Optional[str] = ''
+   receipt:Optional[str] = ''
+   applicantdate:Optional[str] = ''     
+   receiptdate:Optional[str] = '' 
+
+
+
+@app.post('/updateMachine_repair')
+def updateMachine_repair(machine_repair:Machine_repair):
+    
+    print('Machine_repair',machine_repair)
+    return machine.updateMachine_repair(machine_repair)
+
 
 
 @app.get('/getmachine_scrap')

@@ -164,7 +164,7 @@
         </el-table-column>
 
         <el-table-column
-          prop="temporary_area"
+          prop="new_area"
           align="center"
           label="搁置区域"
           width="180"
@@ -187,37 +187,36 @@
             >
           </template>
         </el-table-column>
-
+        
         <el-table-column prop="receiptdate" align="center" label="收货时间" width="140">
         </el-table-column>
-       
-        <el-table-column prop="remark" align="center" label="外修备注" width="180">
-        </el-table-column>
-        <el-table-column prop="handle" align="center" label="处理方式" width="130">
-        </el-table-column>
+        
+        <!-- <el-table-column prop="remark" align="center" label="外修备注" width="180">
+        </el-table-column> -->
+        <!-- <el-table-column prop="handle" align="center" label="处理方式" width="130">
+        </el-table-column> -->
       </el-table>
       <!-- 分页栏 -->
     </el-card>
     <AddrepairRecored ref="addrepairref" />
     <AddMenu ref="addMenuRef" />
-    <Tryoutconfirm ref="tryoutconfirmref" />
+  
     <Receiptconfirm ref="receiptconfirmref" />
     <ApplicantConfirm ref="applicantConfirmref" />
-    <Confirm ref="confirmref" />
+   
   </div>
 </template>
 
 <script lang="ts" setup>
 import AddrepairRecored from "./components/repair/addrepairRecored.vue";
-import Confirm from "./components/repair/reconfirm.vue";
-// import AddMenu from "./components/parts/addMenu.vue";
+
 import service from "/@/utils/request";
 
 import { formatDate111, subtimehours } from "/@/utils/formatTime";
 
 import { ref, reactive, onMounted, toRefs, provide } from "vue";
 
-import Tryoutconfirm from "./components/repair/tryoutconfirm.vue";
+// import Tryoutconfirm from "./components/repair/tryoutconfirm.vue";
 import Receiptconfirm from "./components/repair/receiptconfirm.vue";
 
 import { ElMessageBox } from "element-plus";
@@ -232,15 +231,15 @@ const exportExcel = () => {
 const addrepairref = ref();
 
 const addMenuRef = ref();
-const tryoutconfirmref = ref();
+
 const confirmref = ref();
 const receiptconfirmref = ref();
 
 const applicantConfirmref = ref();
 // 打开新增菜单弹窗
-const onOpentryoutconfirm = (row?: any) => {
-  tryoutconfirmref.value.openDialog(row);
-};
+// const onOpentryoutconfirm = (row?: any) => {
+//   tryoutconfirmref.value.openDialog(row);
+// };
 const onOpenreceiptconfirm = (row?: any) => {
   receiptconfirmref.value.openDialog(row);
 };
@@ -394,21 +393,15 @@ const initrepair = async (flag?: any) => {
       use_part_name: item[5],
       use_count: item[6],
       use_reason: item[7],
-      use_date: formatDate111(item[8]),
-      useconfirm: item[9],
-      applicant: item[10],
-      tryout: item[11],
-      receipt: item[12],
-      new_area: item[13],
-
-      applicantdate: formatDate111(item[14]),
-      receiptdate: formatDate111(item[15]),
-      tryoutdate: formatDate111(item[16]),
-      useconfirmdate: formatDate111(item[17]),
-      use_procline: item[18],
-      temporary_area: item[20],
-      remark: item[21],
-      handle: item[22],
+      use_date: formatDate111(item[8]),   
+      applicant: item[9],
+      receipt: item[10],
+      new_area: item[11],
+      applicantdate: formatDate111(item[12]),
+      receiptdate: formatDate111(item[13]),
+      use_procline: item[14],
+      remark: item[16],
+      handle: item[17],
     };
   });
   state.total = state.partslist.length;

@@ -421,10 +421,7 @@ const onSubmit = () => {
   state.issave = !state.issave;
   if (state.ruleForm.use_count <= state.ruleForm.balance && state.ruleForm.balance > 0) {
     if (state.ruleForm.use_count <= 0 || state.handle == "" || state.userinput == "") {
-      console.log("state.ruleForm.use----------r");
-      console.log(state.ruleForm.use_count);
-      console.log(state.handle);
-      console.log(state.ruleForm.user);
+
       ElMessage.warning("请重新输入");
       state.ruleForm.use_count = 0;
     } else {
@@ -481,6 +478,7 @@ const onSubmit = () => {
 };
 // 表单初始化，方法：`resetFields()` 无法使用
 const initForm = () => {
+  state.use_proline_value=""
   state.ruleForm.user = "";
   state.ruleForm.use_area = "";
   state.ruleForm.use_part_name = "";

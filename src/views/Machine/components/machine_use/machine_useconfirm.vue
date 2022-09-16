@@ -1,11 +1,6 @@
 <template>
   <div class="system-menu-container">
-    <el-dialog
-      title="领用班长确认信息"
-      v-model="state.isShowDialog"
-      width="769px"
-      :destroy-on-close="true"
-    >
+    <el-dialog title="领用班长确认信息" v-model="state.isShowDialog" width="769px" :destroy-on-close="true">
       <el-form :model="state.ruleForm" size="small" label-width="80px">
         <el-row :gutter="35">
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -48,57 +43,29 @@
               <el-input disabled v-model="state.partsdetail.use_area"></el-input>
             </el-form-item>
           </el-col>
-          <!-- <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-            <el-form-item label="搁置区域">
-              <el-select v-model="ruleForm.area" placeholder="最新搁置区域">
-                <el-option
-                  v-for="item in ruleForm.areaArr"
-                  :key="item['value']"
-                  :label="item['label']"
-                  :value="item['value']"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col> -->
+
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="替换备件处理方式">
-              <!-- <el-input placeholder v-model="ruleForm.user_remark"></el-input> -->
+
 
               <el-select v-model="state.handle" placeholder="请选择">
-                <el-option
-                  v-for="item in state.options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
+                <el-option v-for="item in state.options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="确认人">
-              <el-input
-                v-model="state.ruleForm.name"
-                placeholder="班长确认"
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.name" placeholder="班长确认" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
-      <template #footer
-        ><span class="dialog-footer">
+      <template #footer><span class="dialog-footer">
           <el-button @click="onCancel" size="small">取 消</el-button>
-          <el-button
-            type="primary"
-            @click="onSubmit(state.ruleForm.name)"
-            :loading="state.issave"
-            size="small"
-            >确定</el-button
-          >
-        </span></template
-      >
+          <el-button type="primary" @click="onSubmit(state.ruleForm.name)" :loading="state.issave" size="small">确定
+          </el-button>
+        </span></template>
     </el-dialog>
   </div>
 </template>
@@ -156,19 +123,21 @@ onMounted(async () => {
       label: item[0],
     };
   });
- 
+
 });
 // 打开弹窗
-const openDialog =  (row?: any) => {
- 
+const openDialog = (row?: any) => {
+
   state.partsdetail = row;
 
   state.isShowDialog = true;
+
+  state.handle = row.handle
   getbalance();
 };
 
 defineExpose({ openDialog });
-const getbalance =  () => {
+const getbalance = () => {
 
 
 
@@ -179,16 +148,16 @@ const getbalance =  () => {
       spec: state.partsdetail.spec,
       part_name: state.partsdetail.use_part_name,
     },
-  }).then((res:any)=>{
+  }).then((res: any) => {
 
     console.log(res.data);
-    
-    state.ruleForm.balance=res.data[0][4]
 
-    state.ruleForm.original=res.data[0][5]
+    state.ruleForm.balance = res.data[0][4]
+
+    state.ruleForm.original = res.data[0][5]
   })
 
- 
+
 
 };
 
@@ -205,53 +174,60 @@ const onCancel = () => {
 
 //确认提交
 const initmachine_userecord: any = inject("initmachine_userecord");
-const onSubmit = async (v: any) => {
-  if (v == "" || state.handle == "") {
+const onSubmit = () => {
+  if (state.ruleForm.name == "" || state.handle == "") {
     ElMessage.warning({
-      message: "请重新输入",
+      message: "请核对后重新输入",
       type: "warning",
     });
-  } else {
-    //更新确认人
-    state.issave = !state.issave;
-    let { data: res } = await service.get("/updatemachine_userecord", {
-      params: {
-        //保养列表的id 不是parts 的id
-        id: state.partsdetail.id,
-        useconfirm: state.ruleForm.name,
-        use_count: state.partsdetail.use_count,
-        use_area: state.partsdetail.use_area,
-        use_date: formatDate111(state.partsdetail.use_date),
-        use_part_name: state.partsdetail.use_part_name,
-        type: state.partsdetail.type,
-        spec: state.partsdetail.spec,
-        user: state.partsdetail.user,
-        user_reason: state.partsdetail.user_remark,
-        confirm_date: formatDate111(new Date()),
-        handle: state.handle,
-        flag: "confirm",
-        use_procline: state.partsdetail.use_procline,
-      },
-    });
+    return;
+  }
+  //更新确认人
+  state.issave = !state.issave;
+  service.get("/updatemachine_userecord", {
+    params: {
+      //保养列表的id 不是parts 的id
+      id: state.partsdetail.id,
+      useconfirm: state.ruleForm.name,
+      use_count: state.partsdetail.use_count,
+      use_area: state.partsdetail.use_area,
+      use_date: formatDate111(state.partsdetail.use_date),
+      use_part_name: state.partsdetail.use_part_name,
+      type: state.partsdetail.type,
+      spec: state.partsdetail.spec,
+      user: state.partsdetail.user,
+      user_reason: state.partsdetail.user_remark,
+      confirm_date: formatDate111(new Date()),
+      handle: state.handle,
+      flag: "confirm",
+      use_procline: state.partsdetail.use_procline,
+    },
+  }).then((res: any) => {
 
-   
-    if (res == "成功！") {
+    if (res.data == "成功！") {
+      state.issave = !state.issave;
+      closeDialog();
+      initmachine_userecord("other");
       ElMessage.success({
         message: "保存成功",
         type: "success",
       });
-      state.issave = !state.issave;
-      initmachine_userecord("other");
 
-      closeDialog();
-    } else {
-      state.issave = !state.issave;
-      ElMessage.warning({
-        message: "错误",
-        type: "warning",
-      });
     }
-  }
+  }).catch((err: any) => {
+    ElMessage.warning({
+      message: err,
+      type: "warning",
+    });
+  })
+
+
+
+
+
+
+
+
   // 关闭弹窗
   // setBackEndControlRefreshRoutes() // 刷新菜单，未进行后端接口测试
 };
