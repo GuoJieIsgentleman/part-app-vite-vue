@@ -202,6 +202,9 @@ def getspesc(type: Optional[str] = None,  use_part_name: Optional[str] = None, a
         return data
 
 
+
+
+
 # 操作删除
 
 
@@ -289,7 +292,7 @@ def updatetooling(
 
 
 async def create_upload_file(imgid: str, time1:  Optional[str] = None, file: UploadFile = File(...)):
-
+    import os
     try:
 
         print('进入到上传图片方法里面')
@@ -303,7 +306,7 @@ async def create_upload_file(imgid: str, time1:  Optional[str] = None, file: Upl
             time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())+".jpg"
         print(imgsrc)
         file = open(
-            "G:\part-app-vite\part-app-vite\src\serverpy\static\\tooling_img\{}".format(imgsrc), "wb")
+            f"{os.getcwd()}\static\\tooling_img\{imgsrc}", "wb")
         file.write(contents)
 
         file.close()

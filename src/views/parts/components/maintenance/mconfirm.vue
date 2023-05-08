@@ -295,8 +295,7 @@ const selectChange=(val:any)=>{
         },
       });
 
-      console.log("balance");
-      console.log(balance);
+     
       if (balance.length > 0) {
         state.ruleForm.balance = balance[0][4];
         state.ruleForm.original = balance[0][5];
@@ -313,13 +312,10 @@ const selectChange=(val:any)=>{
         };
       });
 
-      console.log("areaArr");
-      console.log(state.ruleForm.areaArr);
     });
     // 打开弹窗
     const openDialog = async (row?: any) => {
-      console.log("rowobjec");
-      console.log(row);
+  
       state.partsdetail = row;
 
       state.isShowDialog = true;

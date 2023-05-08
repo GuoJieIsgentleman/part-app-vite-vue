@@ -4,27 +4,14 @@
       <el-form :model="state.ruleForm" size="small" label-width="80px">
         <el-row :gutter="10">
           <el-col :span="6">
-            <el-upload
-              class="avatar-uploader"
-              ref="upload1"
-              :on-change="imgpreivew"
-              :auto-upload="false"
-              :action="
-                'http://61.185.74.251:5556/tooling_uploadfile?imgid=' +
-                state.ruleForm.id +
-                '&&time1=' +
-                new Date().getTime().toString()
-              "
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
+            <el-upload class="avatar-uploader" ref="upload1" :on-change="imgpreivew" :auto-upload="false" :action="
+              'https://61.185.74.251:5556/tooling_uploadfile?imgid=' +
+              state.ruleForm.id +
+              '&&time1=' +
+              new Date().getTime().toString()
+            " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
               <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
-              <img
-                v-if="state.ruleForm.imageUrl"
-                :src="state.ruleForm.imageUrl"
-                class="avatar"
-              />
+              <img v-if="state.ruleForm.imageUrl" :src="state.ruleForm.imageUrl" class="avatar" />
 
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
@@ -34,20 +21,12 @@
         <el-row :gutter="35">
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="备件名称">
-              <el-input
-                v-model="state.ruleForm.part_name"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.part_name" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="备件规格">
-              <el-input
-                v-model="state.ruleForm.part_spec"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.part_spec" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -76,11 +55,7 @@
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="原有数量">
-              <el-input
-                v-model="state.ruleForm.original"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.original" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
 
@@ -95,15 +70,10 @@
               <el-input v-model="state.ruleForm.type" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
-        </el-row> </el-form
-      ><template #footer
-        ><span class="dialog-footer">
+        </el-row> </el-form><template #footer><span class="dialog-footer">
           <el-button @click="onCancel" size="small">取 消</el-button>
-          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small"
-            >保存</el-button
-          >
-        </span></template
-      >
+          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small">保存</el-button>
+        </span></template>
     </el-dialog>
   </div>
 </template>

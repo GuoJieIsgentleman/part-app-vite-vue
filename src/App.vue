@@ -1,13 +1,10 @@
 <template>
   <ElConfigProvider :locale="locale">
     <router-view v-show="getThemeConfig.lockScreenTime !== 0" />
-    <el-dialog
-      title="提示"
-      v-model="state.VersionFlag"
-      width="30%"
-      :before-close="handleClose"
-    >
-      <span>有新版本 当前版本{{ state.version }}点击确认更新</span>
+
+
+    <!-- <el-dialog title="提示" v-model="state.VersionFlag" width="30%" :before-close="handleClose">
+      <span>有新版本,当前版本{{ state.version }}点击确认更新</span>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="state.VersionFlag = false">取 消</el-button>
@@ -15,10 +12,12 @@
         </span>
       </template>
     </el-dialog>
+
+
     <LockScreen v-if="getThemeConfig.isLockScreen" />
     <Setings ref="setingsRef" v-show="getThemeConfig.lockScreenTime !== 0" />
 
-    <CloseFull />
+    <CloseFull /> -->
   </ElConfigProvider>
 </template>
 
@@ -90,7 +89,7 @@ export default defineComponent({
       console.log("当前下载路径");
       console.log(state.Website);
 
-      if (state.VersionExplain != state.version) {
+      if (state.VersionExplain !== state.version) {
         console.log("需要更新吗");
         state.VersionFlag = true;
       }
@@ -184,7 +183,7 @@ export default defineComponent({
 
     // 页面销毁时，关闭监听布局配置
     onUnmounted(() => {
-      proxy.mittBus.off("openSetingsDrawer", () => {});
+      proxy.mittBus.off("openSetingsDrawer", () => { });
     });
     // 监听路由的变化，设置网站标题
     watch(

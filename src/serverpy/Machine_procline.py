@@ -1,3 +1,4 @@
+import os
 import pinyin
 import sys
 from hmac import new
@@ -15,12 +16,12 @@ import connect as conn
 def getMachine_proclinedetail(procline):
     db = conn.getConn()
     cursor = db.cursor()
-    
-    procline1=""
-    if procline!="":
-        procline1=f''' and procline='{procline}'  '''
+
+    procline1 = ""
+    if procline != "":
+        procline1 = f''' and procline='{procline}'  '''
     else:
-        procline1=f''' and procline='圆镀一线'  '''
+        procline1 = f''' and procline='圆镀一线'  '''
     cursor.execute(
         f'''select * from machine_procline_detial where 1=1  {procline1} ''')
 
@@ -153,10 +154,10 @@ def getMachine_proclineSummary():
 def getmachine_contrast(machineType: Optional[str] = ""):
     db = conn.getConn()
     cursor = db.cursor()
-    sql=""
-    if machineType!="":
-        sql =f'''where type= '{machineType}'  '''
-    
+    sql = ""
+    if machineType != "":
+        sql = f'''where type= '{machineType}'  '''
+
     cursor.execute(f''' 
             
 			select * from (
@@ -180,8 +181,8 @@ def getmachine_contrast(machineType: Optional[str] = ""):
                   
                    ''')
     res = cursor.fetchall()
-    print('temp',sql)
-    print('res',res)
+    print('temp', sql)
+    print('res', res)
     return res
 
 
@@ -200,7 +201,7 @@ async def create_upload_file(flag: Optional[str] = None, imgid: Optional[str] = 
             time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())+".jpg"
         print('imgsrc==='+imgsrc)
         file = open(
-            "G:\part-app-vite\part-app-vite\src\serverpy\static\machine_procline_imgs\{}".format(imgsrc), "wb")
+            f"{os.getcwd()}\static\machine_procline_imgs\{imgsrc}", "wb")
         file.write(contents)
 
         # 传到静态地址
@@ -330,11 +331,10 @@ def machine_procline_update_log(
     db.commit()
 
 
-
 def getProclineMachineTypes():
     db = conn.getConn()
     cursor = db.cursor()
-    sql=f''' 
+    sql = f''' 
 
         select type from(
         select type from machine_detail group by  type
@@ -345,5 +345,5 @@ def getProclineMachineTypes():
 
  '''
     cursor.execute(sql)
-    res=cursor.fetchall()
+    res = cursor.fetchall()
     return res

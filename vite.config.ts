@@ -72,15 +72,15 @@ const viteConfig: UserConfig = {
     // base: './',
     proxy: {
       '/api': {
-        target: 'http://61.185.74.251:5556',
+        target: 'http://192.168.3.17:9999',
         ws: true,
         changeOrigin: true,
-        rewrite: (path:any) => path.replace(/^\//, '')
+        rewrite: (path: any) => path.replace(/^\//, '')
       },
     },
   },
   build: {
-  
+
 
     outDir: 'dist',
     assetsDir: "./static/js",
@@ -93,14 +93,6 @@ const viteConfig: UserConfig = {
 
       },
     },
-   
-   
-    // terserOptions: {
-    //   compress: {
-    //     drop_console: true,
-    //     drop_debugger: true,
-    //   },
-    // }
   },
   define: {
     __VUE_I18N_LEGACY_API__: JSON.stringify(false),

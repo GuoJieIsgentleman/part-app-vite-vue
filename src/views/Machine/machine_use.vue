@@ -37,8 +37,12 @@
             </el-option>
           </el-select>
           <el-select v-model="state.selectarea" clearable placeholder="领用区域">
-            <el-option v-for="item in state.useareas" :key="item['value']" :label="item['label']"
-              :value="item['value']">
+            <el-option v-for="item in state.useareas" :key="item['value']" :label="item['label']" :value="item['value']">
+            </el-option>
+          </el-select>
+
+          <el-select v-model="state.usetype" clearable placeholder="类型">
+            <el-option v-for="item in state.types" :key="item['value']" :label="item['label']" :value="item['value']">
             </el-option>
           </el-select>
         </el-col>
@@ -84,7 +88,7 @@
           <template #default="scope">
             <el-button :disabled="scope.row.useconfirm == '' ? false : true" @click="onOpenuseconfirmref(scope.row)"
               type="success">{{
-              scope.row.useconfirm == "" ? "请确认" : `${scope.row.useconfirm}已确认`
+                scope.row.useconfirm == "" ? "请确认" : `${scope.row.useconfirm}已确认`
               }}</el-button>
           </template>
         </el-table-column>
@@ -105,6 +109,7 @@
     <Useconfirm ref="useconfirmref" />
   </div>
 </template>
+
 
 <script lang="ts" setup>
 import AdduseRecoredMenu from "./components/machine_use/machine_adduseRecoredMenu.vue";
@@ -172,6 +177,7 @@ const handleClick = (val: any) => {
   // console.log(val.area);
 };
 const state = reactive({
+  types: [],
   use_proline_options: [
     {
       value: "圆镀一线",
@@ -234,21 +240,24 @@ const state = reactive({
   filterTable: null,
   save: false,
   loading: true,
+  usetype: ''
 });
 // const filterTable = (el: any) => {
 // 	console.log(el);
 // };
-const getusearea = async () => {
+const getusearea = () => {
   console.log("执行了 getusearea");
-  let { data: res } = await service.get(`/getmachine_usearea`);
-  console.log("res你好");
-  console.log(res);
-  state.useareas = res.map((item: any) => {
-    return {
-      value: item[0],
-      label: item[0],
-    };
-  });
+  service.get(`/getmachine_usearea`).then((res: any) => {
+    state.useareas = res.data.map((item: any) => {
+      return {
+        value: item[0],
+        label: item[0],
+      };
+    });
+  }).catch((err: any) => {
+
+  })
+
 };
 
 //初始化领用记录
@@ -264,7 +273,7 @@ const initmachine_userecord = async (flag?: any) => {
     if (res != null) {
       state.loading = false;
     }
-    state.partslist = res.map((item: any[]) => {
+    state.partslist = res.data.map((item: any[]) => {
       return {
         id: item[0],
         user: item[1],
@@ -290,7 +299,10 @@ const initmachine_userecord = async (flag?: any) => {
 };
 
 provide("initmachine_userecord", initmachine_userecord);
-onMounted(initmachine_userecord);
+onMounted(() => {
+  initmachine_userecord();
+  gettype();
+});
 const addClass = ({ row, rowIndex }: any) => {
   //如果时间相差3小时 就提示颜色
 
@@ -309,6 +321,19 @@ const getalluse = () => {
   initmachine_userecord("all");
 };
 
+
+const gettype = async (value?: any) => {
+  //通过area 找type
+
+  let { data: type } = await service.get("/getmachine_type");
+
+  state.types = type.map((item: any) => {
+    return {
+      value: item[0],
+      label: item[0],
+    };
+  });
+};
 const find = () => {
   console.log("state.start");
   console.log(state.start);
@@ -321,6 +346,7 @@ const find = () => {
         end: state.end,
         prolince: state.selectprolince,
         area: state.selectarea,
+        usetype: state.usetype
       },
     })
     .then((res) => {
@@ -413,7 +439,7 @@ div.el-picker-panel.el-date-picker.has-time>div.el-picker-panel__body-wrapper>di
   padding: 0% !important;
 }
 
-div.el-picker-panel.el-date-picker.has-time>div.el-picker-panel__body-wrapper>div>div.el-picker-panel__content>table {}
+
 
 div.el-picker-panel.el-date-picker.has-time>div.el-picker-panel__body-wrapper>div>div.el-date-picker__header {
   margin: 0px;

@@ -216,8 +216,8 @@ export function setAddRoute() {
  */
 export function resetRoute() {
   setFilterRouteEnd().forEach((route: RouteRecordRaw) => {
-    console.log('route')
-    console.log(route, "color:" + 'red')
+    // console.log('route')
+    // console.log(route, "color:" + 'red')
     const routeName: any = route.name;
     router.hasRoute(routeName) && router.removeRoute(routeName);
   });

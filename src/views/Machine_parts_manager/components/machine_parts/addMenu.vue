@@ -4,33 +4,20 @@
       <el-form :model="state.ruleForm" size="small" label-width="80px">
         <el-row :gutter="10">
           <el-col :span="6">
-           <el-form-item label="备件图片">
-            <el-upload
-              class="avatar-uploader"
-              ref="upload1"
-              :on-change="imgpreivew"
-              :auto-upload="false"
-              :action="
-                'http://61.185.74.251:5556/machine_part_uploadfile?imgid=' +
+            <el-form-item label="备件图片">
+              <el-upload class="avatar-uploader" ref="upload1" :on-change="imgpreivew" :auto-upload="false" :action="
+                'https://61.185.74.251:5556/machine_part_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString() +
                 '&&machine_part_name=' +
                 state.ruleForm.machine_part_name
-              "
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-            >
-              <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
-              <img
-                v-if="state.ruleForm.imageUrl"
-                :src="state.ruleForm.imageUrl"
-                class="avatar"
-              />
+              " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
+                <img v-if="state.ruleForm.imageUrl" :src="state.ruleForm.imageUrl" class="avatar" />
 
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
             </el-form-item>
           </el-col>
 
@@ -44,27 +31,14 @@
 
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="成套备件名称">
-              <el-input
-                v-model="state.ruleForm.machine_part_name"
-                placeholder="'必填，每个成套的专有名称"
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.machine_part_name" placeholder="'必填，每个成套的专有名称" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="单体类型">
-              <el-select
-                v-model="state.ruleForm.singlepart"
-                filterable
-                placeholder="单体类型"
-                clearable
-              >
-                <el-option
-                  v-for="item in state.singleparts"
-                  :key="item['value']"
-                  :label="item['label']"
-                  :value="item['value']"
-                >
+              <el-select v-model="state.ruleForm.singlepart" filterable placeholder="单体类型" clearable>
+                <el-option v-for="item in state.singleparts" :key="item['value']" :label="item['label']"
+                  :value="item['value']">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -77,20 +51,12 @@
 
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="单体备件名称">
-              <el-input
-                v-model="state.ruleForm.part_name"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.part_name" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="单体备件规格">
-              <el-input
-                v-model="state.ruleForm.part_spec"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.part_spec" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -110,33 +76,33 @@
                 </el-option>
               </el-select> -->
               <el-row>
-                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
-                    <el-select v-model="state.floor" filterable placeholder="存放楼层" clearable>
-                      <el-option v-for="item in state.floors" :key="item['value']" :label="item['label']"
-                        :value="item['value']">
-                      </el-option>
-                    </el-select>
-                  </el-col>
-                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
-                    <el-select v-model="state.shelf" filterable placeholder="存放架编号" clearable>
-                      <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']"
-                        :value="item['value']">
-                      </el-option>
-                    </el-select>
-                  </el-col>
-                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
-                    <el-select v-model="state.num" filterable placeholder="存放位置编号" clearable>
-                      <el-option v-for="item in 5" :key="item" :label="item" :value="item">
-                        {{ item }}
-                      </el-option>
-                    </el-select>
-                  </el-col>
+                <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                  <el-select v-model="state.floor" filterable placeholder="存放楼层" clearable>
+                    <el-option v-for="item in state.floors" :key="item['value']" :label="item['label']"
+                      :value="item['value']">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                  <el-select v-model="state.shelf" filterable placeholder="存放架编号" clearable>
+                    <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']"
+                      :value="item['value']">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                  <el-select v-model="state.num" filterable placeholder="存放位置编号" clearable>
+                    <el-option v-for="item in 5" :key="item" :label="item" :value="item">
+                      {{ item }}
+                    </el-option>
+                  </el-select>
+                </el-col>
 
-                  <el-col class="mb20" :xs="24" :sm="18" :md="18" :lg="18" :xl="18">
-                   {{state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num}}
-                  </el-col>
-                </el-row>
-             
+                <el-col class="mb20" :xs="24" :sm="18" :md="18" :lg="18" :xl="18">
+                  {{ state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num }}
+                </el-col>
+              </el-row>
+
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -146,20 +112,12 @@
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="原有数量">
-              <el-input
-                v-model="state.ruleForm.original"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.original" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="机械连接方式">
-              <el-input
-                v-model="state.ruleForm.connection"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.connection" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
 
@@ -168,15 +126,10 @@
               <el-input v-model="state.ruleForm.remark" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
-        </el-row> </el-form
-      ><template #footer
-        ><span class="dialog-footer">
+        </el-row> </el-form><template #footer><span class="dialog-footer">
           <el-button @click="onCancel" size="small">取 消</el-button>
-          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small"
-            >保存</el-button
-          >
-        </span></template
-      >
+          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small">保存</el-button>
+        </span></template>
     </el-dialog>
   </div>
 </template>
@@ -189,58 +142,58 @@ import { compressAccurately } from "image-conversion";
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
 
 const state = reactive({
-  
+
   num: '',
   shelfArea: '',
   floor: '',
   floors: [
-  {
-        value: "值班室一楼",
-        label: "值班室一楼",
-      },
-      {
-        value: "值班室二楼",
-        label: "值班室二楼",
-      },
-      {
-        value: "方镀三线一楼",
-        label: "方镀三线一楼",
-      },
-      {
-        value: "圆镀四线一楼",
-        label: "圆镀四线一楼",
-      },
-      {
-        value: "南污水南库",
-        label: "南污水南库",
-      },{
-    value: "方镀三线二楼",
-    label: "方镀三线二楼",
-  },
-  {
-    value: "圆镀四线二楼",
-    label: "圆镀四线二楼",
-  },
-  {
-    value: "南污水北库",
-    label: "南污水北库",
-  },
-  {
-    value: "锌锭库一层",
-    label: "锌锭库一层",
-  },
-  {
-    value: "锌锭库二层",
-    label: "锌锭库二层",
-  },
-  {
-    value: "方管库一层",
-    label: "方管库一层",
-  },
-  {
-    value: "方管库二层",
-    label: "方管库二层",
-  }],
+    {
+      value: "值班室一楼",
+      label: "值班室一楼",
+    },
+    {
+      value: "值班室二楼",
+      label: "值班室二楼",
+    },
+    {
+      value: "方镀三线一楼",
+      label: "方镀三线一楼",
+    },
+    {
+      value: "圆镀四线一楼",
+      label: "圆镀四线一楼",
+    },
+    {
+      value: "南污水南库",
+      label: "南污水南库",
+    }, {
+      value: "方镀三线二楼",
+      label: "方镀三线二楼",
+    },
+    {
+      value: "圆镀四线二楼",
+      label: "圆镀四线二楼",
+    },
+    {
+      value: "南污水北库",
+      label: "南污水北库",
+    },
+    {
+      value: "锌锭库一层",
+      label: "锌锭库一层",
+    },
+    {
+      value: "锌锭库二层",
+      label: "锌锭库二层",
+    },
+    {
+      value: "方管库一层",
+      label: "方管库一层",
+    },
+    {
+      value: "方管库二层",
+      label: "方管库二层",
+    }],
   shelf: '',
   shelfs: [
     {
@@ -380,14 +333,13 @@ const onSubmit = () => {
 
   let tempStr = state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + "-" + state.num
 
-  if(state.machine_part_id=='' || state.ruleForm.machine_part_name===''
-  ||state.ruleForm.part_spec==='' ||state.ruleForm.part_name===''|| state.ruleForm.type==='')
-  {
-    ElMessage({type:'warning',message:'请完善成套备件信息'})
+  if (state.machine_part_id == '' || state.ruleForm.machine_part_name === ''
+    || state.ruleForm.part_spec === '' || state.ruleForm.part_name === '' || state.ruleForm.type === '') {
+    ElMessage({ type: 'warning', message: '请完善成套备件信息' })
     return
   }
-  if(state.ruleForm.balance===''){
-    ElMessage({type:'warning',message:'请填写库存'})
+  if (state.ruleForm.balance === '') {
+    ElMessage({ type: 'warning', message: '请填写库存' })
     return
   }
 
@@ -414,7 +366,7 @@ const onSubmit = () => {
       });
       state.ruleForm.id = res.data.id;
       //调用上传图片的方法
-    
+
       upload1.value.submit();
       initForm();
       closeDialog();
@@ -430,7 +382,7 @@ const onSubmit = () => {
 };
 
 const imgpreivew = (file: any) => {
- 
+
   if (file.raw.type == "image/jpeg") {
     //图片的raw 转换为url
     state.ruleForm.imageUrl = URL.createObjectURL(file.raw);
@@ -489,52 +441,12 @@ const initForm = () => {
 </script>
 
 <style>
-#app
-  > section
-  > section
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > main
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > div
-  > div
-  > div:nth-child(2)
-  > div
-  > div
-  > div.el-dialog__body
-  > form
-  > div:nth-child(2)
-  > div:nth-child(1)
-  > div
-  > label {
+#app>section>section>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>main>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>div>div>div:nth-child(2)>div>div>div.el-dialog__body>form>div:nth-child(2)>div:nth-child(1)>div>label {
   line-height: 32px;
   width: 96px;
 }
 
-#app
-  > section
-  > section
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > main
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > div
-  > div
-  > div:nth-child(2)
-  > div
-  > div
-  > div.el-dialog__body
-  > form
-  > div:nth-child(2)
-  > div:nth-child(2)
-  > div
-  > label {
+#app>section>section>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>main>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>div>div>div:nth-child(2)>div>div>div.el-dialog__body>form>div:nth-child(2)>div:nth-child(2)>div>label {
   width: 110px !important;
 }
 </style>

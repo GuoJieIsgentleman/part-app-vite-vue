@@ -58,11 +58,11 @@ const state = reactive({
     { title: "类别", key: "type", type: "text" },
     { title: "备件名称", key: "machine_name", type: "text" },
     { title: "规格型号", key: "machine_spesc", type: "text" },
-    { title: "法兰盘外径", key: "FLP", type: "image", width: 200, height: 200 },
-    { title: "轴对内径", key: "ZD", type: "image", width: 200, height: 200 },
-    { title: "键槽", key: "JC", type: "image", width: 200, height: 200 },
-    { title: "孔数", key: "KS", type: "image", width: 200, height: 200 },
-    { title: "孔中心距", key: "KZXJ", type: "image", width: 200, height: 200 },
+    { title: "图1", key: "FLP", type: "image", width: 200, height: 200 },
+    { title: "图2", key: "ZD", type: "image", width: 200, height: 200 },
+    { title: "图3", key: "JC", type: "image", width: 200, height: 200 },
+    { title: "图4", key: "KS", type: "image", width: 200, height: 200 },
+    { title: "图5", key: "KZXJ", type: "image", width: 200, height: 200 },
   ],
   partslist: [] as any,
   partslist1: [] as any,
@@ -156,22 +156,24 @@ const getpartslist = (procline: String) => {
           JC: item[8],
           KS: item[9],
           KZXJ: item[10],
+          count: item[12],
+          remark: item[13]
         };
       });
       state.partslist1 = state.partslist
 
-      let temp=res.data.map((item: any) => {
+      let temp = res.data.map((item: any) => {
         return {
-          label:item[3],
-          value:item[3]
+          label: item[3],
+          value: item[3]
         };
       });
 
-    
 
-      console.log('temp',quchong(temp,"label"));
-       
-      state.Types=quchong(temp,"label")
+
+      console.log('temp', quchong(temp, "label"));
+
+      state.Types = quchong(temp, "label")
       state.partslist1 = state.partslist
 
       state.line = state.partslist[0]["procline"];
@@ -183,16 +185,16 @@ const getpartslist = (procline: String) => {
     });
 };
 
-const quchong=(temp:any,label:any)=>{
-  var res:any = [];//去重复后的集合
-            var tem:any = {};
-            for (var i = 0; i < temp.length; i++) {
-                if (!tem[temp[i][label]]) {
-                    res.push(temp[i]);
-                    tem[temp[i][label]] = 1;
-                }
-            }
-            return res;
+const quchong = (temp: any, label: any) => {
+  var res: any = [];//去重复后的集合
+  var tem: any = {};
+  for (var i = 0; i < temp.length; i++) {
+    if (!tem[temp[i][label]]) {
+      res.push(temp[i]);
+      tem[temp[i][label]] = 1;
+    }
+  }
+  return res;
 
 }
 
@@ -246,8 +248,8 @@ const getSpanArr = () => {
 const getInfoByType = (val: any) => {
 
 
-  state.partslist1=state.partslist.filter((item:any)=>{
-    return item.type.indexOf(val)!=-1
+  state.partslist1 = state.partslist.filter((item: any) => {
+    return item.type.indexOf(val) != -1
   })
 }
 </script>
@@ -318,6 +320,8 @@ const getInfoByType = (val: any) => {
 
         <el-table-column prop="machine_spesc" align="center" label="规格型号" width="auto">
         </el-table-column>
+        <el-table-column prop="count" align="center" label="数量" width="auto">
+        </el-table-column>
         <el-table-column prop="FLP" align="center" label="图1" width="100">
           <template #default="scope">
             <div v-if="scope.row.FLP != null">
@@ -358,6 +362,7 @@ const getInfoByType = (val: any) => {
           </template>
         </el-table-column>
 
+
         <el-table-column prop="KZXJ" width="100" align="center" label="图5">
           <template #default="scope">
             <div v-if="scope.row.KZXJ != null">
@@ -366,6 +371,9 @@ const getInfoByType = (val: any) => {
             </div>
             <div v-else>无图</div>
           </template>
+        </el-table-column>
+
+        <el-table-column prop="remark" align="center" label="备注" width="auto">
         </el-table-column>
         <el-table-column label="操作" align="center" min-width="120">
           <template #default="scope">

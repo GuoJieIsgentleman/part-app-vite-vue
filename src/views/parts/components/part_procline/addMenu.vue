@@ -7,13 +7,13 @@
             <el-col :span="5">
 
               <el-upload class="avatar-uploader" ref="upload1" :on-change="imgpreivewFLP" :auto-upload="false" :action="
-                'http://61.185.74.251:5556/Part_procline_detail_uploadfile?imgid=' +
+                'https://61.185.74.251:5556/Part_procline_detail_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString() +
                 '&&flag=FLP'
               " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-              
+
                 <img v-if="state.ruleForm.FLP" :src="state.ruleForm.FLP" class="imgstyle" />
 
                 <el-icon v-else class="avatar-uploader-icon">图1</el-icon>
@@ -23,13 +23,13 @@
 
             <el-col :span="5">
               <el-upload class="avatar-uploader" ref="upload2" :on-change="imgpreivewZD" :auto-upload="false" :action="
-                'http://61.185.74.251:5556/Part_procline_detail_uploadfile?imgid=' +
+                'https://61.185.74.251:5556/Part_procline_detail_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString() +
                 '&&flag=ZD'
               " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-               
+
                 <img v-if="state.ruleForm.ZD" :src="state.ruleForm.ZD" class="imgstyle" />
 
                 <el-icon v-else class="avatar-uploader-icon">图2</el-icon>
@@ -37,43 +37,43 @@
             </el-col>
             <el-col :span="5">
               <el-upload class="avatar-uploader" ref="upload3" :on-change="imgpreivewJC" :auto-upload="false" :action="
-                'http://61.185.74.251:5556/Part_procline_detail_uploadfile?imgid=' +
+                'https://61.185.74.251:5556/Part_procline_detail_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString() +
                 '&&flag=JC'
               " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-              
+
                 <img v-if="state.ruleForm.JC" :src="state.ruleForm.JC" class="imgstyle" />
 
                 <el-icon v-else class="avatar-uploader-icon">图3</el-icon>
               </el-upload>
             </el-col>
-           
+
             <el-col :span="5">
-               <el-upload class="avata" ref="upload4" :on-change="imgpreivewKS" :auto-upload="false" :action="
-                'http://61.185.74.251:5556/Part_procline_detail_uploadfile?imgid=' +
+              <el-upload class="avata" ref="upload4" :on-change="imgpreivewKS" :auto-upload="false" :action="
+                'https://61.185.74.251:5556/Part_procline_detail_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString() +
                 '&&flag=KS'
               " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-               
+
                 <img v-if="state.ruleForm.KS" :src="state.ruleForm.KS" class="imgstyle" />
 
                 <el-icon v-else class="avatar-uploader-icon">图4</el-icon>
               </el-upload>
 
             </el-col>
-                 <el-col :span="5">
+            <el-col :span="5">
               <el-upload class="avatar-uploader" ref="upload5" :on-change="imgpreivewKZXJ" :auto-upload="false" :action="
-                'http://61.185.74.251:5556/Part_procline_detail_uploadfile?imgid=' +
+                'https://61.185.74.251:5556/Part_procline_detail_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString() +
                 '&&flag=KZXJ'
               " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-       
+
                 <img v-if="state.ruleForm.KZXJ" :src="state.ruleForm.KZXJ" class="imgstyle" />
 
                 <el-icon v-else class="avatar-uploader-icon">图5</el-icon>
@@ -82,7 +82,7 @@
             </el-col>
           </el-space>
         </el-row>
-        <br/>
+        <br />
         <el-row :gutter="35">
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="类型">
@@ -259,6 +259,7 @@ const onSubmit = () => {
         type: state.ruleForm.type,
         area: state.ruleForm.area,
         username: Session.get("userInfo").userName,
+        remark: state.ruleForm.remark
       },
     })
     .then((res) => {

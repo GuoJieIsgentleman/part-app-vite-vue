@@ -30,10 +30,15 @@ export default {
           if (val === v) flag = true;
         });
       });
+
       return flag;
     });
+
+
+
     return {
       getUserAuthBtnList,
+
     };
   },
 };

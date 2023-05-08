@@ -1,8 +1,7 @@
 <template>
 	<div class="layout-view-bg-white flex layout-view-link" :style="{ height: `calc(100vh - ${setLinkHeight}` }">
-		<a :href="currentRouteMeta.isLink" target="_blank" rel="opener" class="flex-margin"
-			>{{ $t(currentRouteMeta.title) }}：{{ currentRouteMeta.isLink }}</a
-		>
+		<a :href="currentRouteMeta.isLink" target="_blank" rel="opener" class="flex-margin">{{ $t(currentRouteMeta.title)
+		}}：{{ currentRouteMeta.isLink }}</a>
 	</div>
 </template>
 
@@ -21,7 +20,7 @@ export default defineComponent({
 		// 设置 link 的高度
 		const setLinkHeight = computed(() => {
 			let { isTagsview } = store.state.themeConfig.themeConfig;
-			if (isTagsview) return `114px`;
+			if (isTagsview) return `130px`;
 			else return `80px`;
 		});
 		// 监听路由的变化，设置内容

@@ -12,11 +12,11 @@
 
             </div>
 
-            <el-table style="width:300px ;" :highlight-current-row=true ref="roleTable" row-class-name="setTableStyle"
+            <el-table style="width:800px ;" :highlight-current-row=true ref="roleTable" row-class-name="setTableStyle"
                 :data="state.tableData.data" border stripe @cell-click="rowclick">
-                <el-table-column type='index'></el-table-column>
-
+                <el-table-column type="index" width="50" />
                 <el-table-column prop="auth_name" label="角色" width="auto"></el-table-column>
+                <el-table-column prop="auth_code" label="编码" width="180"></el-table-column>
 
                 <el-table-column prop="path" label="操作" width="90">
                     <template #default="scope">
@@ -27,9 +27,8 @@
             </el-table>
 
             <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                :page-sizes="state.pagearray" @prev-click="prev()" @next-click="next()"
-                layout="total, sizes, prev, pager, next, jumper" :total="state.total" prev-text="上一页" next-text="下一页"
-                :page-count="state.pagecount" />
+                :page-sizes="state.pagearray" layout="total, sizes, prev, pager, next, jumper" :total="state.total"
+                prev-text="上一页" next-text="下一页" :page-count="state.pagecount" />
 
 
 
@@ -54,9 +53,8 @@
         <el-dialog v-model="state.btnDialog" title="菜单按钮">
 
             <div style="width:300px ;display: flex;">
-             
-                <el-checkbox-group  v-model="state.checked1"
-                    v-for="item in state.checkes">
+
+                <el-checkbox-group v-model="state.checked1" v-for="item in state.checkes">
                     <el-checkbox :label="item" :key="item">{{ item }}</el-checkbox>
                 </el-checkbox-group>
 
@@ -92,9 +90,9 @@ const nodeClick = (node: any, prop: any, event: any) => {
     state.btnDialog = true
 }
 
-const saveBtn=()=>{
+const saveBtn = () => {
     console.log(state.checked1);
-    
+
 }
 
 
@@ -104,7 +102,7 @@ const tree: any = ref()
 const roleTable: any = ref()
 const state: any = reactive({
 
-    checkes:['增加','删除','导出'],
+    checkes: ['增加', '删除', '导出'],
     checked1: [],
     checked2: false,
     btnDialog: false,
@@ -124,6 +122,7 @@ const state: any = reactive({
         },
     },
     pagesize: 10,
+    currentPage: 1,
     defaultProps: {
         children: 'children',
         label: 'menu_name',
@@ -150,8 +149,13 @@ onMounted(() => {
                 parentname: item[8]
             }
         })
-        //展示树形结构 
+        //展示树形结构
+
+        console.log('log menus', state.menus);
+
         state.menus1 = listToTree(state.menus)
+
+        console.log('log menus1', state.menus1);
     }).catch((err: any) => {
 
     })
@@ -263,39 +267,39 @@ onMounted(() => {
 
 
 onMounted(() => {
-    reciveparts(10, 1)
+    reciveparts()
 });
 const inituser = () => {
     //置0
     state.partslist = [];
 
 
-    reciveparts(10, 1);
+    reciveparts();
 };
 
 const handleSizeChange = (val: any) => {
-
     state.pagesize = val;
-    reciveparts(state.pagesize, 1);
+    reciveparts();
     //初始化 页数
 };
 
 
 
-const reciveparts = (page?: any, pagesize?: any) => {
-    let res = service
-        .get("/getroles", {
-            params: {
-                currentpagecount: page,
-                pagesize: pagesize,
-            },
-        })
+const reciveparts = () => {
+    service.get("getroles", {
+        params: {
+            currentpagecount: state.currentPage,
+            pagesize: state.pagesize,
+        },
+    })
         .then((res: any) => {
+            console.log('分页获取权限', res);
+
             if (res != null) {
                 state.pagecount = res.data.pages;
-                state.total = res.data.total;
+                state.total = res.data.total_count;
                 state.loading = false;
-                state.tableData.data = res.data.data1.map((item: any) => {
+                state.tableData.data = res.data.result.map((item: any) => {
                     return {
                         id: item[0],
                         auth_name: item[1],
@@ -314,7 +318,7 @@ provide('reciveparts', reciveparts)
 // // 初始化表格数据
 const inituseData = () => {
     //获取用户数据
-    reciveparts(10, 1)
+    reciveparts()
 };
 
 provide("inituseData", inituseData);
@@ -342,7 +346,7 @@ const onRowDel = (row: any) => {
                 })
                 .then((res: any) => {
                     ElMessage({ type: 'success', message: res.data });
-                    reciveparts(10, 1);
+                    reciveparts();
                 });
 
         })
@@ -356,19 +360,13 @@ const onOpenAddMenu = () => {
 
     AddRoleRef.value.openDialog();
 };
-// 打开编辑菜单弹窗
 
-// 分页改变
-const onHandleSizeChange = (val: number) => {
-    state.pageSize = val;
-    console.log("每页" + val);
-    state.tableData.pageSize = val;
-    reciveparts(state.pageSize, 1);
-};
 // 分页改变
 const handleCurrentChange = (val: any) => {
     console.log("改变页数" + val);
-    reciveparts(state.pagesize, val);
+
+    state.currentPage = val
+    reciveparts();
 };
 // 页面加载时
 </script>

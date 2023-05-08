@@ -1,71 +1,43 @@
 <template>
   <div class="system-menu-container">
-    <el-dialog
-      title="更新备件信息"
-      v-model="state.isShowDialog"
-      width="769px"
-      :before-close="handleClose"
-    >
+    <el-dialog title="更新备件信息" v-model="state.isShowDialog" width="769px" :before-close="handleClose">
       <el-form :model="state.ruleForm" size="small" label-width="80px">
         <el-row :gutter="35">
-          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20"> 
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="备件图片">
               <div v-if="state.ruleForm.imgsrc != ''">
                 <!-- <img :src="ruleForm.imgsrc" alt="" style="height: 40%; width: 40%" /> -->
-                <el-upload
-                  class="avatar-uploader"
-                  multiple="false"
-                  ref="upload"
-                  :action="
-                    'http://61.185.74.251:5556/machine_part_uploadfile?imgid=' +
-                    state.ruleForm.id +
-                    '&&time1=' +
-                    new Date().getTime().toString()+
-                    '&&machine_part_name='+state.ruleForm.machine_part_name
-                  "
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :before-upload="beforeAvatarUpload"
-                >
+                <el-upload class="avatar-uploader" multiple="false" ref="upload" :action="
+                  'https://61.185.74.251:5556/machine_part_uploadfile?imgid=' +
+                  state.ruleForm.id +
+                  '&&time1=' +
+                  new Date().getTime().toString() +
+                  '&&machine_part_name=' + state.ruleForm.machine_part_name
+                " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                   <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
-                  <img
-                    v-if="state.ruleForm.imageUrl == ''"
-                    :src="state.ruleForm.imgsrc"
-                    class="avatar"
-                  />
+                  <img v-if="state.ruleForm.imageUrl == ''" :src="state.ruleForm.imgsrc" class="avatar" />
                   <img v-else :src="state.ruleForm.imageUrl" class="avatar" />
 
                   <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
                 </el-upload>
               </div>
               <div v-else>
-                <el-upload
-                  class="avatar-uploader"
-                  :multiple="false"
-                  :action="
-                    'http://61.185.74.251:5556/machine_part_uploadfile?imgid=' +
-                    state.ruleForm.id +
-                    '&&time1=' +
-                    new Date().getTime().toString()+
-                    '&&machine_part_name='+state.ruleForm.machine_part_name
-                  "
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :before-upload="beforeAvatarUpload"
-                >
+                <el-upload class="avatar-uploader" :multiple="false" :action="
+                  'https://61.185.74.251:5556/machine_part_uploadfile?imgid=' +
+                  state.ruleForm.id +
+                  '&&time1=' +
+                  new Date().getTime().toString() +
+                  '&&machine_part_name=' + state.ruleForm.machine_part_name
+                " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                   <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
-                  <img
-                    v-if="state.ruleForm.imageUrl"
-                    :src="state.ruleForm.imageUrl"
-                    class="avatar"
-                  />
+                  <img v-if="state.ruleForm.imageUrl" :src="state.ruleForm.imageUrl" class="avatar" />
 
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
                 <!-- <img :src="scope.row.partimgsrc" alt="" /> -->
               </div>
             </el-form-item>
-          
+
           </el-col>
         </el-row>
         <el-row :gutter="35">
@@ -89,47 +61,28 @@
               <el-input disabled v-model="state.ruleForm.part_spec"></el-input>
             </el-form-item>
           </el-col>
-          <!-- <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-            <el-form-item label="机械连接方式">
-              <el-input
-                v-model="state.ruleForm.connection"
-                placeholder=""
-                clearable
-              ></el-input>
-            </el-form-item>
-          </el-col> -->
+
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="搁置区域">
               <el-input disabled v-model="state.ruleForm.area"></el-input>
-            
+
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="成套结存">
-              <el-input
-                v-model="state.ruleForm.balance"
-                :placeholder="state.ruleForm.balance"
-                disabled="true"
-              ></el-input>
+              <el-input v-model="state.ruleForm.balance" :placeholder="state.ruleForm.balance"
+                disabled="true"></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="单件结存原有数量">
-              <el-input
-                v-model="state.ruleForm.original"
-                placeholder=""
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.original" placeholder="" clearable></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="备注">
-              <el-input
-                v-model="state.ruleForm.remark"
-                placeholder=""
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.remark" placeholder="" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -137,9 +90,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="onCancel" size="small">取 消</el-button>
-          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small"
-            >保存</el-button
-          >
+          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small">保存</el-button>
         </span>
       </template>
     </el-dialog>
@@ -242,7 +193,7 @@ const beforeAvatarUpload = (file: any) => {
 // 打开弹窗
 const openDialog = (row: any, index: any) => {
 
-console.log('编辑row',row);
+  console.log('编辑row', row);
 
 
   state.ruleForm.index = index;
@@ -256,7 +207,7 @@ console.log('编辑row',row);
   state.ruleForm.type = row.type;
   state.isShowDialog = true;
   state.ruleForm.machine_part_name = row.machine_part_name;
-  state.ruleForm.imgsrc=row.partimgsrc
+  state.ruleForm.imgsrc = row.partimgsrc
 
 
   // state.ruleForm.imgsrc = row.partimgsrc;
@@ -363,9 +314,11 @@ const handleClose = () => {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -374,6 +327,7 @@ const handleClose = () => {
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 160px;
   height: 160px;

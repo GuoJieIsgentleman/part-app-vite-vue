@@ -1,62 +1,34 @@
 <template>
   <div class="system-menu-container">
-    <el-dialog
-      title="编辑菜单"
-      v-model="state.isShowDialog"
-      width="769px"
-      :before-close="handleClose"
-    >
+    <el-dialog title="编辑菜单" v-model="state.isShowDialog" width="769px" :before-close="handleClose">
       <el-form :model="state.ruleForm" size="small" label-width="80px">
         <el-row :gutter="35">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="备件图片">
               <div v-if="state.ruleForm.imgsrc != ''">
                 <!-- <img :src="ruleForm.imgsrc" alt="" style="height: 40%; width: 40%" /> -->
-                <el-upload
-                  class="avatar-uploader"
-                  multiple="false"
-                  ref="upload"
-                  :action="
-                    'http://61.185.74.251:5556/uploadfile?imgid=' +
-                    state.ruleForm.id +
-                    '&&time1=' +
-                    new Date().getTime().toString()
-                  "
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :before-upload="beforeAvatarUpload"
-                >
+                <el-upload class="avatar-uploader" multiple="false" ref="upload" :auto-upload="false" :action="
+                  'https://www.ssxyf.cn:5556/uploadfile?imgid=' +
+                  state.ruleForm.id +
+                  '&&time1=' +
+                  new Date().getTime().toString()
+                " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                   <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
-                  <img
-                    v-if="state.ruleForm.imageUrl == ''"
-                    :src="state.ruleForm.imgsrc"
-                    class="avatar"
-                  />
+                  <img v-if="state.ruleForm.imageUrl == ''" :src="state.ruleForm.imgsrc" class="avatar" />
                   <img v-else :src="state.ruleForm.imageUrl" class="avatar" />
 
                   <!-- <i class="el-icon-plus avatar-uploader-icon"></i> -->
                 </el-upload>
               </div>
               <div v-else>
-                <el-upload
-                  class="avatar-uploader"
-                  :multiple="false"
-                  :action="
-                    'http://61.185.74.251:5556/uploadfile?imgid=' +
-                    state.ruleForm.id +
-                    '&&time1=' +
-                    new Date().getTime().toString()
-                  "
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess"
-                  :before-upload="beforeAvatarUpload"
-                >
+                <el-upload class="avatar-uploader" :multiple="false" :action="
+                  'https://www.ssxyf.cn:5556/uploadfile?imgid=' +
+                  state.ruleForm.id +
+                  '&&time1=' +
+                  new Date().getTime().toString()
+                " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                   <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
-                  <img
-                    v-if="state.ruleForm.imageUrl"
-                    :src="state.ruleForm.imageUrl"
-                    class="avatar"
-                  />
+                  <img v-if="state.ruleForm.imageUrl" :src="state.ruleForm.imageUrl" class="avatar" />
 
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
@@ -68,71 +40,52 @@
         <el-row :gutter="35">
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="类型">
-              <el-input
-               
-                v-model="state.ruleForm.type"
-                placeholder=""
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.type" placeholder="" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="备件名称">
-              <el-input
-                
-                v-model="state.ruleForm.part_name"
-                placeholder=""
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.part_name" placeholder="" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="备件型号">
-              <el-input
-               
-                v-model="state.ruleForm.part_spec"
-                placeholder=""
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.part_spec" placeholder="" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="机械连接方式">
-              <el-input
-                v-model="state.ruleForm.connection"
-                placeholder=""
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.connection" placeholder="" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="18" :xl="12" class="mb20">
             <el-form-item label="搁置区域">
-                 
-              <el-row>
-                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
-                    <el-select v-model="state.floor" filterable placeholder="存放楼层" clearable>
-                      <el-option v-for="item in state.floors" :key="item['value']" :label="item['label']"
-                        :value="item['value']">
-                      </el-option>
-                    </el-select>
-                  </el-col>
-                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
-                    <el-select v-model="state.shelf" filterable placeholder="存放架编号" clearable>
-                      <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']"
-                        :value="item['value']">
-                      </el-option>
-                    </el-select>
-                  </el-col>
-                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
-                    <el-select v-model="state.num" filterable placeholder="存放位置编号" clearable>
-                      <el-option v-for="item in 5" :key="item" :label="item" :value="item">
-                        {{ item }}
-                      </el-option>
-                    </el-select>
-                  </el-col>
 
-                </el-row>
-             
+              <el-row>
+                <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                  <el-select v-model="state.floor" filterable placeholder="存放楼层" clearable>
+                    <el-option v-for="item in state.floors" :key="item['value']" :label="item['label']"
+                      :value="item['value']">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                  <el-select v-model="state.shelf" filterable placeholder="存放架编号" clearable>
+                    <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']"
+                      :value="item['value']">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                  <el-select v-model="state.num" filterable placeholder="存放位置编号" clearable>
+                    <el-option v-for="item in 5" :key="item" :label="item" :value="item">
+                      {{ item }}
+                    </el-option>
+                  </el-select>
+                </el-col>
+
+              </el-row>
+
 
               <!-- <el-select
                 v-model="state.ruleForm.area"
@@ -152,44 +105,39 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="最新区域">
-              {{state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num}}
+              {{ state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num }}
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="原区域">
-              <el-input
-                v-model="state.ruleForm.area"
-                placeholder=""
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.area" placeholder="" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="结存">
-              <el-input
-                v-model="state.ruleForm.balance"
-                :placeholder="state.ruleForm.balance"
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.balance" :placeholder="state.ruleForm.balance"
+                @input="setValue('balance')" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="原有数量">
-              <el-input
-                v-model="state.ruleForm.original"
-                placeholder=""
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.original" placeholder="" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="单价">
+              <el-input v-model="state.ruleForm.price" placeholder="" clearable @input="setValue('price')"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+            <el-form-item label="金额">
+              <el-input v-model="state.ruleForm.amount" placeholder="" clearable disabled></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
             <el-form-item label="备注">
-              <el-input
-                v-model="state.ruleForm.remark"
-                placeholder=""
-                clearable
-              ></el-input>
+              <el-input v-model="state.ruleForm.remark" placeholder="" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -198,9 +146,7 @@
         <span class="dialog-footer">
           <el-button @click="onCancel" size="small">取 消</el-button>
 
-          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small"
-            >保存</el-button
-          >
+          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small">保存</el-button>
         </span>
       </template>
     </el-dialog>
@@ -214,6 +160,7 @@ import { useI18n } from "vue-i18n";
 import service from "/@/utils/request";
 import { ElMessage } from "element-plus";
 import { formatDate111 } from "/@/utils/formatTime";
+import { Debounce } from "/@/utils/untils";
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
 
 const { t } = useI18n();
@@ -222,26 +169,26 @@ const state = reactive({
   num: '',
   shelfArea: '',
   floor: '',
-  floors: [   {
-        value: "值班室一楼",
-        label: "值班室一楼",
-      },
-      {
-        value: "值班室二楼",
-        label: "值班室二楼",
-      },
-      {
-        value: "方镀三线一楼",
-        label: "方镀三线一楼",
-      },
-      {
-        value: "圆镀四线一楼",
-        label: "圆镀四线一楼",
-      },
-      {
-        value: "南污水南库",
-        label: "南污水南库",
-      }],
+  floors: [{
+    value: "值班室一楼",
+    label: "值班室一楼",
+  },
+  {
+    value: "值班室二楼",
+    label: "值班室二楼",
+  },
+  {
+    value: "方镀三线一楼",
+    label: "方镀三线一楼",
+  },
+  {
+    value: "圆镀四线一楼",
+    label: "圆镀四线一楼",
+  },
+  {
+    value: "南污水南库",
+    label: "南污水南库",
+  }],
   shelf: '',
   shelfs: [
     {
@@ -330,6 +277,8 @@ const state = reactive({
     connection: "",
     index: 0,
     userarea: [],
+    price: 0,
+    amount: 0
   },
 });
 
@@ -359,7 +308,7 @@ const beforeAvatarUpload = (file: any) => {
   const isJPG = file.type === "image/jpeg";
   const isLt2M = file.size / 1024 / 1024 < 2;
 
-  
+
   if (!isJPG) {
     ElMessage.error("图片必须为JPG格式");
   }
@@ -385,7 +334,7 @@ const beforeAvatarUpload = (file: any) => {
 
 // 打开弹窗
 const openDialog = (row: any, index: any) => {
- 
+
   state.ruleForm.index = index;
   state.ruleForm.id = row.id;
   state.ruleForm.part_name = row.part_name;
@@ -397,6 +346,9 @@ const openDialog = (row: any, index: any) => {
   state.isShowDialog = true;
   state.ruleForm.imgsrc = row.partimgsrc;
   state.ruleForm.connection = row.connection;
+  state.ruleForm.price = row.price;
+  state.ruleForm.amount = row.amount;
+  state.ruleForm.remark = row.remark;
   getusearea();
 };
 // 关闭弹窗
@@ -428,29 +380,31 @@ const emit = defineEmits(["senddata"]);
 const onSubmit = () => {
   // 做保存 更新表的操作
 
-  if(state.ruleForm.type===""||state.ruleForm.part_name==="" || state.ruleForm.part_spec==="" || state.ruleForm.area==="" )
-  {
-    ElMessage({type:'warning',message:'请完善备件信息'})
+  if (state.ruleForm.type === "" || state.ruleForm.part_name === "" || state.ruleForm.part_spec === "" || state.ruleForm.area === "") {
+    ElMessage({ type: 'warning', message: '请完善备件信息' })
     return
-  }else if(state.ruleForm.balance==="" ||state.ruleForm.balance===""){
-    ElMessage({type:'warning',message:'请填写件数'})
+  } else if (state.ruleForm.balance === "" || state.ruleForm.balance === "") {
+    ElMessage({ type: 'warning', message: '请填写件数' })
     return
   }
 
   state.issave = !state.issave;
   //请求
-  let temp=state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num
+  let temp = state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num
   service
     .get("/updatepart", {
       params: {
         id: state.ruleForm.id,
         part_name: state.ruleForm.part_name,
         part_spec: state.ruleForm.part_spec,
-        area: temp=="-"?state.ruleForm.area:temp,
+        area: temp == "-" ? state.ruleForm.area : temp,
         type: state.ruleForm.type,
         new_balance: state.ruleForm.balance,
         new_original: state.ruleForm.original,
         connection: state.ruleForm.connection,
+        price: state.ruleForm.price,
+        amount: state.ruleForm.amount,
+        remark: state.ruleForm.remark
       },
     })
     .then((res) => {
@@ -495,6 +449,20 @@ const handleClose = () => {
   state.ruleForm.imgsrc = "";
   initForm();
 };
+
+const setValue = (value: string) => {
+
+
+
+
+  Debounce(countAmount, 1000)
+
+
+}
+
+const countAmount = () => {
+  state.ruleForm.amount = state.ruleForm.price * Number(state.ruleForm.balance)
+}
 </script>
 <style lang="less">
 .avatar-uploader .el-upload {
@@ -504,9 +472,11 @@ const handleClose = () => {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -515,6 +485,7 @@ const handleClose = () => {
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 160px;
   height: 160px;

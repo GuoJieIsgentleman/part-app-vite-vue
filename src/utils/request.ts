@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import router, { resetRoute } from '../router';
+import { formatDate111, subtimeminutes } from './formatTime';
 
-import viteConfig from 'vite.config';
 
 import { Session } from './storage';
 
@@ -9,30 +10,33 @@ import { Session } from './storage';
 
 const service = axios.create({
 
-  baseURL: 'http://61.185.74.251:5556',
+  //baseURL: 'http://116.132.45.150:6900',//邯郸
 
-  timeout: 50000,
+  baseURL: 'https://www.ssxyf.cn:5556', //陕西友发
+  //baseURL: 'http://192.168.3.17:9999', //ceshi
+  timeout: 30000,
   headers: { 'Content-Type': 'application/json' },
 });
+
 
 // 添加请求拦截器
 service.interceptors.request.use(
   (config) => {
-    // 在发送请求之前做些什么 token
-
-
-
-
-    // console.log('config')
-    // console.log(config.baseURL)
-    // ElMessage({
-    //   showClose: true,
-    //   message: `${config.baseURL}${config.url}`,
-    //   type: "success",
-    // });
-
     if (Session.get('token')) {
       config.headers.common['Authorization'] = `${Session.get('token')}`;
+    }
+    console.log("登陆时间", Session.get('timestamp'))
+    console.log("现在时间", formatDate111(new Date()))
+    console.log("时间差", subtimeminutes(Session.get('timestamp')))
+
+    if (subtimeminutes(Session.get('timestamp')) > 30) {
+      ElMessage.success("超过30分钟未操作 请重新登录")
+      Session.clear(); // 清除缓存/token等
+      resetRoute(); // 删除/重置路由
+
+
+      //   window.location.href="http://192.168.56.1:10000/#/login";
+      router.push("/login");
     }
     return config;
   },
@@ -50,21 +54,10 @@ service.interceptors.response.use(
 
     const res = response.data;
 
-    if (res.code && res.code !== 0) {
-      // `token` 过期或者账号已在别处登录
 
-      if (res.code === 401 || res.code === 4001) {
-        Session.clear(); // 清除浏览器全部临时缓存
-        window.location.href = '/'; // 去登录页
-        ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
-          .then(() => { })
-          .catch(() => { });
-      }
-      return Promise.reject(service.interceptors.response);
-    } else {
 
-      return response;
-    }
+    return response;
+
 
 
   },

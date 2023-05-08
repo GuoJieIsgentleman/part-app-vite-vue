@@ -7,16 +7,16 @@
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item command="" :disabled="disabledSize === ''">{{
-              $t("message.user.dropdownDefault")
+            $t("message.user.dropdownDefault")
           }}</el-dropdown-item>
           <el-dropdown-item command="medium" :disabled="disabledSize === 'medium'">{{
-              $t("message.user.dropdownMedium")
+            $t("message.user.dropdownMedium")
           }}</el-dropdown-item>
           <el-dropdown-item command="small" :disabled="disabledSize === 'small'">{{
-              $t("message.user.dropdownSmall")
+            $t("message.user.dropdownSmall")
           }}</el-dropdown-item>
           <el-dropdown-item command="mini" :disabled="disabledSize === 'mini'">{{
-              $t("message.user.dropdownMini")
+            $t("message.user.dropdownMini")
           }}</el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -66,16 +66,16 @@
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item command="/home">{{
-              $t("message.user.dropdown1")
+            $t("message.user.dropdown1")
           }}</el-dropdown-item>
           <!-- <el-dropdown-item command="wareHouse">{{ $t('message.user.dropdown6') }}</el-dropdown-item> -->
           <el-dropdown-item command="/personal">{{
-              $t("message.user.dropdown2")
+            $t("message.user.dropdown2")
           }}</el-dropdown-item>
           <!-- <el-dropdown-item command="/404">{{ $t('message.user.dropdown3') }}</el-dropdown-item>
 					<el-dropdown-item command="/401">{{ $t('message.user.dropdown4') }}</el-dropdown-item> -->
           <el-dropdown-item divided command="logOut">{{
-              $t("message.user.dropdown5")
+            $t("message.user.dropdown5")
           }}</el-dropdown-item>
         </el-dropdown-menu>
       </template>
@@ -190,8 +190,8 @@ export default {
           })
           .catch(() => { });
       } else if (path === "/home") {
-       // window.open("https://gitee.com/lyt-top/vue-next-admin");
-         router.push(path);
+        // window.open("https://gitee.com/lyt-top/vue-next-admin");
+        router.push(path);
       } else {
         router.push(path);
       }
@@ -211,7 +211,7 @@ export default {
       (newValue, oldValue) => {
 
         console.log("watch=5", newValue);
-        if(newValue=='/login'){
+        if (newValue == '/login') {
           router.go(0);
         }
       },

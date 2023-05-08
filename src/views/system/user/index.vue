@@ -3,52 +3,51 @@
 
 
 
-          <el-row :gutter="20">
-            <el-col  :xs="6" :sm="5" :md="5" :lg="3" :xl="3">
-              <el-button plain size="mini" type="primary" @click="onOpenAddMenu()">新增用户</el-button>
-            </el-col>
-                <el-col  :xs="2" :sm="5" :md="5" :lg="3" :xl="3">
-           
-            </el-col>
-            <el-col :xs="10" :sm="5" :md="5" :lg="5" :xl="5">
-              <el-select v-model="state.name" filterable remote reserve-keyword placeholder="输入用户名"
-                :remote-method="getUserName" :loading="loading">
-                <el-option v-for="item in state.userNames" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-col>
-            <el-col :xs="3" :sm="3" :md="3" :lg="3" :xl="3">
-              <el-button size="mini" type="primary" @click="findUser()">查询</el-button>
-            </el-col>
-          </el-row>
-          <br/>
+    <el-row :gutter="20">
+      <el-col :xs="6" :sm="5" :md="5" :lg="3" :xl="3">
+        <el-button plain size="mini" type="primary" @click="onOpenAddMenu()">新增用户</el-button>
+      </el-col>
+      <el-col :xs="2" :sm="5" :md="5" :lg="3" :xl="3">
+
+      </el-col>
+      <el-col :xs="10" :sm="5" :md="5" :lg="5" :xl="5">
+        <el-select v-model="state.name" filterable remote reserve-keyword placeholder="输入用户名" :remote-method="getUserName"
+          :loading="loading">
+          <el-option v-for="item in state.userNames" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-col>
+      <el-col :xs="3" :sm="3" :md="3" :lg="3" :xl="3">
+        <el-button size="mini" type="primary" @click="findUser()">查询</el-button>
+      </el-col>
+    </el-row>
+    <br />
     <el-card shadow="hover">
-     
 
 
-        
-          <el-table fit :data="state.tableData.data" stripe  border  style="width:800px ;">
-            <el-table-column prop="id" label="ID" show-overflow-tooltip fixed
-            ></el-table-column>
 
-            <el-table-column prop="username" label="用户名" show-overflow-tooltip></el-table-column>
-       
-            <el-table-column prop="auth_name" label="角色" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="area" label="负责产线" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="inspect_area" label="巡检产线" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="path" label="操作" width="90">
-              <template #default="scope">
-                <el-button size="mini" type="text" @click="onOpenEditMenu(scope.row)">修改</el-button>
-                <el-button size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
 
-          <el-pagination style="width:800px ;" background @size-change="handleSizeChange" @current-change="handleCurrentChange"
-            :page-size="state.pagesize" :page-sizes="state.pagearray" @prev-click="prev()" @next-click="next()"
-            layout="total, sizes, prev, pager, next, jumper" :total="state.total" prev-text="上一页" next-text="下一页"
-            :page-count="state.pagecount" />
-      
-    
+      <el-table fit :data="state.tableData.data" stripe border style="width:800px ;">
+        <el-table-column type="index" with="50"></el-table-column>
+
+        <el-table-column prop="username" label="用户名" show-overflow-tooltip></el-table-column>
+
+        <el-table-column prop="auth_name" label="角色" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="area" label="负责产线" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="inspect_area" label="巡检产线" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="path" label="操作" width="90">
+          <template #default="scope">
+            <el-button size="mini" type="text" @click="onOpenEditMenu(scope.row)">修改</el-button>
+            <el-button size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <el-pagination style="width:800px ;" background @size-change="handleSizeChange"
+        @current-change="handleCurrentChange" :page-size="state.pagesize" :page-sizes="state.pagearray"
+        @prev-click="prev()" @next-click="next()" layout="total, sizes, prev, pager, next, jumper" :total="state.total"
+        prev-text="上一页" next-text="下一页" :page-count="state.pagecount" />
+
+
     </el-card>
 
     <AddMenu ref="addMenuRef" />
@@ -66,6 +65,14 @@ import { ElMessage, ElMessageBox } from "element-plus";
 
 const loading = ref(false)
 const value = ref<string[]>([])
+
+
+const prev = () => {
+
+}
+const next = () => {
+
+}
 
 const getUserName = () => {
 
@@ -94,8 +101,8 @@ const findUser = () => {
 
     }
   }).then((res: any) => {
-    console.log('res',res);
-    
+    console.log('res', res);
+
     state.tableData.data = res.data.map((item: any) => {
       return {
         id: item[0],
@@ -236,8 +243,8 @@ const onOpenAddMenu = (row?: object) => {
 };
 
 const onOpenEditMenu = (row: object) => {
-  console.log('传递之前的row',row);
-  
+  console.log('传递之前的row', row);
+
 
   editMenuRef.value.openDialog(row);
 };

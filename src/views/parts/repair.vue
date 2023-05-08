@@ -12,9 +12,7 @@
           ></Auths
         > -->
           <Auths :value="['btn.add', 'btn.other']">
-            <el-button @click="onOpenAddMenu()" type="danger"
-              >增加无库存备件外修记录</el-button
-            >
+            <el-button @click="onOpenAddMenu()" type="danger">增加无库存备件外修记录</el-button>
           </Auths>
         </el-col>
         <el-col :span="12" :xs="0" :sm="12" :md="12" :lg="6" :xl="6"></el-col>
@@ -30,63 +28,35 @@
       <el-row :gutter="24">
         <el-col :span="12" :xs="12" :sm="12" :md="12" :lg="24" :xl="24">
           <el-tag type="danger" style="background-color: rgb(83, 181, 74); color: white">
-            领用72小时未申请外修显示绿色</el-tag
-          >
+            领用72小时未申请外修显示绿色</el-tag>
           <el-tag type="danger" style="background-color: rgb(74, 89, 202); color: white">
-            收货24小时未试机显示蓝色</el-tag
-          >
+            收货24小时未试机显示蓝色</el-tag>
           <el-tag type="danger" style="background-color: rgb(218, 94, 72); color: white">
-            试机12小时未确认显示红色</el-tag
-          >
+            试机12小时未确认显示红色</el-tag>
         </el-col>
       </el-row>
       <el-row :gutter="35">
         <el-col :span="12" :xs="12" :sm="12" :md="12" :lg="20" :xl="12">
           <div>
-            <el-date-picker
-              size="mini"
-              class="timestyle"
-              v-model="state.start"
-              type="datetime"
-              placeholder="选择开始日期"
-              format="YYYY-MM-DD HH:mm:ss"
-              value-format="YYYY-MM-DD H H:mm:ss"
-            >
+            <el-date-picker size="mini" class="timestyle" v-model="state.start" type="datetime" placeholder="选择开始日期"
+              format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD H H:mm:ss">
             </el-date-picker>
-            <el-date-picker
-              size="mini"
-              v-model="state.end"
-              type="datetime"
-              placeholder="选择结束日期"
-              format="YYYY-MM-DD HH:mm:ss"
-              value-format="YYYY-MM-DD HH:mm:ss"
-            >
+            <el-date-picker size="mini" v-model="state.end" type="datetime" placeholder="选择结束日期"
+              format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss">
             </el-date-picker>
             <el-select v-model="state.selectprolince" clearable placeholder="选择产线">
-              <el-option
-                v-for="item in state.use_proline_options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
+              <el-option v-for="item in state.use_proline_options" :key="item.value" :label="item.label"
+                :value="item.value">
               </el-option>
             </el-select>
             <el-select v-model="state.selectarea" clearable placeholder="领用区域">
-              <el-option
-                v-for="item in state.useareas"
-                :key="item['value']"
-                :label="item['label']"
-                :value="item['value']"
-              >
+              <el-option v-for="item in state.useareas" :key="item['value']" :label="item['label']"
+                :value="item['value']">
               </el-option>
             </el-select>
             <el-select v-model="state.flag1" clearable placeholder="是否无库存外修记录">
-              <el-option
-                v-for="item in state.options"
-                :key="item['value']"
-                :label="item['label']"
-                :value="item['value']"
-              >
+              <el-option v-for="item in state.options" :key="item['value']" :label="item['label']"
+                :value="item['value']">
               </el-option>
             </el-select>
           </div>
@@ -97,21 +67,9 @@
       <el-button type="primary" @click="find">查询</el-button>
       <el-button @click="getalluse()" type="success" plain>查询全部记录</el-button>
       <el-button @click="getuse()" type="success" plain>查询未确认</el-button>
-      <el-table
-        id="outTable"
-        v-loading="state.loading"
-        :data="state.partslist"
-        border
-        align="center"
-        heigth="300"
-        style="width: 100%"
-        header-align="center"
-        max-height="400"
-        fit
-        :row-style="{ height: '10px' }"
-        :cell-style="{ padding: '5px 0' }"
-        :row-class-name="addClass"
-      >
+      <el-table id="outTable" v-loading="state.loading" :data="state.partslist" border align="center" heigth="300"
+        style="width: 100%" header-align="center" max-height="400" fit :row-style="{ height: '10px' }"
+        :cell-style="{ padding: '5px 0' }" :row-class-name="addClass">
         <el-table-column prop="id" label="序号" fixed width="50" align="center">
         </el-table-column>
         <el-table-column prop="user" label="领用人" width="65" align="center">
@@ -123,12 +81,7 @@
 
         <el-table-column prop="type" label="备件类型" width="70" align="center">
         </el-table-column>
-        <el-table-column
-          prop="use_part_name"
-          label="外修备件名称"
-          align="center"
-          width="180"
-        >
+        <el-table-column prop="use_part_name" label="外修备件名称" align="center" width="180">
         </el-table-column>
         <el-table-column prop="spec" label="外修备件型号" align="center" width="180">
         </el-table-column>
@@ -137,110 +90,54 @@
         <el-table-column prop="use_count" label="外修数量" align="center" width="80">
         </el-table-column>
 
-        <el-table-column
-          prop="applicant"
-          label="外修申请人"
-          align="center"
-          min-width="140"
-        >
+        <el-table-column prop="applicant" label="外修申请人" align="center" min-width="140">
           <template #default="scope">
-            <el-button
-              @click="onOpenapplicantConfirm(scope.row)"
-              :disabled="scope.row.applicant == '' ? false : true"
-              type="success"
-              >{{
-                scope.row.applicant == "" ? "请确认" : scope.row.applicant + "已确认"
-              }}</el-button
-            >
+            <el-button @click="onOpenapplicantConfirm(scope.row)" :disabled="scope.row.applicant == '' ? false : true"
+              type="success">{{
+                  scope.row.applicant == "" ? "请确认" : scope.row.applicant + "已确认"
+              }}</el-button>
           </template>
         </el-table-column>
 
-        <el-table-column
-          prop="applicantdate"
-          min-width="150"
-          align="center"
-          label="申请外修时间"
-        >
+        <el-table-column prop="applicantdate" min-width="150" align="center" label="申请外修时间">
         </el-table-column>
 
-        <el-table-column
-          prop="temporary_area"
-          align="center"
-          label="收货临时存放区"
-          width="180"
-        >
+        <el-table-column prop="temporary_area" align="center" label="收货临时存放区" width="180">
         </el-table-column>
-        <el-table-column
-          prop="receipt"
-          label="外修收货人员"
-          align="center"
-          min-width="140"
-        >
+        <el-table-column prop="receipt" label="外修收货人员" align="center" min-width="140">
           <template #default="scope">
-            <el-button
-              :disabled="scope.row.receipt == '' ? false : true"
-              @click="onOpenreceiptconfirm(scope.row)"
-              type="success"
-              >{{
-                scope.row.receipt == "" ? "请确认" : scope.row.receipt + "已确认"
-              }}</el-button
-            >
+            <el-button :disabled="scope.row.receipt == '' ? false : true" @click="onOpenreceiptconfirm(scope.row)"
+              type="success">{{
+                  scope.row.receipt == "" ? "请确认" : scope.row.receipt + "已确认"
+              }}</el-button>
           </template>
         </el-table-column>
 
         <el-table-column prop="receiptdate" align="center" label="收货时间" width="140">
         </el-table-column>
-        <el-table-column
-          prop="tryout"
-          align="center"
-          label="外修试机人员"
-          min-width="140"
-        >
+        <el-table-column prop="tryout" align="center" label="外修试机人员" min-width="140">
           <template #default="scope">
-            <el-button
-              :disabled="scope.row.tryout == '' ? false : true"
-              @click="onOpentryoutconfirm(scope.row)"
-              type="success"
-              >{{
-                scope.row.tryout == "" ? "请确认" : scope.row.tryout + "已确认"
-              }}</el-button
-            >
+            <el-button :disabled="scope.row.tryout == '' ? false : true" @click="onOpentryoutconfirm(scope.row)"
+              type="success">{{
+                  scope.row.tryout == "" ? "请确认" : scope.row.tryout + "已确认"
+              }}</el-button>
           </template>
         </el-table-column>
 
         <el-table-column prop="tryoutdate" align="center" label="试机时间" width="140">
         </el-table-column>
-        <el-table-column
-          prop="new_area"
-          min-width="140"
-          align="center"
-          label="试机完成搁置区域"
-        >
+        <el-table-column prop="new_area" min-width="140" align="center" label="试机完成搁置区域">
         </el-table-column>
-        <el-table-column
-          prop="useconfirm"
-          align="center"
-          label="外修确认人员"
-          min-width="140"
-        >
+        <el-table-column prop="useconfirm" align="center" label="外修确认人员" min-width="140">
           <template #default="scope">
-            <el-button
-              :disabled="scope.row.useconfirm == '' ? false : true"
-              @click="onOpenconfirmref(scope.row)"
-              type="success"
-              >{{
-                scope.row.useconfirm == "" ? "请确认" : scope.row.useconfirm + "已确认"
-              }}</el-button
-            >
+            <el-button :disabled="scope.row.useconfirm == '' ? false : true" @click="onOpenconfirmref(scope.row)"
+              type="success">{{
+    scope.row.useconfirm == "" ? "请确认" : scope.row.useconfirm + "已确认"
+              }}</el-button>
           </template>
         </el-table-column>
 
-        <el-table-column
-          prop="useconfirmdate"
-          align="center"
-          label="确认时间"
-          width="140"
-        >
+        <el-table-column prop="useconfirmdate" align="center" label="确认时间" width="140">
         </el-table-column>
         <el-table-column prop="remark" align="center" label="外修备注" width="180">
         </el-table-column>
@@ -319,16 +216,16 @@ const onOpenconfirmref = (row?: any) => {
 // 		.catch(() => {});
 // };
 
-const handleSizeChange = (val: any) => {};
-const handleCurrentChange = (val: any) => {};
+const handleSizeChange = (val: any) => { };
+const handleCurrentChange = (val: any) => { };
 const currentPage4 = (val: any) => {
   // console.log(val.area);
 };
 
-const filterHandler = (value: any, row: any, column: any) => {};
+const filterHandler = (value: any, row: any, column: any) => { };
 
-const clearFilter = () => {};
-const resetDateFilter = () => {};
+const clearFilter = () => { };
+const resetDateFilter = () => { };
 const handleClick = (val: any) => {
   // console.log(val.area);
 };
@@ -558,11 +455,11 @@ const find = () => {
       console.log(state.partslist);
       state.total = state.partslist.length;
     })
-    .catch((err) => {});
+    .catch((err) => { });
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .el-table .el-table-column {
   justify-content: center;
 
@@ -576,27 +473,31 @@ const find = () => {
   width: 20px; // 横向滚动条
   height: 20px; // 纵向滚动条 必写
 }
+
 // 滚动条的滑块
 .el-table__body-wrapper::-webkit-scrollbar-thumb {
   background-color: #ddd;
 
   border-radius: 10px;
 }
+
 .el-table .warning-row {
   background-color: rgb(74, 89, 202);
   color: white;
 }
+
 .el-table .warning-row1 {
   background-color: rgb(218, 94, 72);
   color: white;
 }
+
 .el-table .warning-row2 {
   background-color: rgb(151, 226, 144);
 
   color: white;
 }
 
-.el-table tbody tr:hover > td {
+.el-table tbody tr:hover>td {
   background-color: #96b7dc !important;
   color: black;
 }
@@ -608,6 +509,7 @@ const find = () => {
   top: 1% !important;
   margin: 0 !important;
 }
+
 .el-picker__popper {
   width: 280px !important;
   height: 280px !important;
@@ -616,92 +518,38 @@ const find = () => {
   margin: 0 !important;
 }
 
-div.el-picker-panel.el-date-picker.has-time
-  > div.el-picker-panel__body-wrapper
-  > div
-  > div.el-picker-panel__content
-  > table
-  > tbody
-  > tr
-  > td
-  > div
-  > span {
+div.el-picker-panel.el-date-picker.has-time>div.el-picker-panel__body-wrapper>div>div.el-picker-panel__content>table>tbody>tr>td>div>span {
   position: relative !important;
 }
 
-div.el-picker-panel.el-date-picker.has-time
-  > div.el-picker-panel__body-wrapper
-  > div
-  > div.el-picker-panel__content
-  > table
-  > tbody
-  > tr
-  > td {
-  padding: 0% !important;
-}
-div.el-picker-panel.el-date-picker.has-time
-  > div.el-picker-panel__body-wrapper
-  > div
-  > div.el-picker-panel__content
-  > table
-  > tbody
-  > tr
-  > td
-  > div {
+div.el-picker-panel.el-date-picker.has-time>div.el-picker-panel__body-wrapper>div>div.el-picker-panel__content>table>tbody>tr>td {
   padding: 0% !important;
 }
 
-div.el-picker-panel.el-date-picker.has-time
-  > div.el-picker-panel__body-wrapper
-  > div
-  > div.el-picker-panel__content
-  > table {
+div.el-picker-panel.el-date-picker.has-time>div.el-picker-panel__body-wrapper>div>div.el-picker-panel__content>table>tbody>tr>td>div {
+  padding: 0% !important;
 }
 
-div.el-picker-panel.el-date-picker.has-time
-  > div.el-picker-panel__body-wrapper
-  > div
-  > div.el-date-picker__header {
+
+
+div.el-picker-panel.el-date-picker.has-time>div.el-picker-panel__body-wrapper>div>div.el-date-picker__header {
   margin: 0px;
 }
-div.el-picker-panel.el-date-picker.has-time
-  > div.el-picker-panel__body-wrapper
-  > div
-  > div.el-date-picker__time-header {
+
+div.el-picker-panel.el-date-picker.has-time>div.el-picker-panel__body-wrapper>div>div.el-date-picker__time-header {
   padding: 0px;
 }
 
-div.el-picker-panel.el-date-picker.has-time
-  > div.el-picker-panel__body-wrapper
-  > div
-  > div.el-picker-panel__content
-  > table
-  > tbody
-  > tr
-  > th {
+div.el-picker-panel.el-date-picker.has-time>div.el-picker-panel__body-wrapper>div>div.el-picker-panel__content>table>tbody>tr>th {
   padding: 0%;
 }
 
-div.el-picker-panel.el-date-picker.has-time > div.el-picker-panel__footer {
+div.el-picker-panel.el-date-picker.has-time>div.el-picker-panel__footer {
   padding: 0%;
   border: 0px;
 }
-section
-  > section
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > main
-  > div
-  > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default
-  > div
-  > div
-  > div
-  > div.el-card.is-hover-shadow
-  > div
-  > div
-  > div
-  > span {
+
+section>section>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>main>div>div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default>div>div>div>div.el-card.is-hover-shadow>div>div>div>span {
   font-size: 18px;
 }
 </style>

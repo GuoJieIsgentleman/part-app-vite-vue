@@ -5,12 +5,11 @@
         <el-row :gutter="35">
           <el-col :span="6">
             <el-form-item label="备件图片">
-              <el-upload class="avatar-uploader" ref="upload1" :on-change="imgpreivew" :auto-upload="false" :action="
-                'http://61.185.74.251:5556/machine_uploadfile?imgid=' +
-                state.ruleForm.id +
-                '&&time1=' +
-                new Date().getTime().toString()
-              " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+              <el-upload class="avatar-uploader" ref="addmachineimgupload" :on-change="imgpreivew" :multiple="false"
+                :onProgress="onProgress" :action="
+                  'https://www.ssxyf.cn:5556/machine_uploadfile?imgid=' + state.ruleForm.id + '&&time1=' +
+                  new Date().getTime().toString()" :show-file-list="false" :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload" :auto-upload="false">
                 <!-- <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar" /> -->
                 <img v-if="state.ruleForm.imageUrl" :src="state.ruleForm.imageUrl" class="avatar" />
 
@@ -33,36 +32,36 @@
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="24" :xl="12">
             <el-form-item label="搁置区域">
               <!-- <el-input v-model="state.ruleForm.part_area_value" placeholder="搁置区域" clearable></el-input> -->
-            
-                <el-row>
-                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
-                    <el-select v-model="state.floor" filterable placeholder="存放楼层" clearable>
-                      <el-option v-for="item in state.floors" :key="item['value']" :label="item['label']"
-                        :value="item['value']">
-                      </el-option>
-                    </el-select>
-                  </el-col>
-                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
-                    <el-select v-model="state.shelf" filterable placeholder="存放架编号" clearable>
-                      <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']"
-                        :value="item['value']">
-                      </el-option>
-                    </el-select>
-                  </el-col>
-                  <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
-                    <el-select v-model="state.num" filterable placeholder="存放位置编号" clearable>
-                      <el-option v-for="item in 5" :key="item" :label="item" :value="item">
-                        {{ item }}
-                      </el-option>
-                    </el-select>
-                  </el-col>
 
-                  <el-col class="mb20" :xs="24" :sm="18" :md="18" :lg="18" :xl="18">
-                   {{state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num}}
-                  </el-col>
-                </el-row>
-             
-           
+              <el-row>
+                <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                  <el-select v-model="state.floor" filterable placeholder="存放楼层" clearable>
+                    <el-option v-for="item in state.floors" :key="item['value']" :label="item['label']"
+                      :value="item['value']">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                  <el-select v-model="state.shelf" filterable placeholder="存放架编号" clearable>
+                    <el-option v-for="item in state.shelfs" :key="item['value']" :label="item['label']"
+                      :value="item['value']">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="8" :xl="12">
+                  <el-select v-model="state.num" filterable placeholder="存放位置编号" clearable>
+                    <el-option v-for="item in 5" :key="item" :label="item" :value="item">
+                      {{ item }}
+                    </el-option>
+                  </el-select>
+                </el-col>
+
+                <el-col class="mb20" :xs="24" :sm="18" :md="18" :lg="18" :xl="18">
+                  {{ state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + '-' + state.num }}
+                </el-col>
+              </el-row>
+
+
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -73,6 +72,16 @@
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="原有数量">
               <el-input v-model="state.ruleForm.original" placeholder clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+            <el-form-item label="单价">
+              <el-input v-model="state.ruleForm.price" @input="setValue" placeholder clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+            <el-form-item label="金额">
+              <el-input v-model="state.ruleForm.amount" placeholder clearable disabled></el-input>
             </el-form-item>
           </el-col>
 
@@ -104,9 +113,8 @@ import { compress, compressAccurately } from "image-conversion";
 import { ElMessage } from "element-plus";
 import { Session } from "/@/utils/storage";
 
+import { Debounce } from '/@/utils/untils'
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
-
-
 const state = reactive({
 
   num: '',
@@ -139,6 +147,10 @@ const state = reactive({
   {
     value: "方管库二层",
     label: "方管库二层",
+  },
+  {
+    value: "方镀库",
+    label: "方镀库",
   }],
   shelf: '',
   shelfs: [
@@ -206,7 +218,7 @@ const state = reactive({
   issave: false,
   isShowDialog: false,
   ruleForm: {
-    id: "",
+    id: "2222222",
     part_name: "",
     part_spec: "",
     area: "",
@@ -219,14 +231,14 @@ const state = reactive({
     imageUrl: "",
     imgsrc: "",
     fileList: [],
+    price: 0,
+    amount: 0.00
   },
 });
-
-
 const getusearea = async () => {
-  console.log("执行了 machine_usearea");
+
   let { data: res } = await service.get(`/getmachine_usearea`);
-  console.log(res);
+
   state.ruleForm.userarea = res.map((item: any) => {
     return {
       value: item[0],
@@ -245,24 +257,22 @@ defineExpose({ openDialog });
 
 // 关闭弹窗
 const closeDialog = (row?: object) => {
-  console.log(row);
+
   state.isShowDialog = false;
 };
-// 是否内嵌下拉改变
-// const onSelectIframeChange = () => {
-// 	if (state.ruleForm.meta.isIframe === 'true') {
-// 		state.ruleForm.isLink = 'true';
-// 	} else {
-// 		state.ruleForm.isLink = '';
-// 	}
-// };
-// 取消
 const onCancel = () => {
   closeDialog();
   initForm();
 };
 
-const upload1 = ref();
+
+const onProgress = () => {
+  console.log('正在上传');
+  console.log('state.ruleform.id', state.ruleForm.id);
+
+}
+
+const addmachineimgupload = ref();
 
 // 新增
 const onSubmit = () => {
@@ -270,7 +280,7 @@ const onSubmit = () => {
 
   let tempStr = state.floor + state.shelf + state.shelf.substring(0, state.shelf.length - 2) + "-" + state.num
 
-  if (state.ruleForm.type === "" || state.ruleForm.part_name === "" || state.ruleForm.part_spec === "" || state.floor === ""||state.shelf === "") {
+  if (state.ruleForm.type === "" || state.ruleForm.part_name === "" || state.ruleForm.part_spec === "" || state.floor === "" || state.shelf === "") {
     ElMessage({ type: 'warning', message: '请完善备件信息' })
     return
   } else if (state.ruleForm.balance === "" || state.ruleForm.balance === "") {
@@ -291,17 +301,26 @@ const onSubmit = () => {
         remark: state.ruleForm.remark,
         type: state.ruleForm.type,
         username: Session.get("userInfo").userName,
+        price: state.ruleForm.price,
+        amount: state.ruleForm.amount
       },
     })
-    .then((res: any) => {
+    .then(async (res: any) => {
       ElMessage({
         type: "success",
         message: res.data.msg,
       });
       state.ruleForm.id = res.data.id;
+
+
+      console.log('state.ruleForm.id', state.ruleForm.id);
+
       //调用上传图片的方法
-      console.log(upload1.value);
-      upload1.value.submit();
+      console.log(addmachineimgupload.value);
+
+
+
+      await addmachineimgupload.value.submit();
       initForm();
       closeDialog(); // 关闭弹窗
     })
@@ -326,7 +345,17 @@ const initForm = () => {
   state.ruleForm.imageUrl = "";
   state.ruleForm.remark = "";
   state.ruleForm.type = "";
+  state.ruleForm.price = 0;
+
+  state.ruleForm.id = ''
+  state.ruleForm.amount = 0;
   state.ruleForm.part_area_value = "";
+  state.floor = ''
+  state.shelf = ''
+  state.num = ''
+
+
+  addmachineimgupload.value.clearFiles()
 };
 const handleAvatarSuccess = (res: any, file: any) => {
   state.ruleForm.imageUrl = URL.createObjectURL(file.raw);
@@ -365,4 +394,17 @@ const imgpreivew = (file: any) => {
   //图片的raw 转换为url
   state.ruleForm.imageUrl = URL.createObjectURL(file.raw);
 };
+
+
+const setValue = () => {
+  Debounce(countAmount, 1000)
+}
+
+const countAmount = () => {
+
+  state.ruleForm.amount = state.ruleForm.price * Number(state.ruleForm.balance)
+
+
+
+}
 </script>

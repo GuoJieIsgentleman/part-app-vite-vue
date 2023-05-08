@@ -15,12 +15,12 @@ import connect as conn
 def getPart_proclinedetail(procline):
     db = conn.getConn()
     cursor = db.cursor()
-    
-    procline1=""
-    if procline!="":
-        procline1=f''' and procline='{procline}'  '''
+
+    procline1 = ""
+    if procline != "":
+        procline1 = f''' and procline='{procline}'  '''
     else:
-        procline1=f''' and procline='圆镀一线'  '''
+        procline1 = f''' and procline='圆镀一线'  '''
     cursor.execute(
         f'''select * from part_procline_detail where 1=1  {procline1} ''')
 
@@ -153,10 +153,10 @@ def getPart_proclineSummary():
 def getPart_contrast(machineType: Optional[str] = ""):
     db = conn.getConn()
     cursor = db.cursor()
-    sql=""
-    if machineType!="":
-        sql =f'''where type= '{machineType}'  '''
-    
+    sql = ""
+    if machineType != "":
+        sql = f'''where type= '{machineType}'  '''
+
     cursor.execute(f''' 
             
 				select * from (
@@ -180,13 +180,13 @@ def getPart_contrast(machineType: Optional[str] = ""):
                   
                    ''')
     res = cursor.fetchall()
-    print('temp',sql)
-    print('res',res)
+    print('temp', sql)
+    print('res', res)
     return res
 
 
 async def create_upload_file(flag: Optional[str] = None, imgid: Optional[str] = None, time1:  Optional[str] = None, file: UploadFile = File(...)):
-
+    import os
     try:
 
         print('进入到上传图片方法里面')
@@ -200,7 +200,7 @@ async def create_upload_file(flag: Optional[str] = None, imgid: Optional[str] = 
             time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())+".jpg"
         print('imgsrc==='+imgsrc)
         file = open(
-            "G:\part-app-vite\part-app-vite\src\serverpy\static\part_procline_imgs\{}".format(imgsrc), "wb")
+            f"{os.getcwd()}\static\part_procline_imgs\{imgsrc}", "wb")
         file.write(contents)
 
         # 传到静态地址
@@ -330,11 +330,10 @@ def part_procline_update_log(
     db.commit()
 
 
-
 def getProclinePartTypes():
     db = conn.getConn()
     cursor = db.cursor()
-    sql=f''' 
+    sql = f''' 
 
         select type from(
         select type from part_detail group by  type
@@ -345,7 +344,5 @@ def getProclinePartTypes():
 
  '''
     cursor.execute(sql)
-    res=cursor.fetchall()
+    res = cursor.fetchall()
     return res
-
-

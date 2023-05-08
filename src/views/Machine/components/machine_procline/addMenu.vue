@@ -13,7 +13,7 @@
                 new Date().getTime().toString() +
                 '&&flag=FLP'
               " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-              
+
                 <img v-if="state.ruleForm.FLP" :src="state.ruleForm.FLP" class="imgstyle" />
 
                 <el-icon v-else class="avatar-uploader-icon">图1</el-icon>
@@ -29,7 +29,7 @@
                 new Date().getTime().toString() +
                 '&&flag=ZD'
               " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-               
+
                 <img v-if="state.ruleForm.ZD" :src="state.ruleForm.ZD" class="imgstyle" />
 
                 <el-icon v-else class="avatar-uploader-icon">图2</el-icon>
@@ -43,29 +43,29 @@
                 new Date().getTime().toString() +
                 '&&flag=JC'
               " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-              
+
                 <img v-if="state.ruleForm.JC" :src="state.ruleForm.JC" class="imgstyle" />
 
                 <el-icon v-else class="avatar-uploader-icon">图3</el-icon>
               </el-upload>
             </el-col>
-           
+
             <el-col :span="5">
-               <el-upload class="avata" ref="upload4" :on-change="imgpreivewKS" :auto-upload="false" :action="
+              <el-upload class="avata" ref="upload4" :on-change="imgpreivewKS" :auto-upload="false" :action="
                 'http://61.185.74.251:5556/machine_procline_detail_uploadfile?imgid=' +
                 state.ruleForm.id +
                 '&&time1=' +
                 new Date().getTime().toString() +
                 '&&flag=KS'
               " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-               
+
                 <img v-if="state.ruleForm.KS" :src="state.ruleForm.KS" class="imgstyle" />
 
                 <el-icon v-else class="avatar-uploader-icon">图4</el-icon>
               </el-upload>
 
             </el-col>
-                 <el-col :span="5">
+            <el-col :span="5">
               <el-upload class="avatar-uploader" ref="upload5" :on-change="imgpreivewKZXJ" :auto-upload="false" :action="
                 'http://61.185.74.251:5556/machine_procline_detail_uploadfile?imgid=' +
                 state.ruleForm.id +
@@ -73,7 +73,7 @@
                 new Date().getTime().toString() +
                 '&&flag=KZXJ'
               " :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-       
+
                 <img v-if="state.ruleForm.KZXJ" :src="state.ruleForm.KZXJ" class="imgstyle" />
 
                 <el-icon v-else class="avatar-uploader-icon">图5</el-icon>
@@ -82,7 +82,7 @@
             </el-col>
           </el-space>
         </el-row>
-        <br/>
+        <br />
         <el-row :gutter="35">
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="类型">
@@ -102,6 +102,11 @@
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="备件规格">
               <el-input v-model="state.ruleForm.part_spec" placeholder clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+            <el-form-item label="数量">
+              <el-input v-model="state.ruleForm.count" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -147,6 +152,7 @@ const state = reactive({
   issave: false,
   isShowDialog: false,
   ruleForm: {
+    count: 0,
     FLP: "",
     ZD: "",
     JC: "",
@@ -268,6 +274,8 @@ const onSubmit = () => {
         type: state.ruleForm.type,
         area: state.ruleForm.area,
         username: Session.get("userInfo").userName,
+        count: state.ruleForm.count,
+        remark: state.ruleForm.remark
       },
     })
     .then((res) => {
@@ -317,6 +325,7 @@ const initForm = () => {
   state.ruleForm.KS = "";
   state.ruleForm.KZXJ = "";
   state.ruleForm.JC = "";
+  state.ruleForm.count = 0
 };
 const handleAvatarSuccess = (res: any, file: any) => {
   state.ruleForm.imageUrl = URL.createObjectURL(file.raw);
@@ -353,37 +362,31 @@ const beforeAvatarUpload = (file: any) => {
 };
 const imgpreivewFLP = (file: any) => {
   //图片的raw 转换为url
-  console.log("imgpreivewFLP");
-  console.log(file);
 
   state.ruleForm.FLP = URL.createObjectURL(file.raw);
 };
 
 const imgpreivewZD = (file: any) => {
   //图片的raw 转换为url
-  console.log("imgpreivewFLP");
-  console.log(file);
+
   state.ruleForm.ZD = URL.createObjectURL(file.raw);
 };
 
 const imgpreivewJC = (file: any) => {
   //图片的raw 转换为url
-  console.log("imgpreivewJC");
-  console.log(file);
+
   state.ruleForm.JC = URL.createObjectURL(file.raw);
 };
 
 const imgpreivewKS = (file: any) => {
   //图片的raw 转换为url
-  console.log("imgpreivewKS");
-  console.log(file);
+
   state.ruleForm.KS = URL.createObjectURL(file.raw);
 };
 
 const imgpreivewKZXJ = (file: any) => {
   //图片的raw 转换为url
-  console.log("imgpreivewKZXJ");
-  console.log(file);
+
   state.ruleForm.KZXJ = URL.createObjectURL(file.raw);
 };
 </script>

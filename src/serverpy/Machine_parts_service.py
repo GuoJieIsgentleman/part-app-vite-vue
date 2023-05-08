@@ -1,17 +1,18 @@
 
 
-import pinyin
 import sys
+import time
+from typing import Optional
+import os
+import connect as conn
+import pinyin
+from fastapi import FastAPI, File, UploadFile
 
 # 定义机器维修的主要环节
 
 
-from fastapi import FastAPI, File, UploadFile
-from typing import Optional
+currentPath = os.getcwd()
 
-import time
-
-import connect as conn
 
 # from serverpy.untils import machine
 
@@ -147,16 +148,15 @@ def getmachine_part_names(area: str):
 # 上传成套图片
 async def create_upload_file(machine_part_name: str, imgid: str, time1:  Optional[str] = None, file: UploadFile = File(...)):
 
-    
     contents = await file.read()
     imgsrc = imgid+"_" + \
         time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())+".jpg"
     print(imgsrc)
-    
-    print('machine_part_name',machine_part_name)
-    
+
+    print('machine_part_name', machine_part_name)
+
     file = open(
-        "G:\part-app-vite\part-app-vite\src\serverpy\static\machine_parts_img\{}".format(imgsrc), "wb")
+        f"{currentPath}\static\machine_parts_img\{imgsrc}", "wb")
     file.write(contents)
 
     # 传到静态地址
@@ -166,7 +166,7 @@ async def create_upload_file(machine_part_name: str, imgid: str, time1:  Optiona
 
     # 先查询这个成套名称明细有几个 如果有2个就更新为一个url
 
-    tempUrl='http://61.185.74.251:5556/static/machine_parts_img/'+imgsrc
+    tempUrl = 'http://61.185.74.251:5556/static/machine_parts_img/'+imgsrc
 
     sql2 = f''' update machine_parts_detail set partimgsrc ='{tempUrl}'  where machine_part_name='{machine_part_name}' '''
     cursor.execute(sql2)

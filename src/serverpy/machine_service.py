@@ -1,18 +1,17 @@
-from distutils.log import error
 import json
-import pinyin
+import math
 import sys
+import threading
+import time
+from distutils.log import error
 from hmac import new
-from fastapi import FastAPI, File, UploadFile
 from typing import Optional
 
-import time
-
-from pydantic.main import BaseModel
-
 import connect as conn
+import pinyin
+from fastapi import FastAPI, File, UploadFile
 from Machine_parts_service import dealwithcount
-
+from pydantic.main import BaseModel
 
 # 获取机修备件明细
 
@@ -114,7 +113,7 @@ def getparts(currentpagecount:  Optional[int] = 0, pagesize: Optional[int] = 0):
 # 获取机修领用记录
 
 
-# 
+#
 def getuserecord(flag: Optional[str] = None,
                  flag1: Optional[str] = '',
                  start: Optional[str] = '',
@@ -296,7 +295,7 @@ def getscrap(flag: Optional[str] = None,
 
 
 async def create_upload_file(imgid: str, time1:  Optional[str] = None, file: UploadFile = File(...)):
-
+    import os
     try:
 
         print('进入到上传图片方法里面')
@@ -306,12 +305,12 @@ async def create_upload_file(imgid: str, time1:  Optional[str] = None, file: Upl
         print(time1)
 
         contents = await file.read()
-        print('contents',contents)
+        print('contents', contents)
         imgsrc = imgid+"_" + \
             time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())+".jpg"
         print(imgsrc)
         file = open(
-            "G:\part-app-vite\part-app-vite\src\serverpy\static\machine_img\{}".format(imgsrc), "wb")
+            f"{os.getcwd()}\static\machine_img\{imgsrc}", "wb")
         file.write(contents)
 
         # 传到静态地址
@@ -336,56 +335,52 @@ async def create_upload_file(imgid: str, time1:  Optional[str] = None, file: Upl
 
 # 机修巡检功能
 
-def getinspection(cardid:  Optional[str] = None,username:Optional[str] = None):
+def getinspection(cardid:  Optional[str] = None, username: Optional[str] = None):
     # auth: str
     db = conn.getConn()
     print('获取巡检区域')
-    print('cardid',cardid)
-    print('username',username)
+    print('cardid', cardid)
+    print('username', username)
     cursor = db.cursor()
-    ss=""
-    if cardid=="-1":
+    ss = ""
+    if cardid == "-1":
         cursor.execute(
-        f''' select inspect_area from `user` where  username = '{username}' ''')
-       
-        data1 =cursor.fetchall()
+            f''' select inspect_area from `user` where  username = '{username}' ''')
+
+        data1 = cursor.fetchall()
         print("获取到全部的区域")
         print(len(data1))
         print(data1)
-        if data1[0][0]==''  or data1[0][0]==None:
-            
+        if data1[0][0] == '' or data1[0][0] == None:
+
             print("请联系管理员授权")
             return -1
-        temp=str(data1[0][0])
-        temp1=temp[1:len(temp)-1]
-        
-        sql=f''' select * from machine_inspection where cardname in({temp1})  '''
+        temp = str(data1[0][0])
+        temp1 = temp[1:len(temp)-1]
+
+        sql = f''' select * from machine_inspection where cardname in({temp1})  '''
         cursor.execute(sql)
 
-        
-        result =cursor.fetchall()
+        result = cursor.fetchall()
         print('result')
         print(result)
         return result
-    
-    
-    
+
     new_cardid = cardid[1:len(cardid)-1]
     print(new_cardid)
-   
+
     cursor.execute(
         '''select * from machine_inspection where cardid='{0}'
         '''.format(new_cardid))
     data = cursor.fetchone()
-    
+
     print('巡检区域为')
     print(data)
     if data == None:
         print('没有获取到该卡号信息')
-        machine_update_log(username,spec=new_cardid,flag='inspect')
+        machine_update_log(username, spec=new_cardid, flag='inspect')
         return '未找到该区域'
-    
-        
+
     # 查询保养、外修和备件管理 的确认
     if data[2] == None:
         return '未查询到对应区域'
@@ -431,10 +426,8 @@ def getinspection(cardid:  Optional[str] = None,username:Optional[str] = None):
               WHERE
                 use_area like '%{}%'
             ) aa
-          WHERE
-            aa.useconfirm = ''
-          OR aa.applicant = ''
-          OR aa.tryout = ''
+          WHERE   
+           aa.applicant = ''   
           OR aa.receipt = ''
                       '''.format(data[2]))
 
@@ -524,32 +517,31 @@ def gettype(area: Optional[str] = None):
 
 # 获取name
 
-def getpartname(type: Optional[str] = None, 
-                area: Optional[str] = None, 
+def getpartname(type: Optional[str] = None,
+                area: Optional[str] = None,
                 flag: Optional[str] = None):
     # 获取获取类型
     db = conn.getConn()
     cursor = db.cursor()
 
     print(flag)
-    if flag=="all":
+    if flag == "all":
         print("获取全部的信息")
         cursor.execute(
             "select part_spec from machine_detail where type like '{0}' group by part_spec "
             .format(type))
         specs = cursor.fetchall()
-       
+
         cursor.execute(
             "select part_name from machine_detail where type like '{0}' group by part_name "
             .format(type))
         names = cursor.fetchall()
-        res={
-            'specs':specs,
-            'names':names
+        res = {
+            'specs': specs,
+            'names': names
         }
         return res
-        
-    
+
     if area == None:
         cursor.execute(
             "select * from machine_detail where type='{0}' group by part_name "
@@ -557,8 +549,7 @@ def getpartname(type: Optional[str] = None,
         data = cursor.fetchall()
         print('备件管理查询'+time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
         print(data)
-        
-        
+
         return data
     else:
         cursor.execute(
@@ -712,8 +703,8 @@ def updatemachine_part(
     db = conn.getConn()
     print('更改备件结存')
     cursor = db.cursor()
-    if flag=='巡检区域更换':
-        updateSql=f''' update  machine_detail  set area='{area}'  where id={id} '''
+    if flag == '巡检区域更换':
+        updateSql = f''' update  machine_detail  set area='{area}'  where id={id} '''
         cursor.execute(updateSql)
         db.commit()
         print('更新区域完成')
@@ -772,16 +763,14 @@ def updatemachine_part(
         return '更新失败'
 
 
-
-
 # 获取外修记录
 
 def getMachine_repair(flag: Optional[str] = None,
-              flag1: Optional[str] = '',
-              start: Optional[str] = '',
-              end: Optional[str] = '',
-              prolince: Optional[str] = '',
-              area: Optional[str] = ''):
+                      flag1: Optional[str] = '',
+                      start: Optional[str] = '',
+                      end: Optional[str] = '',
+                      prolince: Optional[str] = '',
+                      area: Optional[str] = ''):
     db = conn.getConn()
 
     cursor = db.cursor()
@@ -833,9 +822,6 @@ def getMachine_repair(flag: Optional[str] = None,
         print('查询异常')
 
 
-
-
-
 class userecordform(BaseModel):
     user: str
     area: str
@@ -882,25 +868,31 @@ def adduserecord(userecordform: Optional[userecordform] = None):
     print(userecordform.handle)
     print('userecordform.flag')
     print(userecordform.flag)
-    cursor.execute(
-        '''select *  from  machine_detail where area  like '%{0}%'and part_spec='{1}' and type='{2}' and part_name='{3}'
-    '''.format(userecordform.area, userecordform.spec, userecordform.type,
-               userecordform.part_name))
-    data = cursor.fetchall()
-    print(data)
-    print(data[0])
-    print('-------减去件数 ---------' +
+    # cursor.execute(
+    #     '''select *  from  machine_detail where area  like '%{0}%'and part_spec='{1}' and type='{2}' and part_name='{3}'
+    # '''.format(userecordform.area, userecordform.spec, userecordform.type,
+    #            userecordform.part_name))
+    # data = cursor.fetchall()
+    # print(data)
+    # print(data[0])
+    print('-------减去库存件数 ---------' +
           time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-    print(data[0][4])
+    # print(data[0][4])
 
-    count = data[0][4]
-    cursor.execute('''update machine_detail set balance={0}-{5}
-        where part_name='{1}' and part_spec='{2}' and area='{3}' and type='{4}'
-    '''.format(count, userecordform.part_name, userecordform.spec,
-               userecordform.area, userecordform.type,
-               userecordform.use_count))
+    # count = data[0][4]
+    subsql = f''' update machine_detail set balance=balance-{userecordform.use_count}
+        where part_name='{userecordform.part_name}' 
+        and part_spec='{userecordform.spec}'
+        and area like '{userecordform.area}%' 
+        and type='{userecordform.type}' '''
+
+    print(subsql)
+
+    cursor.execute(subsql)
     data = cursor.fetchall()
     db.commit()
+    print('--------已经减去库存--------' +
+          time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 
     print('--------添加领用记录--------' +
           time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
@@ -1078,7 +1070,7 @@ def updatemaintenance(id: int,
             # 不报废
             # 查询在这个区域有没有
             cursor = db.cursor()
-            sql = f''' select count(id) from machine_parts_detail where machine_part_name='{x}' and area='{new_area}' '''
+            sql = f''' select count(id) from machine_parts_detail where machine_part_name='{x}' and area like '{new_area}%' '''
 
             cursor.execute(sql)
             rs = cursor.fetchone()
@@ -1086,7 +1078,7 @@ def updatemaintenance(id: int,
             if rs[0] > 0:
                 # update
                 print('更新区域成套')
-                sql1 = f''' update machine_parts_detail set original=original+{use_count} where machine_part_name='{x}' and area='{new_area}' '''
+                sql1 = f''' update machine_parts_detail set original=original+{use_count} where machine_part_name='{x}' and area like '{new_area}%' '''
 
                 cursor.execute(sql1)
                 db.commit()
@@ -1701,7 +1693,7 @@ def updateuserecord(id: int,
 
     if handle == '外修' and flag == 'confirm':
         print('--------外修--------')
-        sql=f'''
+        sql = f'''
                    INSERT INTO `part`.`machine_repair`
                    ( `user`, `use_area`, `type`, `spec`,
                    `use_part_name`, `use_count`, `user_reason`,
@@ -1710,7 +1702,7 @@ def updateuserecord(id: int,
                    '{use_part_name}', '{use_count}', '', '{use_date}','{use_procline}');
           '''
         cursor.execute(sql)
-    
+
         db.commit()
         print('--------外修记录添加完成--------' +
               time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
@@ -1756,11 +1748,7 @@ def updateuserecord(id: int,
 
         db.commit()
         print('--------设备整改记录添加完成--------')
-        
-  
-     
-        
-   
+
     return '成功！'
 
 
@@ -1925,8 +1913,6 @@ def updatemachine_equipment_rectification(id: Optional[str] = '',
     return '更新完成'
 
 
-
-
 def machine_update_log(
         username: Optional[str] = None,
         area: Optional[str] = None,
@@ -1959,41 +1945,38 @@ def machine_update_log(
         db.commit()
         print("更新记录完成 " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
         return
-    
-    
-    
-    
+
 
 class Machine_repair(BaseModel):
-   username:Optional[str] = ''
-   id: Optional[str] = ''
-   use_count: Optional[str] = '0'
-   use_area:Optional[str] = ''
-   use_date: Optional[str] = ''
-   use_part_name: Optional[str] = ''
-   use_reason: Optional[str] = ''
-   type:Optional[str] = ''
-   spec: Optional[str] = ''
-   new_area: Optional[str] = ''
-   applicant: Optional[str] = ''
-   receipt:Optional[str] = ''
-   applicantdate:Optional[str] = ''     
-   receiptdate:Optional[str] = ''   
+    username: Optional[str] = ''
+    id: Optional[str] = ''
+    use_count: Optional[str] = '0'
+    use_area: Optional[str] = ''
+    use_date: Optional[str] = ''
+    use_part_name: Optional[str] = ''
+    use_reason: Optional[str] = ''
+    type: Optional[str] = ''
+    spec: Optional[str] = ''
+    new_area: Optional[str] = ''
+    applicant: Optional[str] = ''
+    receipt: Optional[str] = ''
+    applicantdate: Optional[str] = ''
+    receiptdate: Optional[str] = ''
 
-def updateMachine_repair(machine_repair:Machine_repair):
-    print('Machine_repair--',machine_repair)
-    
-    
+
+def updateMachine_repair(machine_repair: Machine_repair):
+    print('Machine_repair--', machine_repair)
+
     if machine_repair == None:
         return '保存失败'
-    #更新外修申请 和 收获
+    # 更新外修申请 和 收获
     db = conn.getConn()
     cursor = db.cursor()
-    #判断是否为空
-    if machine_repair.applicantdate !='' and machine_repair.receipt=='': 
-        #申请人更新
-        print('申请人更新',time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-        sql=f''' 
+    # 判断是否为空
+    if machine_repair.applicantdate != '' and machine_repair.receipt == '':
+        # 申请人更新
+        print('申请人更新', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+        sql = f''' 
             UPDATE `part`.`machine_repair` 
                         SET 
 
@@ -2008,12 +1991,13 @@ def updateMachine_repair(machine_repair:Machine_repair):
              '''
         cursor.execute(sql)
         db.commit()
-        print('机修外修申请人更新成功',time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+        print('机修外修申请人更新成功', time.strftime(
+            "%Y-%m-%d %H:%M:%S", time.localtime()))
         return '机修外修申请人更新成功'
-    if machine_repair.receipt!='' and machine_repair.receiptdate != '' :
-        #收货人更新 并且更新 搁置区域
-        print('收货人更新',time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
-        sql=f''' 
+    if machine_repair.receipt != '' and machine_repair.receiptdate != '':
+        # 收货人更新 并且更新 搁置区域
+        print('收货人更新', time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+        sql = f''' 
             UPDATE `part`.`machine_repair` 
                         SET          
                         `receipt`='{machine_repair.receipt}', 
@@ -2029,21 +2013,20 @@ def updateMachine_repair(machine_repair:Machine_repair):
              
              '''
         cursor.execute(sql)
-        #更新及件数
-        
-                
-        #判断该区域有没有 没有就新增 有就更新件数
-        findsql=f''' 
+        # 更新及件数
+
+        # 判断该区域有没有 没有就新增 有就更新件数
+        findsql = f''' 
                 select *  from machine_detail where 1=1       
                 and `part_name`='{machine_repair.use_part_name}'
                 and  `part_spec`='{machine_repair.spec}'
                 and  `area` like '%{machine_repair.new_area}%' 
                  '''
         cursor.execute(findsql)
-        data=cursor.fetchall()
-        if len(data)!=0:
+        data = cursor.fetchall()
+        if len(data) != 0:
             print('查找到区域直接更新 数量')
-            addsql=f''' 
+            addsql = f''' 
                     UPDATE `part`.`machine_detail` 
                     SET 
                     `balance`=`balance`+{machine_repair.use_count}, 
@@ -2055,12 +2038,13 @@ def updateMachine_repair(machine_repair:Machine_repair):
                     and  `area` like '%{machine_repair.new_area}%'    
                     '''
             cursor.execute(addsql)
-            print('addSql',addsql)
-            machine_update_log(machine_repair.username,machine_repair.new_area,machine_repair.spec,machine_repair.use_part_name,machine_repair.use_count,"update")
-            
+            print('addSql', addsql)
+            machine_update_log(machine_repair.username, machine_repair.new_area, machine_repair.spec,
+                               machine_repair.use_part_name, machine_repair.use_count, "update")
+
         else:
             print('没有找到直接新增')
-            insertSql=f'''
+            insertSql = f'''
                       INSERT INTO
                     `part`.`machine_detail` 
                     (
@@ -2082,10 +2066,133 @@ def updateMachine_repair(machine_repair:Machine_repair):
                     '{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}' 
                      )
                         '''
-            print('insertSql',insertSql)
+            print('insertSql', insertSql)
             cursor.execute(insertSql)
-            machine_update_log(machine_repair.username,machine_repair.new_area,machine_repair.spec,machine_repair.use_part_name,machine_repair.use_count,"add")
+            machine_update_log(machine_repair.username, machine_repair.new_area, machine_repair.spec,
+                               machine_repair.use_part_name, machine_repair.use_count, "add")
         db.commit()
-        print('机修外修收获人更新成功',machine_repair)
+        print('机修外修收获人更新成功', machine_repair)
         return '机修外修收获人更新成功'
- 
+
+
+class Crane(BaseModel):
+    starttime: Optional[str] = '',
+    endtime: Optional[str] = '',
+    new_date: Optional[str] = '',
+    models: Optional[str] = '',
+    location: Optional[str] = '',
+    description: Optional[str] = '',
+    clength: Optional[str] = '',
+    operator: Optional[str] = '',
+    confirmer: Optional[str] = '',
+    remark: Optional[str] = '',
+    shift: Optional[str] = '',
+    procline: Optional[str] = '',
+    crane_name: Optional[str] = '',
+    craneType: Optional[str] = ''
+
+
+lock = threading.Lock()
+
+
+def add_crane_log(crane: Crane):
+
+    lock.acquire()
+    sql = f'''
+        INSERT INTO `crane_plan_changelog`
+        (`update_date`, `shift`,  `location`,
+        `description`,`models`,  `clength`, 
+        `operator`, `confirmer`, `craneType`) 
+       VALUES ('{crane.new_date}', '{crane.shift}', '{crane.location}', 
+       '{crane.description}', '{crane.models}', '{crane.clength}',
+       '{crane.operator}', '{crane.confirmer}', '{crane.craneType}');
+    '''
+
+    print('执行sql'+sql)
+    db = conn.getConn()
+    cursor = db.cursor()
+    cursor.execute(sql)
+    db.commit()
+    print("增加天车记录完成 " + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+
+    lock.release()
+    return '添加成功'
+
+
+# 获取天车记录
+
+
+class Pages(BaseModel):
+
+    pagesize: Optional[int] = 0,
+    currentPage: Optional[int] = 0
+
+
+def get_crane_log(crane: Crane, pages: Pages):
+
+    print('crane', crane)
+    print('pages', pages)
+    sql = f''' select * from crane_plan_changelog where 1=1  '''
+
+    db = conn.getConn()
+    cursor = db.cursor()
+    # 筛选获取
+    if crane != None:
+        if crane.crane_name != '':
+            sql += f'''and location like '%{crane.crane_name}%'  '''
+        if crane.procline != '':
+            sql += f'''and shift = '{crane.procline}'  '''
+        if crane.endtime != '':
+            sql += f'''and update_date <= '{crane.endtime}'  '''
+        if crane.starttime != '':
+            sql += f'''and update_date >= '{crane.starttime}'  '''
+        # if crane.new_date[0]!='':
+        #     sql+=f'''and update_date='{crane.new_date}'  '''
+        # if crane.models[0]!='':
+        #     sql+=f'''and models='{crane.models}'  '''
+        # if crane.location[0]!='':
+        #     sql+=f'''and location='{crane.location}'  '''
+        # if crane.description[0]!='':
+        #     sql+=f'''and description like '%{crane.description}%'  '''
+        # if crane.clength[0]!='':
+        #     sql+=f'''and clength='{crane.clength}'  '''
+        # if crane.operator[0]!='':
+        #     sql+=f'''and operator='{crane.operator}'  '''
+        # if crane.confirmer[0]!='':
+        #     sql+=f'''and confirmer='{crane.confirmer}'  '''
+        # if crane.remark[0]!='':
+        #     sql+=f'''and remark like '%{crane.remark}%'  '''
+        # if crane.shift[0]!='':
+        #     sql+=f'''and shift='{crane.shift}'  '''
+
+    res = {}
+    # 分页返回结果
+    if pages != None:
+        # 计算查询结果集总数总数
+
+        print('sql', sql)
+        cursor.execute(sql)
+
+        total = len(cursor.fetchall())
+        print('total', total)
+        # pagesize 10   currentpage 2   total=30  start=2*10+1  end (2+1)*10
+        # start= (n-1)*10   end=n*10
+        res['total'] = total
+
+        pagecount = math.ceil(total/pages.pagesize)
+
+        # 总页数
+        res['pagecount'] = pagecount
+
+        nsql = f'''  LIMIT {(pages.currentPage-1)*pages.pagesize},{pages.pagesize}'''
+
+        sql += nsql
+
+    print('执行sql', sql)
+
+    cursor.execute(sql)
+
+    res1 = cursor.fetchall()
+    res['data'] = res1
+
+    return res

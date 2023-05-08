@@ -1,29 +1,19 @@
 <template>
   <div class="system-menu-container">
-    <el-dialog
-      title="新增菜单"
-      v-model="state.isShowDialog"
-      width="769px"
-      close-on-press-escape
-      :destroy-on-close="true"
-      @close="closeDialog"
-    >
+    <el-dialog title="新增菜单" v-model="state.isShowDialog" width="769px" close-on-press-escape :destroy-on-close="true"
+      @close="closeDialog">
       <el-form :model="state.ruleForm" size="small" label-width="80px">
         <el-row :gutter="35">
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="领用人">
-              <el-input v-model="state.userinput" placeholder clearable></el-input>
+              <el-input v-model="state.userinput" placeholder clearable disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="使用产线">
               <el-select v-model="state.use_proline_value" placeholder="使用产线">
-                <el-option
-                  v-for="item in state.use_proline_options"
-                  :key="item['value']"
-                  :label="item['label']"
-                  :value="item['value']"
-                >
+                <el-option v-for="item in state.use_proline_options" :key="item['value']" :label="item['label']"
+                  :value="item['value']">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -34,18 +24,9 @@
             </div> -->
 
             <el-form-item label="领用区域">
-              <el-select
-                v-model="state.ruleForm.model"
-                key
-                placeholder=""
-                @change="gettype(state.ruleForm.model)"
-              >
-                <el-option
-                  v-for="item in state.ruleForm.userarea"
-                  :key="item['value']"
-                  :label="item['label']"
-                  :value="item['value']"
-                >
+              <el-select v-model="state.ruleForm.model" key placeholder="" @change="gettype(state.ruleForm.model)">
+                <el-option v-for="item in state.ruleForm.userarea" :key="item['value']" :label="item['label']"
+                  :value="item['value']">
                 </el-option>
               </el-select>
               <!-- <el-input v-model="ruleForm.use_area" placeholder clearable></el-input> -->
@@ -53,17 +34,9 @@
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="备件类型">
-              <el-select
-                v-model="state.ruleForm.model1"
-                placeholder=""
-                @change="getpartname(state.ruleForm.model1)"
-              >
-                <el-option
-                  v-for="item in state.ruleForm.usetype"
-                  :key="item['value']"
-                  :label="item['label']"
-                  :value="item['value']"
-                >
+              <el-select v-model="state.ruleForm.model1" placeholder="" @change="getpartname(state.ruleForm.model1)">
+                <el-option v-for="item in state.ruleForm.usetype" :key="item['value']" :label="item['label']"
+                  :value="item['value']">
                 </el-option>
               </el-select>
               <!-- <el-input v-model="ruleForm.use_area" placeholder clearable></el-input> -->
@@ -71,34 +44,18 @@
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="备件名称">
-              <el-select
-                v-model="state.ruleForm.model3"
-                placeholder=""
-                @change="getspesc(state.ruleForm.model3)"
-              >
-                <el-option
-                  v-for="item in state.ruleForm.part_name"
-                  :key="item['value']"
-                  :label="item['label']"
-                  :value="item['value']"
-                >
+              <el-select v-model="state.ruleForm.model3" placeholder="" @change="getspesc(state.ruleForm.model3)">
+                <el-option v-for="item in state.ruleForm.part_name" :key="item['value']" :label="item['label']"
+                  :value="item['value']">
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="备件型号">
-              <el-select
-                v-model="state.ruleForm.model2"
-                placeholder=""
-                @change="getbalance(state.ruleForm.model2)"
-              >
-                <el-option
-                  v-for="item in state.ruleForm.usespesc"
-                  :key="item['value']"
-                  :label="item['label']"
-                  :value="item['value']"
-                >
+              <el-select v-model="state.ruleForm.model2" placeholder="" @change="getbalance(state.ruleForm.model2)">
+                <el-option v-for="item in state.ruleForm.usespesc" :key="item['value']" :label="item['label']"
+                  :value="item['value']">
                 </el-option>
               </el-select>
               <!-- <el-input v-model="ruleForm.use_area" placeholder clearable></el-input> -->
@@ -106,22 +63,12 @@
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="结存数量">
-              <el-input
-                disabled
-                v-model="state.ruleForm.balance"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input disabled v-model="state.ruleForm.balance" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="原有数量">
-              <el-input
-                disabled
-                v-model="state.ruleForm.original"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input disabled v-model="state.ruleForm.original" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -142,12 +89,7 @@
               <!-- <el-input placeholder v-model="ruleForm.user_remark"></el-input> -->
 
               <el-select v-model="state.handle" placeholder="请选择">
-                <el-option
-                  v-for="item in state.options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
+                <el-option v-for="item in state.options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -168,14 +110,10 @@
           </el-col> -->
         </el-row>
       </el-form>
-      <template #footer
-        ><span class="dialog-footer">
+      <template #footer><span class="dialog-footer">
           <el-button @click="onCancel" size="small">取 消</el-button>
-          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small"
-            >保存</el-button
-          >
-        </span></template
-      >
+          <el-button type="primary" @click="onSubmit" :loading="state.issave" size="small">保存</el-button>
+        </span></template>
     </el-dialog>
   </div>
 </template>
@@ -187,6 +125,7 @@ import { ElMessage } from "element-plus";
 import { store } from "/@/store";
 import { Session } from "/@/utils/storage";
 import { formatDate111 } from "/@/utils/formatTime";
+import { options, use_proline_options } from "/@/hooks/getDxinfo";
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
 
 console.log('Session.get("userInfo")');
@@ -195,91 +134,8 @@ console.log(Session.get("userInfo"));
 const state = reactive({
   flag: true,
   userinput: Session.get("userInfo").userName,
-  options: [
-    {
-      value: "保养",
-      label: "保养",
-    },
-
-    {
-      value: "报废",
-      label: "报废",
-    },
-    {
-      value: "外修",
-      label: "外修",
-    },
-    {
-      value: "设备整改",
-      label: "设备整改",
-    },
-  ],
-  use_proline_options: [
-    {
-      value: "圆镀一线",
-      label: "圆镀一线",
-    },
-    {
-      value: "圆镀二线",
-      label: "圆镀二线",
-    },
-    {
-      value: "圆镀三线",
-      label: "圆镀三线",
-    },
-    {
-      value: "圆镀四线",
-      label: "圆镀四线",
-    },
-    {
-      value: "圆镀五线",
-      label: "圆镀五线",
-    },
-    {
-      value: "圆镀六线",
-      label: "圆镀六线",
-    },
-    {
-      value: "方镀一线",
-      label: "方镀一线",
-    },
-    {
-      value: "方镀二线",
-      label: "方镀二线",
-    },
-    {
-      value: "方镀三线",
-      label: "方镀三线",
-    },
-    {
-      value: "圆镀料场",
-      label: "圆镀料场",
-    },
-    {
-      value: "方镀料场",
-      label: "方镀料场",
-    },
-    {
-      value: "锌锭库天车",
-      label: "锌锭库天车",
-    },
-    {
-      value: "锅炉房",
-      label: "锅炉房",
-    },
-    {
-      value: "换热站",
-      label: "换热站",
-    },
-    {
-      value: "空压机房",
-      label: "空压机房",
-    },
-    {
-      value: "配电室",
-      label: "配电室",
-    },
-  ],
+  options: options,
+  use_proline_options: use_proline_options,
   use_proline_value: "",
   handle: "",
   value: "",
@@ -389,7 +245,7 @@ const getbalance = async (value?: any) => {
 
 const openDialog = async (row?: object) => {
   state.isShowDialog = true;
-
+  state.issave = false;
   // 领用区域获取
   let { data: res } = await service.get(`/getmachine_usearea`);
 
@@ -478,7 +334,7 @@ const onSubmit = () => {
 };
 // 表单初始化，方法：`resetFields()` 无法使用
 const initForm = () => {
-  state.use_proline_value=""
+  state.use_proline_value = ""
   state.ruleForm.user = "";
   state.ruleForm.use_area = "";
   state.ruleForm.use_part_name = "";

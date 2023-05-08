@@ -260,16 +260,13 @@
   </div>
 </template>
 
+
+
 <script lang="ts" setup>
 import table2excel from "js-table2excel";
 import Auths from "/@/components/auth/auths.vue";
 import AddMenu from "./components/machine_parts/addMenu.vue";
 import EditMenu from "./components/machine_parts/part/editElectricMenu.vue";
-
-// import FileSaver from "file-saver";
-// import XLSX2 from "xlsx";
-// import XLSX from "xlsx-style";
-
 import AddElectricMenu from "./components/machine_parts/part/addElectricMenu.vue";
 import service from "/@/utils/request";
 import { ref, reactive, onMounted, toRefs, onUnmounted } from "vue";

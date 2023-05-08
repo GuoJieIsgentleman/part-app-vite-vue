@@ -2,7 +2,7 @@
   <div class="system-menu-container">
     <el-card shadow="hover">
       <!-- <el-button @click="resetDateFilter">清除日期过滤器</el-button>
-      <el-button @click="clearFilter">清除所有过滤器</el-button> -->
+        <el-button @click="clearFilter">清除所有过滤器</el-button> -->
 
       <el-row :gutter="35">
         <el-col :span="12" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
@@ -11,7 +11,12 @@
           </Auths>
         </el-col>
         <el-col :span="12" :xs="0" :sm="12" :md="12" :lg="6" :xl="6"></el-col>
-        <el-col :span="12" :xs="0" :sm="12" :md="12" :lg="6" :xl="6"></el-col>
+        <el-col :span="12" :xs="0" :sm="12" :md="12" :lg="6" :xl="6">
+          <Auths :value="['isshow']">
+            <el-tag type="danger" style="background-color: red; color: white;font-size: 20px;">
+              金额总合计为：{{ state.Totalamount }}元</el-tag>
+          </Auths>
+        </el-col>
         <el-col :span="12" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
           <Auths :value="['btn.machine_export']">
             <el-button @click="exportExcel1()" type="primary">导出</el-button>
@@ -23,7 +28,7 @@
           <el-tag type="danger" style="background-color: red; color: white">
             库存数为1时显示红色</el-tag>
         </el-col>
-        <el-col :span="12" :xs="12" :sm="12" :md="12" :lg="12" :xl="12"> </el-col>
+
       </el-row>
       <el-select v-model="state.part_area_value" filterable placeholder="备件区域" clearable>
         <el-option v-for="item in state.ruleForm.userarea" :key="item['value']" :label="item['label']"
@@ -91,7 +96,29 @@
         </el-table-column>
         <el-table-column prop="original" label="原有数量（台)" min-width="100" align="center">
         </el-table-column>
+
+
+        <el-table-column prop="price" label="单价" min-width="100" align="center">
+          <template #default="scope">
+            <Auths :value="['isshow']">
+              <span>{{ scope.row['price'] }}</span>
+            </Auths>
+          </template>
+        </el-table-column>
+
+
+
+        <el-table-column prop="amount" label="金额" min-width="100" align="center">
+          <template #default="scope">
+            <Auths :value="['isshow']">
+              <span>{{ scope.row['amount'] }}</span>
+            </Auths>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="type" label="备件类型" width="100" align="center">
+        </el-table-column>
+        <el-table-column prop="remark" label="备注" width="100" align="center">
         </el-table-column>
 
         <el-table-column label="操作" align="center" min-width="120">
@@ -122,6 +149,7 @@
 <script lang="ts" setup>
 import table2excel from "js-table2excel";
 import Auths from "/@/components/auth/auths.vue";
+import Auth from "/@/components/auth/auth.vue";
 import AddMenu from "/@/views/Machine/components/machine/addMenu.vue";
 import EditMenu from "/@/views/Machine/components/machine/editMenu.vue";
 import service from "/@/utils/request";
@@ -179,11 +207,15 @@ const setdata = (v: any, v1: any) => {
   state.partslist[v1].type = v[0][7];
   state.partslist[v1].partimgsrc = v[0][8];
   state.partslist[v1].connection = v[0][9];
+  state.partslist[v1].price = v[0][12];
+  state.partslist[v1].amount = v[0][13];
 };
 
 const currentPage4 = (val: any) => {
   // console.log(val.area);
 };
+
+
 
 const filterHandler = (value: any, row: any, column: any) => { };
 
@@ -193,6 +225,7 @@ const handleClick = (val: any) => {
   // console.log(val.area);
 };
 const state = reactive({
+  Totalamount: 0.00,
   currentPage: 1,
   shelf: '',
   shelfs: [
@@ -268,7 +301,10 @@ const state = reactive({
     { title: "搁置产线区域", key: "area", type: "text" },
     { title: "结存剩余（台)", key: "balance", type: "text" },
     { title: "原有数量（台)", key: "original", type: "text" },
+    { title: "单价", key: "type", type: "text" },
+    { title: "金额", key: "type", type: "text" },
     { title: "备件类型", key: "type", type: "text" },
+    { title: "备注", key: "type", type: "text" }
   ],
   pagearray: [10, 20, 30, 40, 50],
   ruleForm: {
@@ -308,10 +344,23 @@ const state = reactive({
 });
 const filterTable = (el: any) => { };
 
+
+const gettotalamount = () => {
+
+
+  service.get(`/getTotalamount`).then(res => {
+    state.Totalamount = res.data
+  }).catch(err => {
+    ElMessage({ type: 'warning', message: '获取总金额出错' })
+  });
+
+}
+
+
 const getusearea = async () => {
-  console.log("执行了 getmachine_usearea");
+
   let { data: res } = await service.get(`/getmachine_usearea`);
-  console.log(res);
+
   state.ruleForm.userarea = res.map((item: any) => {
     return {
       value: item[0],
@@ -347,6 +396,8 @@ const reciveparts = (page?: any, pagesize?: any) => {
             partimgsrc: item[8],
             connection: item[9],
             isShow: checkIsShow(item[3]),
+            price: item[12],
+            amount: item[13]
           };
         });
       }
@@ -366,6 +417,10 @@ const checkIsShow = (area: any) => {
     return flag;
   }
 
+  if ((Session.get("userInfo").authPageList[0]).includes('manager')) {
+    return true
+  }
+
   if (Session.get("userInfo").authPageList[0] == "admin") {
     return true;
   }
@@ -376,6 +431,8 @@ const checkIsShow = (area: any) => {
       }
     });
   }
+
+
 
 
   console.log(`${area}+++++++++${flag}`);
@@ -390,6 +447,7 @@ const initpart = () => {
   console.log("执行了 init machine");
   getusearea();
   reciveparts(10, 1);
+  gettotalamount()
 };
 
 //----------------------------------
@@ -474,6 +532,7 @@ onMounted(() => {
   initpart();
   gettype();
   IsPC();
+  gettotalamount()
 });
 // 删除当前行
 const onTabelRowDel = (row: any, index: any) => {
@@ -496,7 +555,7 @@ const onTabelRowDel = (row: any, index: any) => {
             type: "success",
           });
 
-          initpart();
+          reciveparts(state.pagesize, state.pagecount);
         })
         .catch((err) => {
           ElMessage({
@@ -508,7 +567,7 @@ const onTabelRowDel = (row: any, index: any) => {
     .catch(() => { });
 };
 
-const selectparts =  () => {
+const selectparts = () => {
 
   if (state.part_spec_value == "" && state.part_name_value === "" && state.part_area_value + state.shelf === "" && state.part_type_value === "") {
 
@@ -524,24 +583,26 @@ const selectparts =  () => {
       area: state.part_area_value + state.shelf,
       type: state.part_type_value,
     },
-  }).then((res:any)=>{
+  }).then((res: any) => {
     state.partslist = res.data.map((item: any[]) => {
-    return {
-      id: item[0],
-      part_name: item[1],
-      part_spec: item[2],
-      area: item[3],
-      balance: item[4],
-      original: item[5],
-      remark: item[6],
-      type: item[7],
-      partimgsrc: item[8],
-      connection: item[9],
-      isShow: checkIsShow(item[3]),
-    };
-  });
+      return {
+        id: item[0],
+        part_name: item[1],
+        part_spec: item[2],
+        area: item[3],
+        balance: item[4],
+        original: item[5],
+        remark: item[6],
+        type: item[7],
+        partimgsrc: item[8],
+        connection: item[9],
+        isShow: checkIsShow(item[3]),
+        price: item[12],
+        amount: item[13]
+      };
+    });
   })
-  
+
 };
 
 const addClass = ({ row, column, rowIndex, columnIndex }: any) => {
@@ -554,7 +615,7 @@ const exportExcel = () => {
   exportTable("#outTable", `${formatDate111(new Date())}机修备件明细`);
 };
 const exportExcel1 = () => {
-  console.log(table2excel);
+
   table2excel(
     state.column,
     state.partslist,
@@ -570,7 +631,7 @@ const getSummaries = (param: any) => {
       sums[index] = "合计";
       return;
     }
-    if (index === 1 || index === 2 || index === 3 || index === 4 || index === 5) {
+    if (index === 1 || index === 2 || index === 3 || index === 4 || index === 5 || index === 8 || index === 11) {
       sums[index] = "";
     } else {
       const values = data.map((item: any) => Number(item[column.property]));
@@ -593,7 +654,7 @@ const getSummaries = (param: any) => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" >
 .el-table .el-table-column {
   justify-content: center;
 

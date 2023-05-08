@@ -2,7 +2,7 @@
   <div class="system-menu-container">
     <el-card shadow="hover">
       <!-- <el-button @click="resetDateFilter">清除日期过滤器</el-button>
-      <el-button @click="clearFilter">清除所有过滤器</el-button> -->
+                                                                                        <el-button @click="clearFilter">清除所有过滤器</el-button> -->
 
       <el-row :gutter="35">
         <el-col :span="12" :xs="12" :sm="12" :md="12" :lg="6" :xl="6">
@@ -90,8 +90,29 @@
         </el-table-column>
         <el-table-column prop="original" label="原有数量（台)" min-width="100" align="center">
         </el-table-column>
+
+
+        <el-table-column prop="price" label="单价" min-width="100" align="center">
+          <template #default="scope">
+            <Auths :value="['isshow']">
+              <span>{{ scope.row['price'] }}</span>
+            </Auths>
+          </template>
+        </el-table-column>
+        <el-table-column prop="amount" label="金额" min-width="100" align="center">
+          <template #default="scope">
+            <Auths :value="['isshow']">
+              <span>{{ scope.row['amount'] }}</span>
+            </Auths>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="type" label="备件类型" width="100" align="center">
         </el-table-column>
+
+        <el-table-column prop="remark" label="备注" width="100" align="center">
+        </el-table-column>
+
 
         <el-table-column label="操作" align="center" min-width="120">
           <template #default="scope">
@@ -110,19 +131,10 @@
         </el-table-column>
       </el-table>
       <!-- 分页栏 -->
-      <el-pagination background 
-        @size-change="handleSizeChange" 
-        @current-change="handleCurrentChange"
-        :page-size="state.pagesize" 
-        :page-sizes="state.pagearray" 
-        @prev-click="prev()" 
-        @next-click="next()"
-        layout="total, sizes, prev, pager, next, jumper" 
-        :total="state.total" 
-        prev-text="上一页" 
-        next-text="下一页"
-        :current-page="state.currentPage"
-        :page-count="state.pagecount" />
+      <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :page-size="state.pagesize" :page-sizes="state.pagearray" @prev-click="prev()" @next-click="next()"
+        layout="total, sizes, prev, pager, next, jumper" :total="state.total" prev-text="上一页" next-text="下一页"
+        :current-page="state.currentPage" :page-count="state.pagecount" />
     </el-card>
     <AddMenu ref="addMenuRef" />
     <EditMenu ref="editMenuRef" @senddata="setdata" />
@@ -158,10 +170,10 @@ const IsPC = () => {
 
 //分页功能
 const prev = () => {
- // console.log("前一页");
+  // console.log("前一页");
 };
 const next = () => {
- // console.log("下一页");
+  // console.log("下一页");
 };
 
 const handleSizeChange = (val: any) => {
@@ -173,7 +185,7 @@ const handleSizeChange = (val: any) => {
 const handleCurrentChange = (val: any) => {
   // console.log("改变页数" + val);
 
-  state.currentPage=val;
+  state.currentPage = val;
   reciveparts(state.pagesize, val);
 };
 
@@ -199,6 +211,8 @@ const setdata = (v: any, v1: any) => {
   state.partslist[v1].type = v[0][7];
   state.partslist[v1].partimgsrc = v[0][8];
   state.partslist[v1].connection = v[0][9];
+  state.partslist[v1].price = v[0][10];
+  state.partslist[v1].amount = v[0][11];
 };
 
 const currentPage4 = (val: any) => {
@@ -206,70 +220,70 @@ const currentPage4 = (val: any) => {
 };
 
 const state = reactive({
-  currentPage:1,
-  shelf:'',
+  currentPage: 1,
+  shelf: '',
   shelfs: [
     {
-        value: "1号架",
-        label: "1号架",
-      },
-      {
-        value: "2号架",
-        label: "2号架",
-      },
-      {
-        value: "3号架",
-        label: "3号架",
-      },
-      {
-        value: "4号架",
-        label: "4号架",
-      },
-      {
-        value: "5号架",
-        label: "5号架",
-      },
-      {
-        value: "6号架",
-        label: "6号架",
-      },
-      {
-        value: "7号架",
-        label: "7号架",
-      },
-      {
-        value: "8号架",
-        label: "8号架",
-      },
-      {
-        value: "9号架",
-        label: "9号架",
-      },
-      {
-        value: "10号架",
-        label: "10号架",
-      },
-      {
-        value: "11号架",
-        label: "11号架",
-      },
-      {
-        value: "12号架",
-        label: "12号架",
-      },
-      {
-        value: "13号架",
-        label: "13号架",
-      },
-      {
-        value: "14号架",
-        label: "14号架",
-      },
-      {
-        value: "15号架",
-        label: "15号架",
-      },
-    ],
+      value: "1号架",
+      label: "1号架",
+    },
+    {
+      value: "2号架",
+      label: "2号架",
+    },
+    {
+      value: "3号架",
+      label: "3号架",
+    },
+    {
+      value: "4号架",
+      label: "4号架",
+    },
+    {
+      value: "5号架",
+      label: "5号架",
+    },
+    {
+      value: "6号架",
+      label: "6号架",
+    },
+    {
+      value: "7号架",
+      label: "7号架",
+    },
+    {
+      value: "8号架",
+      label: "8号架",
+    },
+    {
+      value: "9号架",
+      label: "9号架",
+    },
+    {
+      value: "10号架",
+      label: "10号架",
+    },
+    {
+      value: "11号架",
+      label: "11号架",
+    },
+    {
+      value: "12号架",
+      label: "12号架",
+    },
+    {
+      value: "13号架",
+      label: "13号架",
+    },
+    {
+      value: "14号架",
+      label: "14号架",
+    },
+    {
+      value: "15号架",
+      label: "15号架",
+    },
+  ],
   areainfo: Session.get("userInfo").areainfo,
   column: [
     { title: "序号", key: "id", type: "text" },
@@ -362,10 +376,12 @@ const reciveparts = (page?: any, pagesize?: any) => {
             partimgsrc: item[8],
             connection: item[9],
             isShow: checkIsShow(item[3]),
+            price: item[10],
+            amount: item[11]
           };
         });
       }
-   
+
     })
     .catch((err: any) => {
       ElMessage({ type: "error", message: err.data });
@@ -374,11 +390,11 @@ const reciveparts = (page?: any, pagesize?: any) => {
 
 const checkIsShow = (area: any) => {
 
-  
+
   let flag = false;
 
   if (
-    Session.get("userInfo").authPageList[0] === "Monitor" || 
+    Session.get("userInfo").authPageList[0] === "Monitor" ||
     Session.get("userInfo").authPageList[0] === "electrician_manager"
 
   ) {
@@ -391,7 +407,7 @@ const checkIsShow = (area: any) => {
     flag = false;
   }
 
-  if(  Session.get("userInfo").authPageList[0] === "admin"){
+  if (Session.get("userInfo").authPageList[0] === "admin") {
     return true
   }
 
@@ -498,56 +514,62 @@ const onTabelRowDel = (row: any, index: any) => {
     .catch(() => { });
 };
 
-const selectparts =  () => {
-  if(state.part_spec_value==""&&state.part_name_value==="" &&state.part_area_value+state.shelf===""&&state.part_type_value==="" ){
+const selectparts = () => {
+  if (state.part_spec_value == "" && state.part_name_value === "" && state.part_area_value + state.shelf === "" && state.part_type_value === "") {
 
     reciveparts(10, 1);
     return;
   }
 
-  
+
 
   service.get("/selectpart", {
     params: {
       part_spec: state.part_spec_value,
       part_name: state.part_name_value,
-      area: state.part_area_value+state.shelf,
+      area: state.part_area_value + state.shelf,
       type: state.part_type_value,
- 
-    },
-  }).then((res:any)=>{
-   
-    state.partslist = res.data.map((item: any) => {
-    return {
-      id: item[0],
-      part_name: item[1],
-      part_spec: item[2],
-      area: item[3],
-      balance: item[4],
-      original: item[5],
-      remark: item[6],
-      type: item[7],
-      partimgsrc: item[8],
-      connection: item[9],
-      isShow: checkIsShow(item[3]),
-    }
-  })
-  
-  state.pagecount = Math.ceil(state.partslist.length / state.pagesize);
-  state.total = state.partslist.length;
 
-  //state.partslist=state.partslist.slice((state.currentPage-1)*state.pagesize,state.currentPage*state.pagesize)
+    },
+  }).then((res: any) => {
+
+    state.partslist = res.data.map((item: any) => {
+      return {
+        id: item[0],
+        part_name: item[1],
+        part_spec: item[2],
+        area: item[3],
+        balance: item[4],
+        original: item[5],
+        remark: item[6],
+        type: item[7],
+        partimgsrc: item[8],
+        connection: item[9],
+        isShow: checkIsShow(item[3]),
+        price: item[10],
+        amount: item[11]
+      }
+    })
+
+    state.pagecount = Math.ceil(state.partslist.length / state.pagesize);
+    state.total = state.partslist.length;
+
+    //state.partslist=state.partslist.slice((state.currentPage-1)*state.pagesize,state.currentPage*state.pagesize)
 
     //计算当前页面的行数
 
-})
-  
+  })
+
 };
 
-const addClass = ({ row, column, rowIndex, columnIndex }: any) => {
+
+const addClass = ({ row, rowIndex }: any) => {
+
+  console.log(row);
   if (row.balance <= 1) {
     return "warning-row";
   }
+
 };
 
 const exportExcel = () => {
@@ -557,6 +579,8 @@ const exportExcel1 = () => {
   console.log(table2excel);
   table2excel(state.column, state.partslist, `${formatDate111(new Date())}备件明细.xlsx`);
 };
+
+
 
 const getSummaries = (param: any) => {
   const { columns, data } = param;
@@ -589,7 +613,7 @@ const getSummaries = (param: any) => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss"  >
 .el-table .el-table-column {
   justify-content: center;
 
@@ -615,8 +639,14 @@ const getSummaries = (param: any) => {
 //   --el-table-tr-background-color: var(--el-color-warning-lighter);
 // }
 
+
+// .el-table>>>.warning-row {
+//   background-color: #ff0000;
+//   color: white;
+// }
+
 .el-table .warning-row {
-  background-color: rgb(208, 58, 58);
+  background-color: rgb(235, 36, 36);
   color: white;
 }
 

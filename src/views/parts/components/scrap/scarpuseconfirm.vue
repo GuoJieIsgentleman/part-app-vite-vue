@@ -1,11 +1,6 @@
 <template>
   <div class="system-menu-container">
-    <el-dialog
-      title="确认信息"
-      v-model="isShowDialog"
-      width="769px"
-      :destroy-on-close="true"
-    >
+    <el-dialog title="确认信息" v-model="isShowDialog" width="769px" :destroy-on-close="true">
       <el-form :model="ruleForm" size="small" label-width="80px">
         <el-row :gutter="35">
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -25,22 +20,12 @@
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="结存数量">
-              <el-input
-                disabled
-                v-model="ruleForm.balance"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input disabled v-model="ruleForm.balance" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="原有数量">
-              <el-input
-                disabled
-                v-model="ruleForm.original"
-                placeholder
-                clearable
-              ></el-input>
+              <el-input disabled v-model="ruleForm.original" placeholder clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -49,20 +34,16 @@
             </el-form-item>
           </el-col>
           <!-- <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-            <el-form-item label="补件数量">
-              <el-input disabled v-model="partsdetail.received" clearable></el-input>
-            </el-form-item>
-          </el-col> -->
+                            <el-form-item label="补件数量">
+                              <el-input disabled v-model="partsdetail.received" clearable></el-input>
+                            </el-form-item>
+                          </el-col> -->
 
           <el-col class="mb20" :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
             <el-form-item label="搁置区域">
               <el-select v-model="ruleForm.area" placeholder="最新搁置区域">
-                <el-option
-                  v-for="item in ruleForm.areaArr"
-                  :key="item['value']"
-                  :label="item['label']"
-                  :value="item['value']"
-                >
+                <el-option v-for="item in ruleForm.areaArr" :key="item['value']" :label="item['label']"
+                  :value="item['value']">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -82,18 +63,10 @@
           </el-col>
         </el-row>
       </el-form>
-      <template #footer
-        ><span class="dialog-footer">
+      <template #footer><span class="dialog-footer">
           <el-button @click="onCancel" size="small">取 消</el-button>
-          <el-button
-            type="primary"
-            @click="onSubmit(ruleForm.name)"
-            :loading="issave"
-            size="small"
-            >确定</el-button
-          >
-        </span></template
-      >
+          <el-button type="primary" @click="onSubmit(ruleForm.name)" :loading="issave" size="small">确定</el-button>
+        </span></template>
     </el-dialog>
   </div>
 </template>
@@ -187,8 +160,8 @@ export default {
 
     //确认提交
 
-    const initpart_equipment_rectification: any = inject(
-      "initpart_equipment_rectification"
+    const initscrap: any = inject(
+      "initscrap"
     );
     const onSubmit = (v: any) => {
       console.log("state.partsdetail.received");
@@ -204,9 +177,11 @@ export default {
           type: "warning",
         });
       } else {
+
+        //updatescrap
         //更新确认人
         let res = service
-          .get("/updateequipment_rectification", {
+          .get("/updatescrap", {
             params: {
               //保养列表的id 不是parts 的id
               id: state.partsdetail.id,
@@ -223,7 +198,7 @@ export default {
               new_area: state.ruleForm.area,
               useconfirmdate: formatDate111(new Date()),
               remark: state.ruleForm.remark,
-              flag: "设备整改确认",
+              flag: "到件确认人",
               flag1: state.partsdetail.remark,
             },
           })
@@ -233,7 +208,7 @@ export default {
               type: "success",
             });
 
-            initpart_equipment_rectification();
+            initscrap();
             closeDialog();
           })
           .catch((err) => {
